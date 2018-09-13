@@ -16,6 +16,9 @@ QGCAttitudeHUD          1.0 QGCAttitudeHUD.qml
 QGCAttitudeWidget       1.0 QGCAttitudeWidget.qml
 QGCCompassWidget        1.0 QGCCompassWidget.qml
 QGCPitchIndicator       1.0 QGCPitchIndicator.qml
+SSP_Altimeter           1.0 SSP_Altimeter.qml
+SSP_Attitude            1.0 SSP_Attitude.qml
+SSP_Heading             1.0 SSP_Heading.qml
 
 # Map items
 CameraTriggerIndicator      1.0 CameraTriggerIndicator.qml

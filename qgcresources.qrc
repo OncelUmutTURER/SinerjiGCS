@@ -50,7 +50,7 @@
         <file alias="Airframe/HelicopterCoaxial">src/AutoPilotPlugins/Common/Images/HelicopterCoaxial.svg</file>
         <file alias="wifi.svg">src/AutoPilotPlugins/Common/Images/wifi.svg</file>
         <file alias="arrow-down.png">src/QmlControls/arrow-down.png</file>
-		<file alias="camera.svg">resources/camera.svg</file>
+        <file alias="camera.svg">resources/camera.svg</file>
         <file alias="camera_photo.svg">src/Camera/images/camera_photo.svg</file>
         <file alias="camera_video.svg">src/Camera/images/camera_video.svg</file>
         <file alias="check.png">src/QmlControls/check.png</file>
@@ -205,7 +205,7 @@
         <file alias="Play">resources/Play.svg</file>
         <file alias="PowerButton">resources/PowerButton.svg</file>
         <file alias="QGCLogoBlack">resources/QGCLogoBlack.svg</file>
-		<file alias="QGCLogoFull">resources/QGCLogoFull.svg</file>
+        <file alias="QGCLogoFull">resources/QGCLogoFull.svg</file>
         <file alias="QGCLogoWhite">resources/QGCLogoWhite.svg</file>
         <file alias="QGroundControlConnect">resources/QGroundControlConnect.svg</file>
         <file alias="rtl.svg">resources/rtl.svg</file>
@@ -339,5 +339,44 @@
         <file alias="joystickThrottleUp.png">resources/calibration/joystick/mode4/joystickThrottleUp.png</file>
         <file alias="joystickYawLeft.png">resources/calibration/joystick/mode4/joystickYawLeft.png</file>
         <file alias="joystickYawRight.png">resources/calibration/joystick/mode4/joystickYawRight.png</file>
+    </qresource>
+    <qresource prefix="/FlightInstrumentImages">
+        <file alias="airspeed_hand.svg">src/FlightMap/Images/FlightInstruments/airspeed_hand.svg</file>
+        <file alias="airspeed_markings.svg">src/FlightMap/Images/FlightInstruments/airspeed_markings.svg</file>
+        <file alias="airspeed_trueairspeed.svg">src/FlightMap/Images/FlightInstruments/airspeed_trueairspeed.svg</file>
+        <file alias="altimeter_background.svg">src/FlightMap/Images/FlightInstruments/altimeter_background.svg</file>
+        <file alias="altimeter_foreground.svg">src/FlightMap/Images/FlightInstruments/altimeter_foreground.svg</file>
+        <file alias="altimeter_hand_100ft.svg">src/FlightMap/Images/FlightInstruments/altimeter_hand_100ft.svg</file>
+        <file alias="altimeter_hand_1000ft.svg">src/FlightMap/Images/FlightInstruments/altimeter_hand_1000ft.svg</file>
+        <file alias="altimeter_hand_10000ft.svg">src/FlightMap/Images/FlightInstruments/altimeter_hand_10000ft.svg</file>
+        <file alias="altimeter_pressure_inhg.svg">src/FlightMap/Images/FlightInstruments/altimeter_pressure_inhg.svg</file>
+        <file alias="altimeter_pressure_mbar.svg">src/FlightMap/Images/FlightInstruments/altimeter_pressure_mbar.svg</file>
+        <file alias="attitude_foreground_1.svg">src/FlightMap/Images/FlightInstruments/attitude_foreground_1.svg</file>
+        <file alias="attitude_foreground_2.svg">src/FlightMap/Images/FlightInstruments/attitude_foreground_2.svg</file>
+        <file alias="attitude_ils_glideslope.svg">src/FlightMap/Images/FlightInstruments/attitude_ils_glideslope.svg</file>
+        <file alias="attitude_ils_localizer.svg">src/FlightMap/Images/FlightInstruments/attitude_ils_localizer.svg</file>
+        <file alias="attitude_ils_markings.svg">src/FlightMap/Images/FlightInstruments/attitude_ils_markings.svg</file>
+        <file alias="attitude_off_flag.svg">src/FlightMap/Images/FlightInstruments/attitude_off_flag.svg</file>
+        <file alias="attitude_pitch.svg">src/FlightMap/Images/FlightInstruments/attitude_pitch.svg</file>
+        <file alias="attitude_roll_1.svg">src/FlightMap/Images/FlightInstruments/attitude_roll_1.svg</file>
+        <file alias="attitude_roll_2.svg">src/FlightMap/Images/FlightInstruments/attitude_roll_2.svg</file>
+        <file alias="heading_background.svg">src/FlightMap/Images/FlightInstruments/heading_background.svg</file>
+        <file alias="heading_beacon_1.svg">src/FlightMap/Images/FlightInstruments/heading_beacon_1.svg</file>
+        <file alias="heading_beacon_2.svg">src/FlightMap/Images/FlightInstruments/heading_beacon_2.svg</file>
+        <file alias="heading_markings.svg">src/FlightMap/Images/FlightInstruments/heading_markings.svg</file>
+        <file alias="heading_yaw.svg">src/FlightMap/Images/FlightInstruments/heading_yaw.svg</file>
+        <file alias="indicator_background_dashboard.svg">src/FlightMap/Images/FlightInstruments/indicator_background_dashboard.svg</file>
+        <file alias="indicator_background_screws.svg">src/FlightMap/Images/FlightInstruments/indicator_background_screws.svg</file>
+        <file alias="indicator_foreground.svg">src/FlightMap/Images/FlightInstruments/indicator_foreground.svg</file>
+        <file alias="instrument_panel_full.svg">src/FlightMap/Images/FlightInstruments/instrument_panel_full.svg</file>
+        <file alias="instrument_panel_work.svg">src/FlightMap/Images/FlightInstruments/instrument_panel_work.svg</file>
+        <file alias="instrument_panel_work_old_attitude.svg">src/FlightMap/Images/FlightInstruments/instrument_panel_work_old_attitude.svg</file>
+        <file alias="turn_airplane.svg">src/FlightMap/Images/FlightInstruments/turn_airplane.svg</file>
+        <file alias="turn_ball.svg">src/FlightMap/Images/FlightInstruments/turn_ball.svg</file>
+        <file alias="turn_ball_path.svg">src/FlightMap/Images/FlightInstruments/turn_ball_path.svg</file>
+        <file alias="turn_markings_1.svg">src/FlightMap/Images/FlightInstruments/turn_markings_1.svg</file>
+        <file alias="turn_markings_2.svg">src/FlightMap/Images/FlightInstruments/turn_markings_2.svg</file>
+        <file alias="vario_hand.svg">src/FlightMap/Images/FlightInstruments/vario_hand.svg</file>
+        <file alias="vario_markings.svg">src/FlightMap/Images/FlightInstruments/vario_markings.svg</file>
     </qresource>
 </RCC>

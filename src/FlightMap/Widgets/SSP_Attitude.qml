@@ -4,21 +4,23 @@ import Qt.labs.calendar 1.0
 
 Item {
     id: root
-
-    property real size: 400
-    property var vehicle: null
-
-    property real roll: vehicle ? vehicle.roll.rawValue : 0
-    property real pitch: vehicle ? vehicle.pitch.rawValue : 0
-
     width: size
     height: size
+
+    property real size: _defaultSize
+    property var vehicle: null
+
+    property bool showPitch:    true
+    property bool showHeading:  false
+
+    property real _rollAngle:   vehicle ? vehicle.roll.rawValue  : 0
+    property real _pitchAngle:  vehicle ? vehicle.pitch.rawValue : 0
 
     Image {
         id: indicator_background_screws
         width: size
         height: size
-        source: "/instrumentImages/indicator_background_screws.svg"
+        source: "/FlightInstrumentImages/indicator_background_screws.svg"
     }
 
     Item {
@@ -26,16 +28,16 @@ Item {
 
         anchors.centerIn: parent.Center
         transform: Rotation {
-            origin.x: size / 2
-            origin.y: size / 2
-            angle: roll
+            origin.x: root.width / 2
+            origin.y: root.width / 2
+            angle: -_rollAngle
         }
 
         Image {
             id: attitude_roll_1
             width: size
             height: size
-            source: "/instrumentImages/attitude_roll_1.svg"
+            source: "/FlightInstrumentImages/attitude_roll_1.svg"
         }
 
         Image {
@@ -43,9 +45,9 @@ Item {
             width: size
             height: size
 
-            source: "/instrumentImages/attitude_pitch.svg"
+            source: "/FlightInstrumentImages/attitude_pitch.svg"
             transform: Translate {
-                y: (pitch * 0.7)
+                y: (_pitchAngle * 0.7)
             }
         }
 
@@ -54,7 +56,7 @@ Item {
             width: size
             height: size
             smooth: true
-            source: "/instrumentImages/attitude_roll_2.svg"
+            source: "/FlightInstrumentImages/attitude_roll_2.svg"
         }
     }
 
@@ -62,7 +64,7 @@ Item {
         id: attitude_foreground_1
         width: size
         height: size
-        source: "/instrumentImages/attitude_foreground_1.svg"
+        source: "/FlightInstrumentImages/attitude_foreground_1.svg"
         smooth: true
     }
 
@@ -70,7 +72,7 @@ Item {
         id: attitude_foreground_2
         width: size
         height: size
-        source: "/instrumentImages/attitude_foreground_2.svg"
+        source: "/FlightInstrumentImages/attitude_foreground_2.svg"
         smooth: true
     }
 
@@ -78,6 +80,6 @@ Item {
         id: indicator_foreground
         width: size
         height: size
-        source: "/instrumentImages/indicator_foreground.svg"
+        source: "/FlightInstrumentImages/indicator_foreground.svg"
     }
 }
