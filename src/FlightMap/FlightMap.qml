@@ -140,7 +140,7 @@ Map {
         coordinate:     gcsPosition
 
         sourceItem: Image {
-            source:         "/res/QGCLogoFull"
+            source:         "/res/SinerjiGCSLogoFull"
             mipmap:         true
             antialiasing:   true
             fillMode:       Image.PreserveAspectFit

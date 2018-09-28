@@ -39,6 +39,8 @@
 #include "QGCDockWidget.h"
 #include "QGCQmlWidgetHolder.h"
 
+#include "SinerjiGCSLoginWindow.h"
+
 #include "ui_MainWindow.h"
 
 #if (defined QGC_MOUSE_ENABLED_WIN) | (defined QGC_MOUSE_ENABLED_LINUX)
@@ -194,6 +196,9 @@ private:
     bool    _forceClose;
 
     QString _getWindowGeometryKey();
+
+    SinerjiGCSLoginWindow  *_loginui;
+    void _showLoginScreen(void);
 };
 
 #endif /* _MAINWINDOW_H_ */

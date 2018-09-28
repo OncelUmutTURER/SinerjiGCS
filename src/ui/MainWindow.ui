@@ -68,8 +68,15 @@
      <string>Widgets</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuProfile">
+    <property name="title">
+     <string>Profile</string>
+    </property>
+    <addaction name="actionLogout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWidgets"/>
+   <addaction name="menuProfile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -99,6 +106,11 @@
    </property>
    <property name="text">
     <string>Replay Flight Data</string>
+   </property>
+  </action>
+  <action name="actionLogout">
+   <property name="text">
+    <string>Çıkış Yap</string>
    </property>
   </action>
  </widget>

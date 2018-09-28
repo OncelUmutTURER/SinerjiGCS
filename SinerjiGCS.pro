@@ -9,8 +9,8 @@
 
 QMAKE_PROJECT_DEPTH = 0 # undocumented qmake flag to force absolute paths in make files
 
-exists($${OUT_PWD}/qgroundcontrol.pro) {
-    error("You must use shadow build (e.g. mkdir build; cd build; qmake ../qgroundcontrol.pro).")
+exists($${OUT_PWD}/SinerjiGCS.pro) {
+    error("You must use shadow build (e.g. mkdir build; cd build; qmake ../SinerjiGCS.pro).")
 }
 
 message(Qt version $$[QT_VERSION])
@@ -21,7 +21,7 @@ message(Qt version $$[QT_VERSION])
 
 include(QGCCommon.pri)
 
-TARGET   = QGroundControl
+TARGET   = SinerjiGCS
 TEMPLATE = app
 QGCROOT  = $$PWD
 
@@ -49,18 +49,18 @@ LinuxBuild {
 }
 
 WindowsBuild {
-    RC_ICONS = resources/icons/qgroundcontrol.ico
+    RC_ICONS = resources/icons/SS_Logo.ico
 }
 
 #
 # Branding
 #
 
-QGC_APP_NAME        = "QGroundControl"
-QGC_ORG_NAME        = "QGroundControl.org"
-QGC_ORG_DOMAIN      = "org.qgroundcontrol"
-QGC_APP_DESCRIPTION = "Open source ground control app provided by QGroundControl dev team"
-QGC_APP_COPYRIGHT   = "Copyright (C) 2017 QGroundControl Development Team. All rights reserved."
+QGC_APP_NAME        = "SinerjiGCS"
+QGC_ORG_NAME        = "SinerjiSoft A.Ş."
+QGC_ORG_DOMAIN      = "www.sinerjisoft.com.tr"
+QGC_APP_DESCRIPTION = "Sinerjisoft Ground Control Station (based on open source ground control app provided by QGroundControl dev team)"
+QGC_APP_COPYRIGHT   = "SinerjiSoft (C) 2018. All rights reserved."
 
 WindowsBuild {
     QGC_INSTALLER_ICON          = "WindowsQGC.ico"
@@ -307,9 +307,9 @@ CustomBuild {
         RESOURCES += $$PWD/qgcresources.qrc
     }
 } else {
-    DEFINES += QGC_APPLICATION_NAME=\"\\\"QGroundControl\\\"\"
-    DEFINES += QGC_ORG_NAME=\"\\\"QGroundControl.org\\\"\"
-    DEFINES += QGC_ORG_DOMAIN=\"\\\"org.qgroundcontrol\\\"\"
+    DEFINES += QGC_APPLICATION_NAME=\"\\\"SinerjiGCS\\\"\"
+    DEFINES += QGC_ORG_NAME=\"\\\"SinerjiSoft A.Ş.\\\"\"
+    DEFINES += QGC_ORG_DOMAIN=\"\\\"www.sinerjisoft.com.tr\\\"\"
     RESOURCES += \
         $$PWD/qgroundcontrol.qrc \
         $$PWD/qgcresources.qrc
@@ -379,6 +379,7 @@ INCLUDEPATH += \
 FORMS += \
     src/ui/MainWindow.ui \
     src/QGCQmlWidgetHolder.ui \
+    src/ui/SinerjiGCSLoginWindow.ui
 
 !MobileBuild {
 FORMS += \
@@ -405,14 +406,16 @@ HEADERS += \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
-    src/comm/MavlinkMessagesTimer.h
+    src/comm/MavlinkMessagesTimer.h \
+    src/ui/SinerjiGCSLoginWindow.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
-    src/comm/MavlinkMessagesTimer.cc
+    src/comm/MavlinkMessagesTimer.cc \
+    src/ui/SinerjiGCSLoginWindow.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
