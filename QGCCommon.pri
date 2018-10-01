@@ -130,9 +130,9 @@ exists ($$PWD/.git) {
     MacBuild {
         MAC_VERSION  = $$section(VERSION, ".", 0, 2)
         MAC_BUILD    = $$section(VERSION, ".", 3, 3)
-        message(SinerjiGCS version $${MAC_VERSION} build $${MAC_BUILD} describe $${GIT_VERSION})
+        message(QGroundControl version $${MAC_VERSION} build $${MAC_BUILD} describe $${GIT_VERSION})
     } else {
-        message(SinerjiGCS $${GIT_VERSION})
+        message(QGroundControl $${GIT_VERSION})
     }
 } else {
     GIT_VERSION     = None

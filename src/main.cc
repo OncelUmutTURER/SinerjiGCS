@@ -47,7 +47,6 @@
 #include <QtBluetooth/QBluetoothSocket>
 #endif
 
-#include <SinerjiGCSLoginWindow.h>
 #include <iostream>
 #include "QGCMapEngine.h"
 
@@ -103,10 +102,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
 int main(int argc, char *argv[])
 {
-    QString loggedInUser("");
-    QApplication qapp(argc, argv);
-    qapp.setProperty("loggedInUser", loggedInUser);
-
 #ifndef __mobile__
     RunGuard guard("QGroundControlRunGuardKey");
     if (!guard.tryToRun()) {
@@ -215,7 +210,7 @@ int main(int argc, char *argv[])
     Q_CHECK_PTR(app);
 
 #ifdef Q_OS_LINUX
-    QApplication::setWindowIcon(QIcon(":/res/resources/icons/SS_Logo.ico"));
+    QApplication::setWindowIcon(QIcon(":/res/resources/icons/qgroundcontrol.ico"));
 #endif /* Q_OS_LINUX */
 
     // There appears to be a threading issue in qRegisterMetaType which can cause it to throw a qWarning
@@ -252,8 +247,6 @@ int main(int argc, char *argv[])
     } else
 #endif
     {
-//        app->_initLoginScreen();
-
         if (!app->_initForNormalAppBoot()) {
             return -1;
         }

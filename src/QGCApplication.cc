@@ -114,11 +114,6 @@
 
 #include "QGCMapEngine.h"
 
-#include <QSplashScreen>
-#include <QTimer>
-
-#include <QQuickView> //umut
-
 QGCApplication* QGCApplication::_app = nullptr;
 
 const char* QGCApplication::_deleteAllSettingsKey           = "DeleteAllSettingsNextBoot";
@@ -426,21 +421,6 @@ void QGCApplication::_initCommon(void)
     qmlRegisterSingletonType<KMLFileHelper>             ("QGroundControl.KMLFileHelper",            1, 0, "KMLFileHelper",          kmlFileHelperSingletonFactory);
 }
 
-bool QGCApplication::_initLoginScreen(void)
-{
-    QSettings settings;
-
-    _loadCurrentStyleSheet();
-
-    // Exit main application when last window is closed
-//    connect(this, &QGCApplication::lastWindowClosed, this, QGCApplication::quit);
-
-//    SinerjiGCSLoginWindow w = new SinerjiGCSLoginWindow(nullptr);
-//    w.show();
-
-    return true;
-}
-
 bool QGCApplication::_initForNormalAppBoot(void)
 {
     QSettings settings;
@@ -450,31 +430,12 @@ bool QGCApplication::_initForNormalAppBoot(void)
     // Exit main application when last window is closed
     connect(this, &QGCApplication::lastWindowClosed, this, QGCApplication::quit);
 
-    // Show splash screen for 5 second
-//    QSplashScreen *splash = new QSplashScreen;
-//    splash->setPixmap(QPixmap(":/res/SinerjiGCS_SplashScreen").scaled(QSize(640,480),Qt::KeepAspectRatio));
-//    splash->show();
-//    sleep(5);
-
-//    splash->finish(mainWindow);
-
-    // Show Login Screen. If successfully logged in then open main window
-//    SinerjiGCSLoginWindow w;
-//    w.show();
-
-//    QString _user = qApp->property("loggedInUser").toString();
-//    while (_user.isEmpty()) {
-//        sleep(1);
-//    }
-
 #ifdef __mobile__
     _qmlAppEngine = toolbox()->corePlugin()->createRootWindow(this);
 #else
-
     // Start the user interface
-    MainWindow* mainWindow = MainWindow::_create();    
+    MainWindow* mainWindow = MainWindow::_create();
     Q_CHECK_PTR(mainWindow);
-
 #endif
 
     // Now that main window is up check for lost log files
@@ -638,7 +599,7 @@ void QGCApplication::_loadCurrentStyleSheet(void)
 
     // The dark style sheet is the master. Any other selected style sheet just overrides
     // the colors of the master sheet.
-    QFile masterStyleSheet(_lightStyleFile);
+    QFile masterStyleSheet(_darkStyleFile);
     if (masterStyleSheet.open(QIODevice::ReadOnly | QIODevice::Text)) {
         styles = masterStyleSheet.readAll();
     } else {
@@ -646,9 +607,9 @@ void QGCApplication::_loadCurrentStyleSheet(void)
         success = false;
     }
 
-    if (success && _toolbox->settingsManager()->appSettings()->indoorPalette()->rawValue().toBool()) {
+    if (success && !_toolbox->settingsManager()->appSettings()->indoorPalette()->rawValue().toBool()) {
         // Load the slave light stylesheet.
-        QFile styleSheet(_darkStyleFile);
+        QFile styleSheet(_lightStyleFile);
         if (styleSheet.open(QIODevice::ReadOnly | QIODevice::Text)) {
             styles += styleSheet.readAll();
         } else {

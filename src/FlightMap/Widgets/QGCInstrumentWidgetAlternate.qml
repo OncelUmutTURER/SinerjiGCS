@@ -43,7 +43,7 @@ Rectangle {
 
     QGCPalette { id: qgcPal }
 
-    SinerjiGCS_Altimeter {
+    SSP_Altimeter {
         id: altimeter
         //anchors.leftMargin: _topBottomMargin
         anchors.topMargin: _topBottomMargin
@@ -52,7 +52,7 @@ Rectangle {
         size: parent.width  //_innerRadius * 4
         vehicle: _activeVehicle
     }
-    SinerjiGCS_Attitude {
+    SSP_Attitude {
         id: attitude
         //anchors.leftMargin: _spacing  //anchors.topMargin: _spacing
         anchors.top: altimeter.bottom
@@ -61,7 +61,7 @@ Rectangle {
         vehicle: _activeVehicle
     }
 
-    SinerjiGCS_Heading {
+    SSP_Heading {
         id: heading
         anchors.leftMargin: _spacing  //anchors.topMargin: _spacing
         anchors.top: attitude.bottom

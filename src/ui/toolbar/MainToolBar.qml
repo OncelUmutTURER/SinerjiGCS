@@ -92,7 +92,7 @@ Rectangle {
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
                 exclusiveGroup:     mainActionGroup
-                source:             "/res/SinerjiGCSLogoFull"
+                source:             "/res/QGCLogoWhite"
                 logo:               true
                 onClicked:          toolBar.showSettingsView()
                 visible:            !QGroundControl.corePlugin.options.combineSettingsAndSetup

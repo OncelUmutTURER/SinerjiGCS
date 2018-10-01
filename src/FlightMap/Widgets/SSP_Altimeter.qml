@@ -1,6 +1,6 @@
 import QtQuick 2.3
 import QtGraphicalEffects 1.0
-//import Qt.labs.calendar 1.0
+import Qt.labs.calendar 1.0
 
 Item {
     id: root

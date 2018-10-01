@@ -230,8 +230,6 @@ MainWindow::MainWindow()
     }
 #endif
 
-    connect(_ui.actionLogout,  &QAction::triggered, this, &MainWindow::_showLoginScreen);
-
     connect(_ui.actionStatusBar,  &QAction::triggered, this, &MainWindow::showStatusBarCallback);
 
     connect(&windowNameUpdateTimer, &QTimer::timeout, this, &MainWindow::configureWindowName);
@@ -547,13 +545,4 @@ void MainWindow::_showAdvancedUIChanged(bool advanced)
     } else {
         menuBar()->clear();
     }
-}
-
-void MainWindow::_showLoginScreen()
-{
-    _loginui = new SinerjiGCSLoginWindow(this);
-    _loginui->setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    //_loginui->move(pos() + (QGuiApplication::primaryScreen()->geometry().center() - geometry().center()));
-    //_loginui->move(pos() + (QApplication::desktop()->availableGeometry().center() - geometry().center()));
-    _loginui->show();
 }

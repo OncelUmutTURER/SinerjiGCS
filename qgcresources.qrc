@@ -179,7 +179,6 @@
         <file alias="AlertAircraft.svg">src/FlightMap/Images/AlertAircraft.svg</file>
         <file alias="AwarenessAircraft.svg">src/FlightMap/Images/AwarenessAircraft.svg</file>
         <file alias="check.svg">resources/check.svg</file>
-        <file alias="APM/SinerjiBrandImage">src/FirmwarePlugin/APM/SinerjiBrandImage.png</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="action.svg">resources/action.svg</file>
@@ -223,10 +222,6 @@
         <file alias="XDeleteBlack.svg">resources/XDeleteBlack.svg</file>
         <file alias="waypoint.svg">resources/waypoint.svg</file>
         <file>resources/icons/qgroundcontrol.ico</file>
-        <file>resources/icons/SS_Logo.ico</file>
-        <file alias="SinerjiGCSLogoFull">resources/SinerjiGCSLogoFull.png</file>
-        <file alias="SinerjiGCS_SplashScreen">resources/SinerjiGCS_SplashScreen.png</file>
-        <file alias="SinerjiGCS_LoginBG">resources/SinerjiGCS_LoginBG.png</file>
     </qresource>
     <qresource prefix="/res/firmware">
         <file alias="px4.png">resources/firmware/px4.png</file>
