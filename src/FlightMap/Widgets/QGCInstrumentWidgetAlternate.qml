@@ -52,6 +52,7 @@ Rectangle {
         size: parent.width  //_innerRadius * 4
         vehicle: _activeVehicle
     }
+
     SSP_Attitude {
         id: attitude
         //anchors.leftMargin: _spacing  //anchors.topMargin: _spacing
