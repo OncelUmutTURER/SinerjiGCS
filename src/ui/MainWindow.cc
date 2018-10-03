@@ -53,11 +53,15 @@
 
 #ifndef NO_SERIAL_LINK
 #include "SerialLink.h"
+#include "logindialog.h"
 #endif
 
 #ifdef UNITTEST_BUILD
 #include "QmlControls/QmlTestWidget.h"
 #endif
+
+#include <QSplashScreen>
+#include <unistd.h>
 
 /// The key under which the Main Window settings are saved
 const char* MAIN_SETTINGS_GROUP = "QGC_MAINWINDOW";
@@ -242,7 +246,41 @@ MainWindow::MainWindow()
 #ifdef __mobile__
         menuBar()->hide();
 #endif
-        show();
+
+        // Umut
+        // Show splash screen for 5 second
+        QSplashScreen *splash = new QSplashScreen;
+        splash->setPixmap(QPixmap(":/res/SinerjiGCS_SplashScreen").scaled(QSize(640,480),Qt::KeepAspectRatio));
+        splash->show();
+        sleep(5);
+
+//        LoginDialog *login = new LoginDialog(this);
+//        login->setModal(true);
+//        login->setWindowModality(Qt::ApplicationModal);
+
+        LoginDialog login;
+
+        // Umut
+        // Bu satır olmazsa mainWindow ile splash screen aynı anda ekranda oluyor.
+        // Bu satır main window açıldığında splash screen'in kapanmasını sağlıyor.
+        splash->finish(&login);
+
+        int loginResult = login.exec();
+
+//        show();
+        if (loginResult == QDialog::Accepted) {
+            show();
+        }
+        else if (loginResult == QDialog::Rejected)
+        {
+//            qgcApp()->exit();
+//            qgcApp()->quit();
+
+//            QGCApplication::quit();
+//            QCoreApplication::quit();
+
+            qgcApp()->_shutdown();
+        }
     }
 
 #ifndef __mobile__
@@ -544,5 +582,40 @@ void MainWindow::_showAdvancedUIChanged(bool advanced)
         menuBar()->addMenu(_ui.menuWidgets);
     } else {
         menuBar()->clear();
+    }
+}
+
+void MainWindow::on_actionLogout_triggered()
+{
+//        LoginDialog login;
+    LoginDialog *login = new LoginDialog(this);
+//        login->setModal(true);
+//        login->setWindowModality(Qt::ApplicationModal);
+
+    qApp->property("loggedInUser") = "";
+
+    QList<QMenu*> menus = MainWindow::instance()->menuBar()->findChildren<QMenu*>();
+    foreach(QMenu* m,menus)
+    {
+        if(m->objectName()=="menuPilot")
+        {
+            m->setTitle("Pilot");
+            break;
+        }
+    }
+
+    int loginResult = login->exec();
+
+    if (loginResult == QDialog::Accepted) {
+    }
+    else if (loginResult == QDialog::Rejected)
+    {
+//            qgcApp()->exit();
+//            qgcApp()->quit();
+
+//            QGCApplication::quit();
+//            QCoreApplication::quit();
+
+        qgcApp()->_shutdown();  // exits application
     }
 }

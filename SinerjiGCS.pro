@@ -379,6 +379,7 @@ INCLUDEPATH += \
 FORMS += \
     src/ui/MainWindow.ui \
     src/QGCQmlWidgetHolder.ui \
+    src/ui/logindialog.ui
 
 !MobileBuild {
 FORMS += \
@@ -405,14 +406,16 @@ HEADERS += \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
-    src/comm/MavlinkMessagesTimer.h
+    src/comm/MavlinkMessagesTimer.h \
+    src/ui/logindialog.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
-    src/comm/MavlinkMessagesTimer.cc
+    src/comm/MavlinkMessagesTimer.cc \
+    src/ui/logindialog.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)

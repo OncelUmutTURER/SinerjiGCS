@@ -24,7 +24,7 @@
 #include <QStyleFactory>
 #include <QAction>
 #include <QStringListModel>
-#include <QSplashScreen>
+#include <logindialog.h>
 
 #ifdef QGC_ENABLE_BLUETOOTH
 #include <QBluetoothLocalDevice>
@@ -431,22 +431,14 @@ bool QGCApplication::_initForNormalAppBoot(void)
     // Exit main application when last window is closed
     connect(this, &QGCApplication::lastWindowClosed, this, QGCApplication::quit);
 
-    // Show splash screen for 5 second
-    QSplashScreen *splash = new QSplashScreen;
-    splash->setPixmap(QPixmap(":/res/SinerjiGCS_SplashScreen").scaled(QSize(640,480),Qt::KeepAspectRatio));
-    splash->show();
-    sleep(5);
-
-
-
 #ifdef __mobile__
     _qmlAppEngine = toolbox()->corePlugin()->createRootWindow(this);
 #else
+
     // Start the user interface
     MainWindow* mainWindow = MainWindow::_create();
     Q_CHECK_PTR(mainWindow);
 
-    splash->finish(mainWindow);
 #endif
 
     // Now that main window is up check for lost log files

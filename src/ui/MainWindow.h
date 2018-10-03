@@ -164,6 +164,8 @@ private slots:
     void _showQmlTestWidget(void);
 #endif
 
+    void on_actionLogout_triggered();
+
 private:
     /// Constructor is private since all creation should be through MainWindow::_create
     MainWindow();
