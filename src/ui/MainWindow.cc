@@ -61,7 +61,8 @@
 #endif
 
 #include <QSplashScreen>
-#include <unistd.h>
+//#include <unistd.h>
+#include <QThread>
 
 /// The key under which the Main Window settings are saved
 const char* MAIN_SETTINGS_GROUP = "QGC_MAINWINDOW";
@@ -252,7 +253,7 @@ MainWindow::MainWindow()
         QSplashScreen *splash = new QSplashScreen;
         splash->setPixmap(QPixmap(":/res/SinerjiGCS_SplashScreen").scaled(QSize(640,480),Qt::KeepAspectRatio));
         splash->show();
-        sleep(5);
+        Sleep(5000);
 
 //        LoginDialog *login = new LoginDialog(this);
 //        login->setModal(true);
