@@ -41,7 +41,7 @@ Item {
     Rectangle {
         anchors.fill:   parent
         visible:        logo
-        color:          qgcPal.brandingPurple
+        color:          qgcPal.brandingOrange   //qgcPal.brandingPurple
     }
 
     QGCColoredImage {

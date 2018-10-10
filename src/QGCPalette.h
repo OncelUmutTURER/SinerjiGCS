@@ -95,6 +95,7 @@ public:
     DEFINE_QGC_COLOR(mapWidgetBorderDark,   setMapWidgetBorderDark)
     DEFINE_QGC_COLOR(brandingPurple,        setBrandingPurple)
     DEFINE_QGC_COLOR(brandingBlue,          setBrandingBlue)
+    DEFINE_QGC_COLOR(brandingOrange,        setBrandingOrange)
     DEFINE_QGC_COLOR(colorGreen,            setColorGreen)
     DEFINE_QGC_COLOR(colorOrange,           setColorOrange)
     DEFINE_QGC_COLOR(colorRed,              setColorRed)

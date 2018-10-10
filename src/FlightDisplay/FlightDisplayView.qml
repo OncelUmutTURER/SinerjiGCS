@@ -636,7 +636,7 @@ QGCView {
         GuidedActionConfirm {
             id:                         guidedActionConfirm
             anchors.margins:            _margins
-            anchors.bottom:             parent.bottom
+            anchors.top:                parent.top                  //anchors.bottom:             parent.bottom
             anchors.horizontalCenter:   parent.horizontalCenter
             guidedController:           _guidedController
             altitudeSlider:             _altitudeSlider
@@ -645,7 +645,7 @@ QGCView {
         GuidedActionList {
             id:                         guidedActionList
             anchors.margins:            _margins
-            anchors.bottom:             parent.bottom
+            anchors.top:                parent.top                   //anchors.bottom:             parent.bottom
             anchors.horizontalCenter:   parent.horizontalCenter
             guidedController:           _guidedController
         }

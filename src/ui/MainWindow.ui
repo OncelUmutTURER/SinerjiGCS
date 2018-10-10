@@ -54,6 +54,23 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QMenuBar {
+     background-color: rgb(238,204,68)
+ }
+
+ QMenuBar::item {
+     background: transparent;
+ }
+
+ QMenuBar::item:selected {
+     background: #a8a8a8;
+ }
+
+ QMenuBar::item:pressed {
+     background: #888888;
+ }</string>
+   </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
@@ -64,6 +81,15 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuWidgets">
+    <property name="styleSheet">
+     <string notr="true">QMenuBar {
+     background-color: rgb(238,204,68);
+ }
+
+ QMenuBar::item {
+     background: transparent;
+ }</string>
+    </property>
     <property name="title">
      <string>Widgets</string>
     </property>

@@ -67,7 +67,8 @@ Item {
             }
 
             Component.onCompleted: {
-                var pos = mapFromItem(toolBar, centerX - (width / 2), toolBar.height)
+                //var pos = mapFromItem(toolBar, centerX - (width / 2), toolBar.height)
+                var pos = mapFromItem(toolBar, centerX - (width / 2), -1*(toolBar.height / 2 + height))
                 x = pos.x
                 y = pos.y + ScreenTools.defaultFontPixelHeight
             }
