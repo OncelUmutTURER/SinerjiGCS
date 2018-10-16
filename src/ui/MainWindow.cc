@@ -253,7 +253,7 @@ MainWindow::MainWindow()
         QSplashScreen *splash = new QSplashScreen;
         splash->setPixmap(QPixmap(":/res/SinerjiGCS_SplashScreen").scaled(QSize(640,480),Qt::KeepAspectRatio));
         splash->show();
-        Sleep(5000);
+        QThread::sleep(3);
 
 //        LoginDialog *login = new LoginDialog(this);
 //        login->setModal(true);
