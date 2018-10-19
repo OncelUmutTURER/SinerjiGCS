@@ -46,6 +46,7 @@ public:
 
         StatkartTopo            = 100,
         EniroTopo               = 110,
+        SinerjiCustomTopo       = 120,
 
         BingMap                 = 444,
         BingSatellite           = 555,
@@ -80,6 +81,8 @@ public:
         EsriTerrain             = 7002,
 
         AirmapElevation         = 8001
+
+        //, SinerjiCustomTopo     = 100001
     };
 
     UrlFactory      ();
