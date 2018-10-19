@@ -98,6 +98,9 @@ UrlFactory::getImageFormat(MapType type, const QByteArray& image)
                 case EniroTopo:
                     format = "png";
                     break;
+                case SinerjiCustomTopo:         //umut
+                    format = "png";
+                    break;
                 /*
                 case MapQuestMap:
                 case MapQuestSat:
@@ -173,6 +176,11 @@ UrlFactory::getTileURL(MapType type, int x, int y, int zoom, QNetworkAccessManag
         case EniroTopo:
             request.setRawHeader("Referrer", "https://www.eniro.se/");
             break;
+/*
+        case SinerjiCustomTopo:       //umut
+            request.setRawHeader("Referrer", "https://www.norgeskart.no/");     //StatkartTopo      //https://openmaptiles.org/
+            break;
+*/
         /*
         case OpenStreetMapSurfer:
         case OpenStreetMapSurferTerrain:
@@ -284,6 +292,13 @@ UrlFactory::_getURL(MapType type, int x, int y, int zoom, QNetworkAccessManager*
     	return QString("http://map.eniro.com/geowebcache/service/tms1.0.0/map/%1/%2/%3.png").arg(zoom).arg(x).arg((1<<zoom)-1-y);
     }
     break;
+
+    case SinerjiCustomTopo:     //umut
+    {
+        return QString("http://localhost:4000/1_25_sample/%1/%2/%3").arg(zoom).arg(x).arg(y);
+    }
+    break;
+
     /*
     case OpenStreetMap:
     {
@@ -469,6 +484,7 @@ UrlFactory::_getURL(MapType type, int x, int y, int zoom, QNetworkAccessManager*
         }
     }
         break;
+
     default:
         qWarning("Unknown map id %d\n", type);
         break;
@@ -649,6 +665,7 @@ UrlFactory::averageSizeForType(MapType type)
     case MapboxHybrid:
     case MapboxPirates:
     case MapboxWheatPaste:
+    //case SinerjiCustomTopo:           //umut
     default:
         break;
     }

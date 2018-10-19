@@ -27,7 +27,8 @@ public:
         mapProviderMapbox,
         mapProviderEsri,
         mapProviderEniro,
-        mapProviderVWorld
+        mapProviderVWorld,
+        mapProviderSinerjiCustom     //umut
     } MapProvider_t;
 
     // This enum must match the json meta data

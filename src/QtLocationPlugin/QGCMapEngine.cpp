@@ -57,6 +57,8 @@ stQGeoTileCacheQGCMapTypes kMapTypes[] = {
     {"Statkart Terrain Map",    UrlFactory::StatkartTopo},
     {"ENIRO Terrain Map",       UrlFactory::EniroTopo},
 
+    {"SinerjiCustom Terrain Map",      UrlFactory::SinerjiCustomTopo},       //umut
+
     {"VWorld Satellite Map",     UrlFactory::VWorldSatellite},
     {"VWorld Street Map",        UrlFactory::VWorldStreet}
 
@@ -507,7 +509,8 @@ QGCMapEngine::concurrentDownloads(UrlFactory::MapType type)
     case UrlFactory::BingSatellite:
     case UrlFactory::BingHybrid:
     case UrlFactory::StatkartTopo:
-    case UrlFactory::EniroTopo:
+    case UrlFactory::EniroTopo:        
+    case UrlFactory::SinerjiCustomTopo: //umut
     case UrlFactory::EsriWorldStreet:
     case UrlFactory::EsriWorldSatellite:
     case UrlFactory::EsriTerrain:

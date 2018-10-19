@@ -115,6 +115,11 @@ void FlightMapSettings::_newMapProvider(QVariant value)
         _removeEnumValue(mapTypeStreet, enumStrings, enumValues);
         _removeEnumValue(mapTypeSatellite, enumStrings, enumValues);
         _removeEnumValue(mapTypeHybrid, enumStrings, enumValues);
+        break;        
+    case mapProviderSinerjiCustom:           //umut
+        _removeEnumValue(mapTypeSatellite, enumStrings, enumValues);
+        _removeEnumValue(mapTypeHybrid, enumStrings, enumValues);
+        _removeEnumValue(mapTypeStreet, enumStrings, enumValues);   //_removeEnumValue(mapTypeTerrain, enumStrings, enumValues);
         break;
     case mapProviderEsri:
         _removeEnumValue(mapTypeHybrid, enumStrings, enumValues);
@@ -122,6 +127,7 @@ void FlightMapSettings::_newMapProvider(QVariant value)
     case mapProviderVWorld:
         _removeEnumValue(mapTypeHybrid, enumStrings, enumValues);
         _removeEnumValue(mapTypeTerrain, enumStrings, enumValues);
+        break;
     }
     metaData->setEnumInfo(enumStrings, enumValues);
     emit mapTypeChanged();
