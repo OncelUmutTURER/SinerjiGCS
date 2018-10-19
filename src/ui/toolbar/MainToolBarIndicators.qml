@@ -75,6 +75,20 @@ Item {
         spacing:        ScreenTools.defaultFontPixelWidth * 1.5
         visible:        _activeVehicle && !_communicationLost
 
+        /*
+          toolBarIndicators:
+
+            MessageIndicator.qml
+            GPSIndicator.qml
+            TelemetryRSSIIndicator.qml
+            RCRSSIIndicator.qml
+            BatteryIndicator.qml
+            ModeIndicator.qml
+            VTOLModeIndicator.qml
+            ArmedIndicator.qml
+            GPSRTKIndicator.qml
+            LinkIndicator.qml
+        */
         Repeater {
             model:      _activeVehicle ? _activeVehicle.toolBarIndicators : []
             Loader {

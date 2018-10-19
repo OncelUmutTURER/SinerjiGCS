@@ -103,7 +103,7 @@ Item {
                 anchors.margins:    _margin
                 anchors.top:        parent.top
                 anchors.left:       parent.left
-                anchors.right:      parent.left
+                anchors.right:      parent.right     //anchors.right:      parent.left
                 spacing:            _margin
 
                 RowLayout {

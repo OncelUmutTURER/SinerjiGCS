@@ -54,6 +54,23 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QMenuBar {
+     background-color: rgb(238,204,68)
+ }
+
+ QMenuBar::item {
+     background: transparent;
+ }
+
+ QMenuBar::item:selected {
+     background: #a8a8a8;
+ }
+
+ QMenuBar::item:pressed {
+     background: #888888;
+ }</string>
+   </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
@@ -64,6 +81,15 @@
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuWidgets">
+    <property name="styleSheet">
+     <string notr="true">QMenuBar {
+     background-color: rgb(238,204,68);
+ }
+
+ QMenuBar::item {
+     background: transparent;
+ }</string>
+    </property>
     <property name="title">
      <string>Widgets</string>
     </property>
@@ -78,11 +104,33 @@
     <property name="title">
      <string>About</string>
     </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="actionEnglish"/>
+     <addaction name="actionTurkce"/>
+    </widget>
+    <addaction name="actionSinerji_GCS"/>
+    <addaction name="actionSinerjiPilot"/>
+    <addaction name="menuLanguage"/>
+   </widget>
+   <widget class="QMenu" name="menuImport_Export">
+    <property name="title">
+     <string>Import/Export</string>
+    </property>
+    <addaction name="actionImport_Export_Flight_Data"/>
+    <addaction name="actionImport_GeoData"/>
+    <addaction name="actionImport_Flight_Video"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWidgets"/>
    <addaction name="menuPilot"/>
    <addaction name="menuAbout"/>
+   <addaction name="menuImport_Export"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -117,6 +165,56 @@
   <action name="actionLogout">
    <property name="text">
     <string>Logout</string>
+   </property>
+  </action>
+  <action name="actionSinerji_GCS">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>SinerjiGCS</string>
+   </property>
+  </action>
+  <action name="actionSinerjiPilot">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>SinerjiPilot</string>
+   </property>
+  </action>
+  <action name="actionImport_Export_Flight_Data">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Import/Export Flight Data</string>
+   </property>
+  </action>
+  <action name="actionImport_GeoData">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Import GeoData</string>
+   </property>
+  </action>
+  <action name="actionImport_Flight_Video">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Import Flight Video</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="actionTurkce">
+   <property name="text">
+    <string>Türkçe</string>
    </property>
   </action>
  </widget>

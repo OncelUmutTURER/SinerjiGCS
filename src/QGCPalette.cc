@@ -47,15 +47,15 @@ QGCPalette::~QGCPalette()
 void QGCPalette::_buildMap(void)
 {
     //                                      Light                 Dark
-    //                                      Disabled   Enabled    Disabled   Enabled
-    DECLARE_QGC_COLOR(window,               "#ffffff", "#ffffff", "#222222", "#222222")
+    //                                      Disabled   Enabled    Disabled   Enabled        //original values
+    DECLARE_QGC_COLOR(window,               "#ffffff", "#eecc44", "#222222", "#222222")     //"#ffffff", "#ffffff", "#222222", "#222222"
     DECLARE_QGC_COLOR(windowShade,          "#d9d9d9", "#d9d9d9", "#333333", "#333333")
     DECLARE_QGC_COLOR(windowShadeDark,      "#bdbdbd", "#bdbdbd", "#282828", "#282828")
     DECLARE_QGC_COLOR(text,                 "#9d9d9d", "#000000", "#707070", "#ffffff")
     DECLARE_QGC_COLOR(warningText,          "#cc0808", "#cc0808", "#f85761", "#f85761")
-    DECLARE_QGC_COLOR(button,               "#ffffff", "#ffffff", "#707070", "#626270")
-    DECLARE_QGC_COLOR(buttonText,           "#9d9d9d", "#000000", "#202020", "#ffffff")
-    DECLARE_QGC_COLOR(buttonHighlight,      "#e4e4e4", "#946120", "#3a3a3a", "#fff291")
+    DECLARE_QGC_COLOR(button,               "#eecc44", "#ffffff", "#707070", "#626270")     //"#ffffff", "#ffffff", "#707070", "#626270"
+    DECLARE_QGC_COLOR(buttonText,           "#888a85", "#555753", "#202020", "#ffffff")     //"#9d9d9d", "#000000", "#202020", "#ffffff"
+    DECLARE_QGC_COLOR(buttonHighlight,      "#fcaf3e", "#f57900", "#3a3a3a", "#fff291")     //"#e4e4e4", "#946120", "#3a3a3a", "#fff291"
     DECLARE_QGC_COLOR(buttonHighlightText,  "#2c2c2c", "#ffffff", "#2c2c2c", "#000000")
     DECLARE_QGC_COLOR(primaryButton,        "#585858", "#8cb3be", "#585858", "#8cb3be")
     DECLARE_QGC_COLOR(primaryButtonText,    "#2c2c2c", "#000000", "#2c2c2c", "#000000")
@@ -80,6 +80,7 @@ void QGCPalette::_buildMap(void)
     DECLARE_QGC_COLOR(mapWidgetBorderDark,  "#000000", "#000000", "#000000", "#000000")
     DECLARE_QGC_COLOR(brandingPurple,       "#4A2C6D", "#4A2C6D", "#4A2C6D", "#4A2C6D")
     DECLARE_QGC_COLOR(brandingBlue,         "#48D6FF", "#6045c5", "#48D6FF", "#6045c5")
+    DECLARE_QGC_COLOR(brandingOrange,       "#f29301", "#f29301", "#f29301", "#f29301")
 }
 
 void QGCPalette::setColorGroupEnabled(bool enabled)

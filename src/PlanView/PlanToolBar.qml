@@ -17,7 +17,7 @@ Rectangle {
     anchors.right:      parent.right
     anchors.top:        parent.top
     z:                  toolBar.z + 1
-    color:              qgcPal.globalTheme === QGCPalette.Light ? Qt.rgba(1,1,1,0.8) : Qt.rgba(0,0,0,0.75)
+    color:              qgcPal.window   //qgcPal.globalTheme === QGCPalette.Light ? Qt.rgba(1,1,1,0.8) : Qt.rgba(0,0,0,0.75)
     visible:            false
     anchors.bottomMargin: 1
 

@@ -274,7 +274,7 @@ Item {
         visible:            !QGroundControl.videoManager.fullScreen
         anchors.left:       parent.left
         anchors.right:      parent.right
-        anchors.top:        parent.top
+        anchors.bottom:     parent.bottom    //umut: toolbar'ı aşağıya alıyor
         opacity:            planToolBar.visible ? 0 : 1
         z:                  QGroundControl.zOrderTopMost
 
@@ -308,7 +308,8 @@ Item {
         height:             ScreenTools.toolbarHeight
         anchors.left:       parent.left
         anchors.right:      parent.right
-        anchors.top:        parent.top
+        anchors.bottom:     parent.bottom      //anchors.top:        parent.top
+        anchors.top:        toolBar.top        //umut: ekledim
         z:                  toolBar.z + 1
 
         onShowFlyView: {
@@ -321,8 +322,8 @@ Item {
         id:                 settingsViewLoader
         anchors.left:       parent.left
         anchors.right:      parent.right
-        anchors.top:        toolBar.bottom
-        anchors.bottom:     parent.bottom
+        anchors.bottom:     toolBar.top  //anchors.top:      toolBar.bottom
+        anchors.top:        parent.top   //anchors.bottom:   parent.bottom
         visible:            false
 /*
         onVisibleChanged: {
@@ -337,8 +338,8 @@ Item {
         id:                 setupViewLoader
         anchors.left:       parent.left
         anchors.right:      parent.right
-        anchors.top:        toolBar.bottom
-        anchors.bottom:     parent.bottom
+        anchors.bottom:     toolBar.top  //anchors.top:      toolBar.bottom
+        anchors.top:        parent.top   //anchors.bottom:   parent.bottom
         visible:            false
 
         property var planToolBar: planToolBar
@@ -346,7 +347,13 @@ Item {
 
     Loader {
         id:                 planViewLoader
-        anchors.fill:       parent
+        //anchors.fill:       parent
+
+        anchors.left:       parent.left     //umut: ekledim
+        anchors.right:      parent.right    //umut: ekledim
+        anchors.bottom:     toolBar.top     //umut: ekledim
+        anchors.top:        parent.top      //umut: ekledim
+
         visible:            false
 
         property var toolbar: planToolBar
@@ -354,7 +361,13 @@ Item {
 
     FlightDisplayView {
         id:                 flightView
-        anchors.fill:       parent
+        //anchors.fill:       parent
+
+        anchors.left:       parent.left     //umut: ekledim
+        anchors.right:      parent.right    //umut: ekledim
+        anchors.bottom:     toolBar.top     //umut: ekledim
+        anchors.top:        parent.top      //umut: ekledim
+
         visible:            true
         //-------------------------------------------------------------------------
         //-- Loader helper for any child, no matter how deep can display an element
@@ -369,8 +382,8 @@ Item {
         id:                 analyzeViewLoader
         anchors.left:       parent.left
         anchors.right:      parent.right
-        anchors.top:        toolBar.bottom
-        anchors.bottom:     parent.bottom
+        anchors.bottom:     toolBar.top  //anchors.top:      toolBar.bottom
+        anchors.top:        parent.top   //anchors.bottom:   parent.bottom
         visible:            false
     }
 
