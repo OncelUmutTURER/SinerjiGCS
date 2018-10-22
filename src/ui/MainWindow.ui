@@ -123,8 +123,8 @@
      <string>Import/Export</string>
     </property>
     <addaction name="actionImport_Export_Flight_Data"/>
+    <addaction name="actionImport_Export_Flight_Video"/>
     <addaction name="actionImport_GeoData"/>
-    <addaction name="actionImport_Flight_Video"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWidgets"/>
@@ -199,12 +199,12 @@
     <string>Import GeoData</string>
    </property>
   </action>
-  <action name="actionImport_Flight_Video">
+  <action name="actionImport_Export_Flight_Video">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Import Flight Video</string>
+    <string>Import Export Flight Video</string>
    </property>
   </action>
   <action name="actionEnglish">
