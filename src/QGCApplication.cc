@@ -24,7 +24,6 @@
 #include <QStyleFactory>
 #include <QAction>
 #include <QStringListModel>
-#include <logindialog.h>
 
 #ifdef QGC_ENABLE_BLUETOOTH
 #include <QBluetoothLocalDevice>
