@@ -26,6 +26,7 @@
 #include <QDockWidget>
 #include <QMenuBar>
 #include <QDialog>
+#include <ImportExportDialog.h>
 
 #include "QGC.h"
 #include "MAVLinkProtocol.h"
@@ -588,11 +589,6 @@ void MainWindow::_showAdvancedUIChanged(bool advanced)
 
 void MainWindow::on_actionLogout_triggered()
 {
-//        LoginDialog login;
-    LoginDialog *login = new LoginDialog(this);
-//        login->setModal(true);
-//        login->setWindowModality(Qt::ApplicationModal);
-
     qApp->property("loggedInUser") = "";
 
     QList<QMenu*> menus = MainWindow::instance()->menuBar()->findChildren<QMenu*>();
@@ -605,7 +601,15 @@ void MainWindow::on_actionLogout_triggered()
         }
     }
 
-    int loginResult = login->exec();
+//        LoginDialog *login = new LoginDialog(this);
+//        login->setModal(true);
+//        login->setWindowModality(Qt::ApplicationModal);
+//        int loginResult = login->exec();
+
+    LoginDialog login;
+    login.setModal(true);
+    login.setWindowModality(Qt::ApplicationModal);
+    int loginResult = login.exec();
 
     if (loginResult == QDialog::Accepted) {
     }
@@ -619,4 +623,40 @@ void MainWindow::on_actionLogout_triggered()
 
         qgcApp()->_shutdown();  // exits application
     }
+}
+
+void MainWindow::on_actionImport_Export_Flight_Data_triggered()
+{
+    ImportExportDialog ieDialog;
+    ieDialog.setModal(true);
+
+    QTabWidget* tabWidget = ieDialog.findChild<QTabWidget*>("tabWidget", Qt::FindDirectChildrenOnly);
+    //tabWidget->setCurrentWidget(tabWidget->findChild<QWidget*>("Tab_FlightLogs", Qt::FindDirectChildrenOnly));
+    tabWidget->setCurrentIndex(0);
+
+    ieDialog.exec();
+}
+
+void MainWindow::on_actionImport_Export_Flight_Video_triggered()
+{
+    ImportExportDialog ieDialog;
+    ieDialog.setModal(true);
+
+    QTabWidget* tabWidget = ieDialog.findChild<QTabWidget*>(QString("tabWidget"), Qt::FindDirectChildrenOnly);
+    //tabWidget->setCurrentWidget(tabWidget->findChild<QWidget*>(QString("Tab_VideoRecordings"), Qt::FindDirectChildrenOnly));
+    tabWidget->setCurrentIndex(1);
+
+    ieDialog.exec();
+}
+
+void MainWindow::on_actionImport_GeoData_triggered()
+{
+    ImportExportDialog ieDialog;
+    ieDialog.setModal(true);
+
+    QTabWidget* tabWidget = ieDialog.findChild<QTabWidget*>(QString("tabWidget"), Qt::FindDirectChildrenOnly);
+    //tabWidget->setCurrentWidget(tabWidget->findChild<QWidget*>(QString("Tab_VideoRecordings"), Qt::FindDirectChildrenOnly));
+    tabWidget->setCurrentIndex(2);
+
+    ieDialog.exec();
 }

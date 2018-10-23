@@ -8,24 +8,12 @@ LoginDialog::LoginDialog(QWidget *parent) :
     ui(new Ui::LoginDialog)
 {
     ui->setupUi(this);
-    //ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Login");
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible(false); //ButtonBox'ı no-button olacak şekilde ayarladığımızda uygulama patlıyor. Bu nedenle var olan tek button'u hide() ediyoruz.
 }
 
 LoginDialog::~LoginDialog()
 {
     delete ui;
 }
-
-/*
-void LoginDialog::on_buttonBox_clicked(QAbstractButton *button)
-{
-    if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Ok) ){
-        if(ui->txtUserName->text() == "Umut" && ui->txtPassword->text() == "1234")
-            this->done(QDialog::Accepted);
-    }
-}
-*/
 
 void LoginDialog::on_btnLogin_clicked()
 {

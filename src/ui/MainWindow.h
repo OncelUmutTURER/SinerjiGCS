@@ -166,6 +166,12 @@ private slots:
 
     void on_actionLogout_triggered();
 
+    void on_actionImport_Export_Flight_Data_triggered();
+
+    void on_actionImport_Export_Flight_Video_triggered();
+
+    void on_actionImport_GeoData_triggered();
+
 private:
     /// Constructor is private since all creation should be through MainWindow::_create
     MainWindow();
