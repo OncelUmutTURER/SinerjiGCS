@@ -13,3 +13,5 @@ The [GPL v3 License](http://www.gnu.org/licenses/gpl-3.0.en.html) is a strong co
 ## Contact
 
 If you have questions regarding the licensing, please contact the maintainer Lorenz Meier, [lm@groundcontrol.org].
+
+
