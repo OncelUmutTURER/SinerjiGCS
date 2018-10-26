@@ -102,12 +102,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
 int main(int argc, char *argv[])
 {
-    // Umut
-    // Login olmuş kullanıcının adını diğer yerlerden erişebilmek adına global parametrede saklıyoruz
-    QString loggedInUser("");
-    QApplication qapp(argc, argv);
-    qapp.setProperty("loggedInUser", loggedInUser);
-
 #ifndef __mobile__
     RunGuard guard("QGroundControlRunGuardKey");
     if (!guard.tryToRun()) {
@@ -229,6 +223,12 @@ int main(int argc, char *argv[])
     app->_initCommon();
     //-- Initialize Cache System
     getQGCMapEngine()->init();
+
+    // Umut
+    // Login olmuş kullanıcının adını diğer yerlerden erişebilmek adına global parametrede saklıyoruz
+    QString loggedInUser("");
+//    QApplication qapp(argc, argv);
+    app->setProperty("loggedInUser", loggedInUser);
 
     int exitCode = 0;
 
