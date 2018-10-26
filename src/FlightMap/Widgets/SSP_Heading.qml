@@ -17,6 +17,7 @@ Item {
         width: size
         height: size
         source: "/FlightInstrumentImages/indicator_background_screws.svg"
+        visible: showScrews
     }
 
     Item {
@@ -28,6 +29,7 @@ Item {
             width: size
             height: size
             source: "/FlightInstrumentImages/heading_background.svg"
+            visible: showScrews
         }
 
         Image {
@@ -41,7 +43,7 @@ Item {
             transform: Rotation {
                 origin.x:       heading_yaw.width  / 2
                 origin.y:       heading_yaw.height / 2
-                angle:          _heading
+                angle:          -_heading
             }
 
         }
