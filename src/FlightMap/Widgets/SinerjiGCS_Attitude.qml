@@ -21,6 +21,7 @@ Item {
         width: size
         height: size
         source: "/FlightInstrumentImages/indicator_background_screws.svg"
+        visible: showScrews
     }
 
     Item {

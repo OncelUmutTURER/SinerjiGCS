@@ -24,6 +24,7 @@ Item {
         width: size
         height: size
         source: "/FlightInstrumentImages/indicator_background_screws.svg"
+        visible: showScrews
     }
     Image {
         id: altimeter_pressure_inhg
