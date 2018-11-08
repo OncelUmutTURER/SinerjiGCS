@@ -410,7 +410,9 @@ HEADERS += \
     src/comm/MavlinkMessagesTimer.h \
     src/ui/logindialog.h \
     src/ImportExportDialog.h \
-    src/ProgressiveFileCopier.h
+    src/ProgressiveFileCopier.h \
+    src/Vehicle/carduino.h \
+    src/Vehicle/arduinocommunication.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
@@ -420,7 +422,9 @@ SOURCES += \
     src/comm/MavlinkMessagesTimer.cc \
     src/ui/logindialog.cpp \
     src/ImportExportDialog.cpp \
-    src/ProgressiveFileCopier.cpp
+    src/ProgressiveFileCopier.cpp \
+    src/Vehicle/carduino.cpp \
+    src/Vehicle/arduinocommunication.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)

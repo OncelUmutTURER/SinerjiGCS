@@ -193,7 +193,6 @@ void QGCMAVLinkInspector::refreshView()
         float msgHz = 0.0f;
         QMap<int, QMap<int, float>* >::const_iterator iteHz = uasMessageHz.find(msg->sysid);
         QMap<int, float>* uasMsgHz = iteHz.value();
-
         while((iteHz != uasMessageHz.end()) && (iteHz.key() == msg->sysid))
         {
             if(iteHz.value()->contains(msg->msgid))
