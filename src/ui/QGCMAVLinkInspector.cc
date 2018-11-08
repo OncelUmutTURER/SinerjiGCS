@@ -10,7 +10,7 @@
 #include <QDebug>
 
 const float QGCMAVLinkInspector::updateHzLowpass = 0.2f;
-const unsigned int QGCMAVLinkInspector::updateInterval = 100000U;
+const unsigned int QGCMAVLinkInspector::updateInterval = 1000U;
 
 QGCMAVLinkInspector::QGCMAVLinkInspector(const QString& title, QAction* action, MAVLinkProtocol* protocol, QWidget *parent) :
     QGCDockWidget(title, action, parent),

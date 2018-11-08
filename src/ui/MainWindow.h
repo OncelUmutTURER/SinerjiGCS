@@ -40,7 +40,6 @@
 #include "QGCQmlWidgetHolder.h"
 
 #include "ui_MainWindow.h"
-#include "arduinocommunication.h"
 #if (defined QGC_MOUSE_ENABLED_WIN) | (defined QGC_MOUSE_ENABLED_LINUX)
     #include "Mouse6dofInput.h"
 #endif // QGC_MOUSE_ENABLED_WIN
