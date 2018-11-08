@@ -10,7 +10,7 @@
 #include <QDebug>
 
 const float QGCMAVLinkInspector::updateHzLowpass = 0.2f;
-const unsigned int QGCMAVLinkInspector::updateInterval = 1000U;
+const unsigned int QGCMAVLinkInspector::updateInterval = 100000U;
 
 QGCMAVLinkInspector::QGCMAVLinkInspector(const QString& title, QAction* action, MAVLinkProtocol* protocol, QWidget *parent) :
     QGCDockWidget(title, action, parent),
@@ -193,7 +193,6 @@ void QGCMAVLinkInspector::refreshView()
         float msgHz = 0.0f;
         QMap<int, QMap<int, float>* >::const_iterator iteHz = uasMessageHz.find(msg->sysid);
         QMap<int, float>* uasMsgHz = iteHz.value();
-
         while((iteHz != uasMessageHz.end()) && (iteHz.key() == msg->sysid))
         {
             if(iteHz.value()->contains(msg->msgid))

@@ -1,6 +1,10 @@
 #include "MainWindow.h"
 #include "logindialog.h"
 #include "ui_logindialog.h"
+#include "arduinocommunication.h"
+#include "carduino.h"
+#include <string>
+#include <iostream>
 #include <QPushButton>
 
 LoginDialog::LoginDialog(QWidget *parent) :
@@ -32,7 +36,45 @@ void LoginDialog::on_btnLogin_clicked()
                 break;
             }
         }
+        cArduino arduino2(ArduinoBaundRate::B9600bps);
+        ArduinoCommunication _arduinocommunication2(false,false,0,0,false);
 
+//        if(!arduino2.isOpen())
+//        {
+//            cerr<<"can't open arduino"<<endl;
+//        }
+
+        //cout<<"arduino open at "<<arduino2.getDeviceName()<<endl;
+
+        string userInput ="";
+        string arduinoOutput="";
+        _arduinocommunication2.SetValueApplicationStart(true);
+        userInput = _arduinocommunication2.GetValue();
+
+        //cout<<">>";
+
+        arduino2.write(userInput);
+
+        if(!arduino2.read(arduinoOutput))//read witch timeout!
+        {
+            cerr<<"TIMEOUT!"<<endl;
+        }
+        else
+        {
+            cout<<arduinoOutput<<endl;
+        }
+        arduino2.close();
+        //arduino2.open(ArduinoBaundRate::B9600bps);
+//        arduino2.write("S0AB12T35R5");
+//        if(!arduino2.read(arduinoOutput))//read witch timeout!
+//        {
+//            cerr<<"TIMEOUT!"<<endl;
+//        }
+//        else
+//        {
+//            cout<<arduinoOutput<<endl;
+//        }
+//        arduino2.close();
         accept(); //closes dialog window
     }
 }
