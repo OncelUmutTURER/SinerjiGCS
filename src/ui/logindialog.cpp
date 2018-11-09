@@ -37,7 +37,7 @@ void LoginDialog::on_btnLogin_clicked()
             }
         }
         cArduino arduino2(ArduinoBaundRate::B9600bps);
-        ArduinoCommunication _arduinocommunication2(false,false,0,0,false);
+        ArduinoCommunication _arduinocommunication2(false,false,false,false,false,"0",false,0);
 
 //        if(!arduino2.isOpen())
 //        {
@@ -45,7 +45,10 @@ void LoginDialog::on_btnLogin_clicked()
 //        }
 
         //cout<<"arduino open at "<<arduino2.getDeviceName()<<endl;
-
+        //arduino2.open(ArduinoBaundRate::B9600bps);
+        arduino2.write("Sistem");
+        arduino2.close();
+        arduino2.open(ArduinoBaundRate::B9600bps);
         string userInput ="";
         string arduinoOutput="";
         _arduinocommunication2.SetValueApplicationStart(true);
@@ -64,17 +67,7 @@ void LoginDialog::on_btnLogin_clicked()
             cout<<arduinoOutput<<endl;
         }
         arduino2.close();
-        //arduino2.open(ArduinoBaundRate::B9600bps);
-//        arduino2.write("S0AB12T35R5");
-//        if(!arduino2.read(arduinoOutput))//read witch timeout!
-//        {
-//            cerr<<"TIMEOUT!"<<endl;
-//        }
-//        else
-//        {
-//            cout<<arduinoOutput<<endl;
-//        }
-//        arduino2.close();
+
         accept(); //closes dialog window
     }
 }

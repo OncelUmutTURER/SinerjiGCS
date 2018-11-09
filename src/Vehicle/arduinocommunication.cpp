@@ -3,44 +3,70 @@
 
 using namespace std;
 
-ArduinoCommunication::ArduinoCommunication(bool a, bool b, int c, int d,bool e)
+ArduinoCommunication::ArduinoCommunication(bool a, bool b,bool c, bool d,bool e, string f,bool g, int h)
 {
-    SetValueApplicationStart(a);
-    SetValueArmed(b);
-    SetValueCustomMode(c);
-    SetValueBatteryStatus(d);
-    SetValueGPS3DFix(e,false);
+    SetValueIsRecord(a);
+    SetValueVideoSignal(b);
+    SetValueTelemetry(c);
+    SetValueArmed(d);
+    SetValueApplicationStart(e);
+    SetValueCustomMode(f);
+    SetValueGPS3DFix(g,false);
+    SetValueBatteryStatus(h);
+}
+void ArduinoCommunication::SetValueIsRecord(bool a)
+{
+    if(a)
+        IsRecord="H";
+    else
+        IsRecord="L";
+}
+void ArduinoCommunication::SetValueVideoSignal(bool b)
+{
+    if(b)
+        VideoSignal="H";
+    else
+        VideoSignal="L";
 }
 
-void ArduinoCommunication::SetValueApplicationStart(bool x)
+void ArduinoCommunication::SetValueTelemetry(bool c)
 {
-    if(x)
-        ApplicationStart="H";
+    if(c)
+        Telemetry="H";
     else
-        ApplicationStart="L";
+        Telemetry="L";
 }
-void ArduinoCommunication::SetValueArmed(bool y)
+void ArduinoCommunication::SetValueArmed(bool d)
 {
-    if(y)
+    if(d)
         Armed="H";
     else
         Armed="L";
 }
-void ArduinoCommunication::SetValueCustomMode(int z)
+void ArduinoCommunication::SetValueApplicationStart(bool e)
 {
-    CustomMode=z;
-}
-void ArduinoCommunication::SetValueBatteryStatus(int d)
-{
-    BatteryStatus=d;
-}
-void ArduinoCommunication::SetValueGPS3DFix(bool e,bool g)
-{
-    IsSendMessage=g;
     if(e)
+        ApplicationStart="H";
+    else
+        ApplicationStart="L";
+}
+
+void ArduinoCommunication::SetValueCustomMode(std::string f)
+{
+    CustomMode=f;
+}
+
+void ArduinoCommunication::SetValueGPS3DFix(bool g,bool h)
+{
+    IsSendMessage=h;
+    if(g)
         GPS3DFix="H";
     else
         GPS3DFix="L";
+}
+void ArduinoCommunication::SetValueBatteryStatus(int h)
+{
+    BatteryStatus=h;
 }
 void ArduinoCommunication::SetLastValue(string f)
 {
@@ -48,12 +74,22 @@ void ArduinoCommunication::SetLastValue(string f)
 }
 std::string ArduinoCommunication::GetValue()
 {
-    string s="S"+ApplicationStart+"AL"+Armed+"C"+std::to_string(CustomMode)+"DB"+std::to_string(BatteryStatus)+"GPF"+GPS3DFix;
+    string s="KY"+IsRecord+"VY"+VideoSignal+"TY"+Telemetry+"AL"+Armed+"S"+ApplicationStart+"C"+CustomMode+"GPF"+GPS3DFix+"DB"+std::to_string(BatteryStatus);
     return s;
 }
-std::string ArduinoCommunication::GetApplicationStart()
+std::string ArduinoCommunication::GetIsRecord()
 {
-    string s="S"+ApplicationStart;
+    string s="KY"+IsRecord;
+    return s;
+}
+std::string ArduinoCommunication::GetVideoSignal()
+{
+    string s="VY"+VideoSignal;
+    return s;
+}
+std::string ArduinoCommunication::GetTelemetry()
+{
+    string s="TY"+Telemetry;
     return s;
 }
 std::string ArduinoCommunication::GetArmed()
@@ -61,19 +97,24 @@ std::string ArduinoCommunication::GetArmed()
     string s="AL"+Armed;
     return s;
 }
-std::string ArduinoCommunication::GetCustomMode()
+std::string ArduinoCommunication::GetApplicationStart()
 {
-    string s="C"+std::to_string(CustomMode);
+    string s="S"+ApplicationStart;
     return s;
 }
-std::string ArduinoCommunication::GetBatteryStatus()
+std::string ArduinoCommunication::GetCustomMode()
 {
-    string s="DB"+std::to_string(BatteryStatus);
+    string s="C"+CustomMode;
     return s;
 }
 std::string ArduinoCommunication::GetGPS3DFix()
 {
     string s="GPF"+GPS3DFix;
+    return s;
+}
+std::string ArduinoCommunication::GetBatteryStatus()
+{
+    string s="DB"+std::to_string(BatteryStatus);
     return s;
 }
 std::string ArduinoCommunication::GetLastValue()

@@ -21,13 +21,23 @@ public:
     Fact* active                       (void) { return &_active; }
     Fact* numSatellites                (void) { return &_numSatellites; }*/
 
-    ArduinoCommunication(bool,bool,int,int,bool);
-    void SetValueApplicationStart(bool);
-    void SetValueArmed(bool);
-    void SetValueCustomMode(int);
-    void SetValueBatteryStatus(int);
-    void SetValueGPS3DFix(bool,bool);
+    //Default olarak tek seferlik değer atamaları için kullanılır
+    //ArduinoCommunication(bool,bool,int,int,bool);
+    ArduinoCommunication(bool,bool,bool,bool,bool,std::string,bool,int);
+    //Parametrelerin Set etmek için kullanılan fonksiyonlar
+    void SetValueIsRecord(bool); //KY --1
+    void SetValueVideoSignal(bool); //VY --2
+    void SetValueTelemetry(bool); //TY --3
+    void SetValueArmed(bool); //AL --4
+    void SetValueApplicationStart(bool); //S --5
+    void SetValueCustomMode(std::string); //C --6
+    void SetValueGPS3DFix(bool,bool); //GPF --7
+    void SetValueBatteryStatus(int); //DB --8
+
+    //Son değer ile karşılaştırarak mesaj değişiminde arduino'ya iletmesi için
     void SetLastValue(std::string);
+
+    //Parametrelerin alınması için oluşturulan fonksiyonlar
     std::string  GetValue();
     std::string GetApplicationStart();
     std::string GetArmed();
@@ -35,21 +45,22 @@ public:
     std::string GetBatteryStatus();
     std::string GetGPS3DFix();
     std::string GetLastValue();
+    std::string GetIsRecord();
+    std::string GetVideoSignal();
+    std::string GetTelemetry();
     bool GetIsSendMessage();
 
 private:
+    //Parametre tanımlarını içerir
     std::string ApplicationStart;
     std::string Armed;
-    int CustomMode;
+    std::string CustomMode;
     int BatteryStatus;
     std::string GPS3DFix;
     std::string LastValue;
+    std::string IsRecord;
+    std::string VideoSignal;
+    std::string Telemetry;
     bool IsSendMessage;
-/*private:
-    Fact        _connected; ///< is an RTK gps connected?
-    Fact        _currentDuration; ///< survey-in status in [s]
-    Fact        _currentAccuracy; ///< survey-in accuracy in [mm]
-    Fact        _valid; ///< survey-in valid?
-    Fact        _active; ///< survey-in active?
-    Fact        _numSatellites; ///< number of satellites*/
+
 };
