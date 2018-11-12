@@ -318,6 +318,31 @@ FlightMap {
         }
     }
 
+    MapQuickItem {
+        id:             lookAtLocation
+        visible:        false
+        z:              QGroundControl.zOrderMapItems
+        anchorPoint.x:  sourceItem.anchorPointX
+        anchorPoint.y:  sourceItem.anchorPointY
+
+        sourceItem: MissionItemIndexLabel {
+            checked:    true
+            index:      -1
+            color:      "blue"
+            label:      qsTr("ROI", "ROI")
+        }
+
+        function show(coord) {
+            lookAtLocation.coordinate = coord
+            lookAtLocation.visible = true
+        }
+
+        function hide() {
+            lookAtLocation.visible = false
+        }
+    }
+
+
     QGCMapCircleVisuals {
         id:         orbitMapCircle
         mapControl: parent
@@ -353,7 +378,10 @@ FlightMap {
 
     // Handle guided mode clicks
     MouseArea {
+        acceptedButtons:  Qt.RightButton | Qt.LeftButton
         anchors.fill: parent
+
+        property int mouseButtonClicked : Qt.NoButton
 
         Menu {
             id: clickMenu
@@ -382,23 +410,52 @@ FlightMap {
                 }
             }
         }
+        onPressed: {
 
+            if(mouse.button == Qt.RightButton)
+            {
+                mouseButtonClicked = Qt.RightButton
+            }
+            else if(mouse.button == Qt.LeftButton)
+            {
+                mouseButtonClicked = Qt.LeftButton
+            }
+        }
         onClicked: {
-            if (guidedActionsController.guidedUIVisible || (!guidedActionsController.showGotoLocation && !guidedActionsController.showOrbit)) {
-                return
-            }            
-            orbitMapCircle.hide()
-            gotoLocationItem.hide()
-            var clickCoord = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y), false /* clipToViewPort */)
-            if (guidedActionsController.showGotoLocation && guidedActionsController.showOrbit) {
-                clickMenu.coord = clickCoord
-                clickMenu.popup()
-            } else if (guidedActionsController.showGotoLocation) {
-                gotoLocationItem.show(clickCoord)
-                guidedActionsController.confirmAction(guidedActionsController.actionGoto, clickCoord)
-            } else if (guidedActionsController.showOrbit) {
-                orbitMapCircle.show(clickCoord)
-                guidedActionsController.confirmAction(guidedActionsController.actionOrbit, clickCoord)
+
+            if(mouseButtonClicked === Qt.LeftButton)
+            {
+                if (guidedActionsController.guidedUIVisible || (!guidedActionsController.showGotoLocation && !guidedActionsController.showOrbit)) {
+                    return
+                }
+                orbitMapCircle.hide()
+                gotoLocationItem.hide()
+                var clickCoord = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y), false /* clipToViewPort */)
+                if (guidedActionsController.showGotoLocation && guidedActionsController.showOrbit) {
+                    clickMenu.coord = clickCoord
+                    clickMenu.popup()
+                } else if (guidedActionsController.showGotoLocation) {
+                    gotoLocationItem.show(clickCoord)
+                    guidedActionsController.confirmAction(guidedActionsController.actionGoto, clickCoord)
+                } else if (guidedActionsController.showOrbit) {
+                    orbitMapCircle.show(clickCoord)
+                    guidedActionsController.confirmAction(guidedActionsController.actionOrbit, clickCoord)
+                }
+            }
+            else if (mouseButtonClicked === Qt.RightButton)
+            {
+
+                if (guidedActionsController.guidedUIVisible || !guidedActionsController.showLookAtLocation) {
+                    return
+                }
+                lookAtLocation.hide()
+                var clickCoords = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y), false)
+
+                if (guidedActionsController.showLookAtLocation) {
+                    lookAtLocation.show(clickCoords)
+                    guidedActionsController.confirmAction(guidedActionsController.actionLookAtLocation, clickCoords)
+                }
+
             }
         }
     }
