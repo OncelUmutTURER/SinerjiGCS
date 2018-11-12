@@ -641,7 +641,7 @@ void MainWindow::on_actionImport_Export_Flight_Data_triggered()
     ieDialog.exec();
 }
 
-void MainWindow::on_actionImport_Export_Flight_Video_triggered()
+void MainWindow::on_actionImport_Flight_Video_triggered()
 {
     ImportExportDialog ieDialog;
     ieDialog.setModal(true);
