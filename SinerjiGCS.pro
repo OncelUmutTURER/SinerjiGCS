@@ -240,6 +240,7 @@ QT += \
     xml \
     texttospeech
 
+QT += multimedia multimediawidgets
 # Multimedia only used if QVC is enabled
 !contains (DEFINES, QGC_DISABLE_UVC) {
     QT += \
@@ -410,7 +411,8 @@ HEADERS += \
     src/comm/MavlinkMessagesTimer.h \
     src/ui/logindialog.h \
     src/ImportExportDialog.h \
-    src/ProgressiveFileCopier.h
+    src/ProgressiveFileCopier.h \
+    src/VideoPlayer/videoplayer.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
@@ -420,7 +422,8 @@ SOURCES += \
     src/comm/MavlinkMessagesTimer.cc \
     src/ui/logindialog.cpp \
     src/ImportExportDialog.cpp \
-    src/ProgressiveFileCopier.cpp
+    src/ProgressiveFileCopier.cpp \
+    src/VideoPlayer/videoplayer.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)

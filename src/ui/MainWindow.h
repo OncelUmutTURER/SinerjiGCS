@@ -172,6 +172,8 @@ private slots:
 
     void on_actionImport_GeoData_triggered();
 
+    void on_actionVideoPlayer_triggered();
+
 private:
     /// Constructor is private since all creation should be through MainWindow::_create
     MainWindow();
