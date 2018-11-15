@@ -174,7 +174,7 @@ LinuxBuild {
     }
 
     # QGroundControl start script
-    QMAKE_POST_LINK += && $$QMAKE_COPY $$BASEDIR/deploy/sinerjigcs-start.sh $$DESTDIR
-    QMAKE_POST_LINK += && $$QMAKE_COPY $$BASEDIR/deploy/sinerjigcs.desktop $$DESTDIR
+    QMAKE_POST_LINK += && $$QMAKE_COPY $$BASEDIR/deploy/qgroundcontrol-start.sh $$DESTDIR #sinerjigcs-start.sh yapmak için SinerjiGCS/deploy klasörü altındaki dosyaların içeriklerinin düzenlenmesi gerekiyor aksi halde hata alınıyor.
+    QMAKE_POST_LINK += && $$QMAKE_COPY $$BASEDIR/deploy/qgroundcontrol.desktop $$DESTDIR #sinerjigcs.desktop yapmak için SinerjiGCS/deploy klasörü altındaki dosyaların içeriklerinin düzenlenmesi gerekiyor aksi halde hata alınıyor.
     QMAKE_POST_LINK += && $$QMAKE_COPY $$BASEDIR/resources/icons/SS_Logo_icon.png $$DESTDIR
 }

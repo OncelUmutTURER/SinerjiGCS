@@ -78,6 +78,7 @@
     <addaction name="separator"/>
     <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
+    <addaction name="actionVideoPlayer"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuWidgets">
@@ -98,6 +99,7 @@
     <property name="title">
      <string>Pilot</string>
     </property>
+    <addaction name="actionPilot_Profile"/>
     <addaction name="actionLogout"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -129,8 +131,8 @@
    <addaction name="menuFile"/>
    <addaction name="menuWidgets"/>
    <addaction name="menuPilot"/>
-   <addaction name="menuAbout"/>
    <addaction name="menuImport_Export"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -215,6 +217,19 @@
   <action name="actionTurkce">
    <property name="text">
     <string>Türkçe</string>
+   </property>
+  </action>
+  <action name="actionVideoPlayer">
+   <property name="text">
+    <string>Video Player</string>
+   </property>
+  </action>
+  <action name="actionPilot_Profile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Pilot Profile</string>
    </property>
   </action>
  </widget>

@@ -43,6 +43,10 @@
 #include "QGCImageProvider.h"
 #include "QGCCorePlugin.h"
 
+//videoPlayer
+#include "VideoPlayer/videoplayer.h"
+//
+
 #ifndef __mobile__
 #include "Linecharts.h"
 #include "QGCUASFileViewMulti.h"
@@ -637,7 +641,7 @@ void MainWindow::on_actionImport_Export_Flight_Data_triggered()
     ieDialog.exec();
 }
 
-void MainWindow::on_actionImport_Export_Flight_Video_triggered()
+void MainWindow::on_actionImport_Flight_Video_triggered()
 {
     ImportExportDialog ieDialog;
     ieDialog.setModal(true);
@@ -659,4 +663,13 @@ void MainWindow::on_actionImport_GeoData_triggered()
     tabWidget->setCurrentIndex(2);
 
     ieDialog.exec();
+}
+
+void MainWindow::on_actionVideoPlayer_triggered()
+{
+       VideoPlayer* player = new VideoPlayer();
+
+       const QRect availableGeometry = qApp->desktop()->availableGeometry(player);
+       player->resize(availableGeometry.width() / 2, availableGeometry.height() / 2);
+       player->show();
 }
