@@ -412,12 +412,9 @@ HEADERS += \
     src/ui/logindialog.h \
     src/ImportExportDialog.h \
     src/ProgressiveFileCopier.h \
-<<<<<<< HEAD
     src/Vehicle/carduino.h \
     src/Vehicle/arduinocommunication.h
-=======
     src/VideoPlayer/videoplayer.h
->>>>>>> release
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
@@ -428,12 +425,9 @@ SOURCES += \
     src/ui/logindialog.cpp \
     src/ImportExportDialog.cpp \
     src/ProgressiveFileCopier.cpp \
-<<<<<<< HEAD
     src/Vehicle/carduino.cpp \
     src/Vehicle/arduinocommunication.cpp
-=======
     src/VideoPlayer/videoplayer.cpp
->>>>>>> release
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
