@@ -2869,6 +2869,21 @@ void Vehicle::guidedModeGotoLocation(const QGeoCoordinate& gotoCoord)
     _firmwarePlugin->guidedModeGotoLocation(this, gotoCoord);
 }
 
+void Vehicle::setROILocation(const QGeoCoordinate& roiCoord)
+{
+    if (!coordinate().isValid()) {
+        return;
+    }
+
+    sendMavCommand(defaultComponentId(),
+                   MAV_CMD_DO_SET_ROI,                  // command
+                   true,                                // show error if fails
+                   qQNaN(), qQNaN(), qQNaN(), qQNaN(),  // params 1-4 empty
+                   roiCoord.latitude(),
+                   roiCoord.longitude(),
+                   _coordinate.altitude());
+}
+
 void Vehicle::guidedModeChangeAltitude(double altitudeChange)
 {
     if (!guidedModeSupported()) {
