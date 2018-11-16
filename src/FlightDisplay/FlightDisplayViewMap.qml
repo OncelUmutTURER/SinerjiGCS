@@ -319,7 +319,7 @@ FlightMap {
     }
 
     MapQuickItem {
-        id:             lookAtLocation
+        id:             roiLocation
         visible:        false
         z:              QGroundControl.zOrderMapItems
         anchorPoint.x:  sourceItem.anchorPointX
@@ -329,16 +329,16 @@ FlightMap {
             checked:    true
             index:      -1
             color:      "blue"
-            label:      qsTr("ROI", "ROI")
+            label:      qsTr("ROI", "Camera Region Of Interest")
         }
 
         function show(coord) {
-            lookAtLocation.coordinate = coord
-            lookAtLocation.visible = true
+            roiLocation.coordinate = coord
+            roiLocation.visible = true
         }
 
         function hide() {
-            lookAtLocation.visible = false
+            roiLocation.visible = false
         }
     }
 
@@ -445,15 +445,15 @@ FlightMap {
             else if (mouseButtonClicked === Qt.RightButton)
             {
 
-                if (guidedActionsController.guidedUIVisible || !guidedActionsController.showLookAtLocation) {
+                if (guidedActionsController.guidedUIVisible || !guidedActionsController.showROILocation) {
                     return
                 }
-                lookAtLocation.hide()
+                roiLocation.hide()
                 var clickCoords = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y), false)
 
-                if (guidedActionsController.showLookAtLocation) {
-                    lookAtLocation.show(clickCoords)
-                    guidedActionsController.confirmAction(guidedActionsController.actionLookAtLocation, clickCoords)
+                if (guidedActionsController.showROILocation) {
+                    roiLocation.show(clickCoords)
+                    guidedActionsController.confirmAction(guidedActionsController.actionROILocation, clickCoords)
                 }
 
             }
