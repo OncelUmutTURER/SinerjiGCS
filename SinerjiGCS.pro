@@ -413,7 +413,7 @@ HEADERS += \
     src/ImportExportDialog.h \
     src/ProgressiveFileCopier.h \
     src/Vehicle/carduino.h \
-    src/Vehicle/arduinocommunication.h
+    src/Vehicle/arduinocommunication.h \
     src/VideoPlayer/videoplayer.h
 
 SOURCES += \
@@ -426,7 +426,7 @@ SOURCES += \
     src/ImportExportDialog.cpp \
     src/ProgressiveFileCopier.cpp \
     src/Vehicle/carduino.cpp \
-    src/Vehicle/arduinocommunication.cpp
+    src/Vehicle/arduinocommunication.cpp \
     src/VideoPlayer/videoplayer.cpp
 
 #

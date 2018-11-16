@@ -38,35 +38,31 @@ void LoginDialog::on_btnLogin_clicked()
         }
         cArduino arduino2(ArduinoBaundRate::B9600bps);
         ArduinoCommunication _arduinocommunication2(false,false,false,false,false,"0",false,0);
-
-//        if(!arduino2.isOpen())
-//        {
-//            cerr<<"can't open arduino"<<endl;
-//        }
-
-        //cout<<"arduino open at "<<arduino2.getDeviceName()<<endl;
-        //arduino2.open(ArduinoBaundRate::B9600bps);
-        arduino2.write("Sistem");
-        arduino2.close();
-        arduino2.open(ArduinoBaundRate::B9600bps);
+//        arduino2.open(ArduinoBaundRate::B9600bps);
+//        arduino2.write("KYHVTHTYLALLSLC3GPFHDB77");
+//        arduino2.close();
         string userInput ="";
-        string arduinoOutput="";
-        _arduinocommunication2.SetValueApplicationStart(true);
-        userInput = _arduinocommunication2.GetValue();
-
-        //cout<<">>";
-
-        arduino2.write(userInput);
-
-        if(!arduino2.read(arduinoOutput))//read witch timeout!
+        if(!arduino2.isOpen())
         {
-            cerr<<"TIMEOUT!"<<endl;
+            _arduinocommunication2.SetArduinoConnection(false);
         }
         else
         {
-            cout<<arduinoOutput<<endl;
+            arduino2.open(ArduinoBaundRate::B9600bps);
+            _arduinocommunication2.SetValueApplicationStart(true);
+            userInput = _arduinocommunication2.GetValue();
+            arduino2.write(userInput);
+            //        string arduinoOutput="";
+            //        if(!arduino2.read(arduinoOutput))//read witch timeout!
+            //        {
+            //            cerr<<"TIMEOUT!"<<endl;
+            //        }
+            //        else
+            //        {
+            //            cout<<arduinoOutput<<endl;
+            //        }
+            arduino2.close();
         }
-        arduino2.close();
 
         accept(); //closes dialog window
     }

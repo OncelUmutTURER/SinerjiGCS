@@ -48,8 +48,8 @@
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirspaceVehicleManager.h"
 #include "time.h"
-
-
+//#include <thread>
+//#include <chrono>
 #endif
 cArduino arduino(ArduinoBaundRate::B9600bps);
 QGC_LOGGING_CATEGORY(VehicleLog, "VehicleLog")
@@ -89,6 +89,43 @@ const char* Vehicle::_temperatureFactGroupName =        "temperature";
 const char* Vehicle::_clockFactGroupName =              "clock";
 const char* Vehicle::_distanceSensorFactGroupName =     "distanceSensor";
 const char* Vehicle::_estimatorStatusFactGroupName =    "estimatorStatus";
+
+void Vehicle::ReadingArduino()
+{
+    if(_arduinocommunication.GetArduinoConnection())
+    {
+        if(!arduino.isOpen())
+        {
+            _arduinocommunication.SetArduinoConnection(false);
+             QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+        }
+        else
+        {
+            if(_arduinocommunication.GetArmed() == "ALH")//Armed ise dinleme yap
+            {
+                arduino.open(ArduinoBaundRate::B9600bps);
+                string arduinoOutput;
+                int indexRth,indexADB;
+                if(arduino.read(arduinoOutput))//data is arrived
+                {
+                    indexRth=arduinoOutput.find("R");
+                    indexADB=arduinoOutput.find("A");
+                    if(indexRth > -1)
+                    {
+                        guidedModeRTL();
+                    }
+                    if(indexADB > -1)
+                    {
+                        emergencyStop();
+                    }
+                }
+                arduino.close();
+            }
+
+        }
+
+    }
+}
 
 Vehicle::Vehicle(LinkInterface*             link,
                  int                        vehicleId,
@@ -212,6 +249,11 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _distanceSensorFactGroup(this)
     , _estimatorStatusFactGroup(this)
 {
+    //Read Arduino
+    QObject::connect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+    readTimer.setInterval(500);
+    readTimer.start();
+
     connect(_joystickManager, &JoystickManager::activeJoystickChanged, this, &Vehicle::_loadSettings);
     connect(qgcApp()->toolbox()->multiVehicleManager(), &MultiVehicleManager::activeVehicleAvailableChanged, this, &Vehicle::_loadSettings);
 
@@ -254,6 +296,7 @@ Vehicle::Vehicle(LinkInterface*             link,
     // Listen for system messages
     connect(_toolbox->uasMessageHandler(), &UASMessageHandler::textMessageCountChanged,  this, &Vehicle::_handleTextMessage);
     connect(_toolbox->uasMessageHandler(), &UASMessageHandler::textMessageReceived,      this, &Vehicle::_handletextMessageReceived);
+
 
 
     if (_highLatencyLink || link->isPX4Flow()) {
@@ -657,13 +700,6 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         return;
     }
 
-    //    if(!arduino.isOpen())
-    //    {
-    //        cerr<<"can't open arduino"<<endl;
-    //    }
-    //cout<<"arduino open at receive Message "<<arduino.getDeviceName()<<endl;
-    //std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
 
     switch (message.msgid) {
     case MAVLINK_MSG_ID_HOME_POSITION:
@@ -801,21 +837,34 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     // does processing.
     emit mavlinkMessageReceived(message);
     _uas->receiveMessage(message);
-    if(_arduinocommunication.GetIsSendMessage())
+    //    arduino.open(ArduinoBaundRate::B9600bps);
+    //    arduino.write("KYHVTHTYLALLSLC3GPFHDB77");
+    //    arduino.close();
+    if(_arduinocommunication.GetArduinoConnection())
     {
-        arduino.open(ArduinoBaundRate::B9600bps);
-
-        string userInput = _arduinocommunication.GetValue();
-        if(_arduinocommunication.GetLastValue() !=userInput)
+        if(!arduino.isOpen())
         {
-            _arduinocommunication.SetLastValue(userInput);
-            arduino.write(userInput);
+            _arduinocommunication.SetArduinoConnection(false);
+            QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
         }
-        arduino.close();
+        else
+        {
+            if(_arduinocommunication.GetIsSendMessage())
+            {
+                arduino.open(ArduinoBaundRate::B9600bps);
+
+                string userInput = _arduinocommunication.GetValue();
+                if(_arduinocommunication.GetLastValue() !=userInput)
+                {
+                    _arduinocommunication.SetLastValue(userInput);
+                    arduino.write(userInput);
+                }
+                arduino.close();
+            }
+        }
     }
 
 }
-
 
 #if !defined(NO_ARDUPILOT_DIALECT)
 void Vehicle::_handleCameraFeedback(const mavlink_message_t& message)
@@ -1612,10 +1661,20 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
     if(_arduinocommunication.GetArmed() != "AL"+std::to_string(newArmed) )
     {
         if(newArmed)
+        {
             _arduinocommunication.SetValueArmed(true);
+            //Arduino Read Messages
+            //            std::thread s(&Vehicle::ReadingArduino, this);
+            //            s.join();
+            //            if(s.joinable())
+            //            {
+            //                std::terminate();
+            //            }
+        }
         else
+        {
             _arduinocommunication.SetValueArmed(false);
-        //To do : Send to Arduino code
+        }
     }
     // ArduPilot firmare has a strange case when ARMING_REQUIRE=0. This means the vehicle is always armed but the motors are not
     // really powered up until the safety button is pressed. Because of this we can't depend on the heartbeat to tell us the true
@@ -1680,7 +1739,6 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
         if(_arduinocommunication.GetCustomMode() != "C"+std::to_string(_custom_mode) )
         {
             _arduinocommunication.SetValueCustomMode(std::to_string(_custom_mode));
-            //To do : Send to Arduino code
         }
         if (previousFlightMode != flightMode()) {
             emit flightModeChanged(flightMode());

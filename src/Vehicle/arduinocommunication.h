@@ -5,7 +5,7 @@ class ArduinoCommunication
 
 
 public:
-   /* ArduinoCommunication(QObject* parent = NULL);
+    /* ArduinoCommunication(QObject* parent = NULL);
 
     Q_PROPERTY(Fact* connected            READ connected            CONSTANT)
     Q_PROPERTY(Fact* currentDuration      READ currentDuration      CONSTANT)
@@ -36,6 +36,7 @@ public:
 
     //Son değer ile karşılaştırarak mesaj değişiminde arduino'ya iletmesi için
     void SetLastValue(std::string);
+    void SetArduinoConnection(bool);
 
     //Parametrelerin alınması için oluşturulan fonksiyonlar
     std::string  GetValue();
@@ -49,6 +50,7 @@ public:
     std::string GetVideoSignal();
     std::string GetTelemetry();
     bool GetIsSendMessage();
+    bool GetArduinoConnection();
 
 private:
     //Parametre tanımlarını içerir
@@ -62,5 +64,6 @@ private:
     std::string VideoSignal;
     std::string Telemetry;
     bool IsSendMessage;
+    bool IsArduinoConnection;
 
 };

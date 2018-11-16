@@ -20,7 +20,7 @@
 #include "MAVLinkProtocol.h"
 #include "UASMessageHandler.h"
 #include "SettingsFact.h"
-
+//#include <thread>
 class UAS;
 class UASInterface;
 class FirmwarePlugin;
@@ -453,30 +453,30 @@ private:
 #if 0
     typedef enum ESTIMATOR_STATUS_FLAGS
     {
-       ESTIMATOR_ATTITUDE=1, /* True if the attitude estimate is good | */
-       ESTIMATOR_VELOCITY_HORIZ=2, /* True if the horizontal velocity estimate is good | */
-       ESTIMATOR_VELOCITY_VERT=4, /* True if the  vertical velocity estimate is good | */
-       ESTIMATOR_POS_HORIZ_REL=8, /* True if the horizontal position (relative) estimate is good | */
-       ESTIMATOR_POS_HORIZ_ABS=16, /* True if the horizontal position (absolute) estimate is good | */
-       ESTIMATOR_POS_VERT_ABS=32, /* True if the vertical position (absolute) estimate is good | */
-       ESTIMATOR_POS_VERT_AGL=64, /* True if the vertical position (above ground) estimate is good | */
-       ESTIMATOR_CONST_POS_MODE=128, /* True if the EKF is in a constant position mode and is not using external measurements (eg GPS or optical flow) | */
-       ESTIMATOR_PRED_POS_HORIZ_REL=256, /* True if the EKF has sufficient data to enter a mode that will provide a (relative) position estimate | */
-       ESTIMATOR_PRED_POS_HORIZ_ABS=512, /* True if the EKF has sufficient data to enter a mode that will provide a (absolute) position estimate | */
-       ESTIMATOR_GPS_GLITCH=1024, /* True if the EKF has detected a GPS glitch | */
-       ESTIMATOR_ACCEL_ERROR=2048, /* True if the EKF has detected bad accelerometer data | */
+        ESTIMATOR_ATTITUDE=1, /* True if the attitude estimate is good | */
+        ESTIMATOR_VELOCITY_HORIZ=2, /* True if the horizontal velocity estimate is good | */
+        ESTIMATOR_VELOCITY_VERT=4, /* True if the  vertical velocity estimate is good | */
+        ESTIMATOR_POS_HORIZ_REL=8, /* True if the horizontal position (relative) estimate is good | */
+        ESTIMATOR_POS_HORIZ_ABS=16, /* True if the horizontal position (absolute) estimate is good | */
+        ESTIMATOR_POS_VERT_ABS=32, /* True if the vertical position (absolute) estimate is good | */
+        ESTIMATOR_POS_VERT_AGL=64, /* True if the vertical position (above ground) estimate is good | */
+        ESTIMATOR_CONST_POS_MODE=128, /* True if the EKF is in a constant position mode and is not using external measurements (eg GPS or optical flow) | */
+        ESTIMATOR_PRED_POS_HORIZ_REL=256, /* True if the EKF has sufficient data to enter a mode that will provide a (relative) position estimate | */
+        ESTIMATOR_PRED_POS_HORIZ_ABS=512, /* True if the EKF has sufficient data to enter a mode that will provide a (absolute) position estimate | */
+        ESTIMATOR_GPS_GLITCH=1024, /* True if the EKF has detected a GPS glitch | */
+        ESTIMATOR_ACCEL_ERROR=2048, /* True if the EKF has detected bad accelerometer data | */
 
         typedef struct __mavlink_estimator_status_t {
-         uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
-         float vel_ratio; /*< Velocity innovation test ratio*/
-         float pos_horiz_ratio; /*< Horizontal position innovation test ratio*/
-         float pos_vert_ratio; /*< Vertical position innovation test ratio*/
-         float mag_ratio; /*< Magnetometer innovation test ratio*/
-         float hagl_ratio; /*< Height above terrain innovation test ratio*/
-         float tas_ratio; /*< True airspeed innovation test ratio*/
-         float pos_horiz_accuracy; /*< Horizontal position 1-STD accuracy relative to the EKF local origin (m)*/
-         float pos_vert_accuracy; /*< Vertical position 1-STD accuracy relative to the EKF local origin (m)*/
-         uint16_t flags; /*< Integer bitmask indicating which EKF outputs are valid. See definition for ESTIMATOR_STATUS_FLAGS.*/
+            uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
+            float vel_ratio; /*< Velocity innovation test ratio*/
+            float pos_horiz_ratio; /*< Horizontal position innovation test ratio*/
+            float pos_vert_ratio; /*< Vertical position innovation test ratio*/
+            float mag_ratio; /*< Magnetometer innovation test ratio*/
+            float hagl_ratio; /*< Height above terrain innovation test ratio*/
+            float tas_ratio; /*< True airspeed innovation test ratio*/
+            float pos_horiz_accuracy; /*< Horizontal position 1-STD accuracy relative to the EKF local origin (m)*/
+            float pos_vert_accuracy; /*< Vertical position 1-STD accuracy relative to the EKF local origin (m)*/
+            uint16_t flags; /*< Integer bitmask indicating which EKF outputs are valid. See definition for ESTIMATOR_STATUS_FLAGS.*/
         } mavlink_estimator_status_t;
     };
 #endif
@@ -978,7 +978,7 @@ public:
 
     /// Same as sendMavCommand but available from Qml.
     Q_INVOKABLE void sendCommand(int component, int command, bool showError, double param1 = 0.0f, double param2 = 0.0f, double param3 = 0.0f, double param4 = 0.0f, double param5 = 0.0f, double param6 = 0.0f, double param7 = 0.0f)
-        { sendMavCommand(component, (MAV_CMD)command, showError, param1, param2, param3, param4, param5, param6, param7); }
+    { sendMavCommand(component, (MAV_CMD)command, showError, param1, param2, param3, param4, param5, param6, param7); }
 
     int firmwareMajorVersion(void) const { return _firmwareMajorVersion; }
     int firmwareMinorVersion(void) const { return _firmwareMinorVersion; }
@@ -1051,6 +1051,7 @@ public:
     /// Vehicle is about to be deleted
     void prepareDelete();
 
+    //std::thread s;
     quint64     mavlinkSentCount        () { return _mavlinkSentCount; }        /// Calculated total number of messages sent to us
     quint64     mavlinkReceivedCount    () { return _mavlinkReceivedCount; }    /// Total number of sucessful messages received
     quint64     mavlinkLossCount        () { return _mavlinkLossCount; }        /// Total number of lost messages
@@ -1162,6 +1163,7 @@ signals:
     void mavlinkStatusChanged();
 
 private slots:
+    void ReadingArduino();
     void _mavlinkMessageReceived(LinkInterface* link, mavlink_message_t message);
     void _linkInactiveOrDeleted(LinkInterface* link);
     void _sendMessageOnLink(LinkInterface* link, mavlink_message_t message);
@@ -1198,6 +1200,7 @@ private slots:
     void _adsbTimerTimeout      ();
 
 private:
+    QTimer readTimer;
     bool _containsLink(LinkInterface* link);
     void _addLink(LinkInterface* link);
     void _loadSettings(void);

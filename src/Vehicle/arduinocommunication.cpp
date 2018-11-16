@@ -13,6 +13,11 @@ ArduinoCommunication::ArduinoCommunication(bool a, bool b,bool c, bool d,bool e,
     SetValueCustomMode(f);
     SetValueGPS3DFix(g,false);
     SetValueBatteryStatus(h);
+    SetArduinoConnection(true);
+}
+void ArduinoCommunication::SetArduinoConnection(bool x)
+{
+    IsArduinoConnection=x;
 }
 void ArduinoCommunication::SetValueIsRecord(bool a)
 {
@@ -124,4 +129,8 @@ std::string ArduinoCommunication::GetLastValue()
 bool ArduinoCommunication::GetIsSendMessage()
 {
     return  IsSendMessage;
+}
+bool ArduinoCommunication::GetArduinoConnection()
+{
+    return  IsArduinoConnection;
 }
