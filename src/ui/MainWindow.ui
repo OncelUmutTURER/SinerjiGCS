@@ -222,6 +222,8 @@
   <action name="actionVideoPlayer">
    <property name="text">
     <string>Video Player</string>
+   </property>
+  </action>
   <action name="actionPilot_Profile">
    <property name="enabled">
     <bool>false</bool>
