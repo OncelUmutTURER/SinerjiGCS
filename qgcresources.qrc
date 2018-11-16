@@ -228,6 +228,8 @@
         <file alias="SinerjiGCS_LoginBG">resources/SinerjiGCS_LoginBG.png</file>
         <file alias="SinerjiGCSLogoFull">resources/SinerjiGCSLogoFull.png</file>
         <file alias="SinerjiGCS_SplashScreen">resources/SinerjiGCS_SplashScreen.png</file>
+        <file alias="zoomIn">src/Camera/images/zoomIn.svg</file>
+        <file alias="zoomOut">src/Camera/images/zoomOut.svg</file>
     </qresource>
     <qresource prefix="/res/firmware">
         <file alias="px4.png">resources/firmware/px4.png</file>
