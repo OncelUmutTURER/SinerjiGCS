@@ -121,7 +121,8 @@ Column {
                                 cameraModeStatusText.text = "Take a photo"
                                 cameraMode = false
 
-                                console.log("CHANGE MODE (PHOTO) EVENT")
+                                //console.log("CHANGE MODE (PHOTO) EVENT")
+                                _activeVehicle.cameraModeChange();
                             }
                         }
                     }
@@ -133,7 +134,8 @@ Column {
                                 cameraMode = true
                                 cameraModeStatusText.text = "Record a video"
 
-                                console.log("CHANGE MODE (VIDEO) EVENT")
+                                //console.log("CHANGE MODE (VIDEO) EVENT")
+                                _activeVehicle.cameraModeChange();
                             }
                         }
                     }
@@ -150,7 +152,8 @@ Column {
                     visible: !cameraMode
 
                     onClicked: {
-                        console.log("TAKE A PHOTO EVENT")
+                        //console.log("TAKE A PHOTO EVENT")
+                        _activeVehicle.cameraCapture();
                     }
 
                     background: Rectangle {
@@ -202,7 +205,8 @@ Column {
                         cameraModeStatusText.text = !videoActive ? "Recording.." : "Record a video"
                         videoActive = !videoActive
 
-                        console.log("RECORD VIDEO EVENT")
+                        //console.log("RECORD VIDEO EVENT")
+                        _activeVehicle.cameraCapture();
                     }
 
                     background: Rectangle {
@@ -303,7 +307,8 @@ Column {
                         }
                     }
                     onClicked: {
-                        console.log("ZOOM IN EVENT")
+                        //console.log("ZOOM IN EVENT")
+                        _activeVehicle.cameraZoomIn();
                     }
                 }
                 Label {
@@ -341,6 +346,7 @@ Column {
                     }
                     onClicked: {
                         console.log("ZOOM OUT EVENT")
+                        _activeVehicle.cameraZoomOut();
                     }
                 }
             }

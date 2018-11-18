@@ -713,6 +713,9 @@ public:
     /// Command vehicle camera to look at specified location (altitude is included and relative)
     Q_INVOKABLE void setROILocation(const QGeoCoordinate& gotoCoord);
 
+    /// Command vehicle camera to look at natural position
+    Q_INVOKABLE void cancelROILocation(void);
+
     /// Command vehicle to change altitude
     ///     @param altitudeChange If > 0, go up by amount specified, if < 0, go down by amount specified
     Q_INVOKABLE void guidedModeChangeAltitude(double altitudeChange);
@@ -746,6 +749,17 @@ public:
 
     Q_INVOKABLE void triggerCamera(void);
     Q_INVOKABLE void sendPlan(QString planFile);
+
+    ///Change camera mode: Picture / Video
+    Q_INVOKABLE void cameraModeChange(void);
+    ///If in picture mode take picture, if in video mode start/stop video recording
+    Q_INVOKABLE void cameraCapture(void);
+    ///Start zoom in
+    Q_INVOKABLE void cameraZoomIn(void);
+    ///Start zoom out
+    Q_INVOKABLE void cameraZoomOut(void);
+    ///Stop zoom command
+    Q_INVOKABLE void cameraZoomStop(void);
 
 #if 0
     // Temporarily removed, waiting for new command implementation
@@ -1262,6 +1276,8 @@ private:
     void _setCapabilities(uint64_t capabilityBits);
     void _updateArmed(bool armed);
     bool _apmArmingNotRequired(void);
+
+    void _sendSerialCommand(uint8_t count, const uint8_t *data, uint8_t device = 3, uint8_t flags = 2, uint16_t timeout = 100, uint32_t baudrate = 115200);
 
     int     _id;                    ///< Mavlink system id
     int     _defaultComponentId;

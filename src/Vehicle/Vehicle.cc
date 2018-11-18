@@ -2884,6 +2884,11 @@ void Vehicle::setROILocation(const QGeoCoordinate& roiCoord)
                    _coordinate.altitude());
 }
 
+void Vehicle::cancelROILocation()
+{
+    //Umut TODO: To Be Implemented
+}
+
 void Vehicle::guidedModeChangeAltitude(double altitudeChange)
 {
     if (!guidedModeSupported()) {
@@ -3349,6 +3354,59 @@ void Vehicle::triggerCamera(void)
                    1.0,                             // trigger camera
                    0.0,                             // param 6 unused
                    1.0);                            // test shot flag
+}
+
+
+void Vehicle::cameraModeChange(void)
+{
+    uint8_t cmd[7] = {0xFF, 0x01, 0x00, 0x07, 0x00, 0x67, 0x6F};
+    _sendSerialCommand(sizeof(cmd), cmd);
+}
+
+void Vehicle::cameraCapture(void)
+{
+    uint8_t cmd[7] = {0xFF, 0x01, 0x00, 0x07, 0x00, 0x55, 0x5D};
+    _sendSerialCommand(sizeof(cmd), cmd);
+}
+
+void Vehicle::cameraZoomIn(void)
+{
+    uint8_t cmd[7] = {0xFF, 0x01, 0x00, 0x20, 0x00, 0x00, 0x21};
+    _sendSerialCommand(sizeof(cmd), cmd);
+}
+
+void Vehicle::cameraZoomOut(void)
+{
+    uint8_t cmd[7] = {0xFF, 0x01, 0x00, 0x40, 0x00, 0x00, 0x41};
+    _sendSerialCommand(sizeof(cmd), cmd);
+}
+
+void Vehicle::cameraZoomStop(void)
+{
+    uint8_t cmd[7] = {0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01};
+    _sendSerialCommand(sizeof(cmd), cmd);
+}
+
+void Vehicle::_sendSerialCommand(uint8_t count, const uint8_t *data, uint8_t device, uint8_t flags, uint16_t timeout, uint32_t baudrate)
+{
+    mavlink_message_t msg;
+    mavlink_serial_control_t ser;
+    memset(&ser, 0, sizeof(ser));
+
+    ser.device = device;
+    ser.flags = flags;
+    ser.timeout = timeout;
+    ser.baudrate = baudrate;
+    ser.count = count;
+    memcpy(ser.data, data, count);
+
+    mavlink_msg_serial_control_encode_chan(_mavlink->getSystemId(),
+                                           _mavlink->getComponentId(),
+                                           priorityLink()->mavlinkChannel(),
+                                           &msg,
+                                           &ser);
+
+    sendMessageOnLink(priorityLink(), msg);
 }
 
 void Vehicle::setVtolInFwdFlight(bool vtolInFwdFlight)
