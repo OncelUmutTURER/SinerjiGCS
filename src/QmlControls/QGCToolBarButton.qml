@@ -41,7 +41,9 @@ Item {
     Rectangle {
         anchors.fill:   parent
         visible:        logo
-        color:          qgcPal.brandingOrange   //qgcPal.brandingPurple
+       /* color:          "#dbdbdb"   //qgcPal.brandingPurple
+        border.color: qgcPal.brandingOrange
+        border.width: 1*/
     }
 
     QGCColoredImage {
@@ -54,7 +56,7 @@ Item {
         anchors.bottom:         parent.bottom
         sourceSize.height:      parent.height
         fillMode:               Image.PreserveAspectFit
-        color:                  logo ? "white" : (checked ? qgcPal.buttonHighlight : qgcPal.buttonText)
+        color:                  logo ? "transparent" : (checked ? qgcPal.buttonHighlight : qgcPal.buttonText)
     }
 
     Rectangle {
