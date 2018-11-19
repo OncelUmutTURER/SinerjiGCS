@@ -24,6 +24,7 @@ Item {
     property alias          source:         icon.source
     property bool           checked:        false
     property bool           logo:           false
+    property bool           isPlan:         false
     property ExclusiveGroup exclusiveGroup:  null
 
     signal clicked()
@@ -56,7 +57,7 @@ Item {
         anchors.bottom:         parent.bottom
         sourceSize.height:      parent.height
         fillMode:               Image.PreserveAspectFit
-        color:                  logo ? "transparent" : (checked ? qgcPal.buttonHighlight : qgcPal.buttonText)
+        color:                  logo ? isPlan ?qgcPal.buttonHighlight : "transparent" : (checked ? qgcPal.buttonHighlight : qgcPal.buttonText)
     }
 
     Rectangle {

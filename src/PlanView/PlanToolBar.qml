@@ -102,6 +102,7 @@ Rectangle {
             anchors.bottom:     parent.bottom
             source:             "/qmlimages/PaperPlane.svg"
             logo:               true
+            isPlan:             true
             checked:            false
             onClicked: {
                 checked = false

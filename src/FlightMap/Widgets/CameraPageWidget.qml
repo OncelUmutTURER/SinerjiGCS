@@ -36,35 +36,23 @@ Column {
     property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
     property var _dynamicCameras: _activeVehicle ? _activeVehicle.dynamicCameras : null
     property bool _isCamera: false
-    property var _camera: _isCamera ? _dynamicCameras.cameras.get(
-                                          _curCameraIndex) : null
-    property bool _cameraModeUndefined: _isCamera ? _dynamicCameras.cameras.get(
-                                                        _curCameraIndex).cameraMode === QGCCameraControl.CAMERA_MODE_UNDEFINED : true
-    property bool _cameraVideoMode: _isCamera ? _dynamicCameras.cameras.get(
-                                                    _curCameraIndex).cameraMode === 1 : false
-    property bool _cameraPhotoMode: _isCamera ? _dynamicCameras.cameras.get(
-                                                    _curCameraIndex).cameraMode === 0 : false
-    property bool _cameraPhotoIdle: _isCamera
-                                    && _camera.photoStatus === QGCCameraControl.PHOTO_CAPTURE_IDLE
-    property bool _cameraElapsedMode: _isCamera
-                                      && _camera.cameraMode === QGCCameraControl.CAM_MODE_PHOTO
-                                      && _camera.photoMode
-                                      === QGCCameraControl.PHOTO_CAPTURE_TIMELAPSE
+    property var _camera: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex) : null
+    property bool _cameraModeUndefined: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex).cameraMode === QGCCameraControl.CAMERA_MODE_UNDEFINED : true
+    property bool _cameraVideoMode: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex).cameraMode === 1 : false
+    property bool _cameraPhotoMode: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex).cameraMode === 0 : false
+    property bool _cameraPhotoIdle: _isCamera && _camera.photoStatus === QGCCameraControl.PHOTO_CAPTURE_IDLE
+    property bool _cameraElapsedMode: _isCamera && _camera.cameraMode === QGCCameraControl.CAM_MODE_PHOTO && _camera.photoMode === QGCCameraControl.PHOTO_CAPTURE_TIMELAPSE
     property real _spacers: ScreenTools.defaultFontPixelHeight * 0.5
     property real _labelFieldWidth: ScreenTools.defaultFontPixelWidth * 30
     property real _editFieldWidth: ScreenTools.defaultFontPixelWidth * 30
     property bool _communicationLost: _activeVehicle ? _activeVehicle.connectionLost : false
     property bool _hasModes: _isCamera && _camera && _camera.hasModes
-    property bool _videoRecording: _camera && _camera.videoStatus
-                                   === QGCCameraControl.VIDEO_CAPTURE_STATUS_RUNNING
+    property bool _videoRecording: _camera && _camera.videoStatus === QGCCameraControl.VIDEO_CAPTURE_STATUS_RUNNING
     property bool _noStorage: _camera && _camera.storageTotal === 0
     property int _curCameraIndex: _dynamicCameras ? _dynamicCameras.currentCamera : 0
 
     function showSettings() {
-        qgcView.showDialog(cameraSettings,
-                           _cameraVideoMode ? qsTr("Video Settings") : qsTr(
-                                                  "Camera Settings"), 70,
-                                              StandardButton.Ok)
+        qgcView.showDialog(cameraSettings, _cameraVideoMode ? qsTr("Video Settings") : qsTr("Camera Settings"), 70, StandardButton.Ok)
     }
 
     //-- Dumb camera trigger if no actual camera interface exists
@@ -83,6 +71,9 @@ Column {
     property string zoomOutIcon: "/res/zoomOut"
     property bool cameraMode
     property bool videoActive: false
+    property bool zoomInActive
+    property bool zoomOutActive
+
     ColumnLayout {
         id: mainLayout
         enabled: _activeVehicle
@@ -122,7 +113,7 @@ Column {
                                 cameraMode = false
 
                                 //console.log("CHANGE MODE (PHOTO) EVENT")
-                                _activeVehicle.cameraModeChange();
+                                _activeVehicle.cameraModeChange()
                             }
                         }
                     }
@@ -135,7 +126,7 @@ Column {
                                 cameraModeStatusText.text = "Record a video"
 
                                 //console.log("CHANGE MODE (VIDEO) EVENT")
-                                _activeVehicle.cameraModeChange();
+                                _activeVehicle.cameraModeChange()
                             }
                         }
                     }
@@ -153,7 +144,7 @@ Column {
 
                     onClicked: {
                         //console.log("TAKE A PHOTO EVENT")
-                        _activeVehicle.cameraCapture();
+                        _activeVehicle.cameraCapture()
                     }
 
                     background: Rectangle {
@@ -165,11 +156,11 @@ Column {
                         gradient: Gradient {
                             GradientStop {
                                 position: 0
-                                color: "#ccc"
+                                color: captureButton.pressed ? "#aaa" : "#ccc"
                             }
                             GradientStop {
                                 position: 1
-                                color: "#aaa"
+                                color: captureButton.pressed ? "#ccc" : "#aaa"
                             }
                         }
                     }
@@ -188,9 +179,10 @@ Column {
                             id: captureButtoncolorOverlay
                             anchors.fill: captureButtonIcon
                             source: captureButtonIcon
-                            color: "gray"
+                            color: captureButton.pressed ? "green" : "gray"
                         }
                     }
+
                 }
                 Button {
                     // Video
@@ -206,7 +198,7 @@ Column {
                         videoActive = !videoActive
 
                         //console.log("RECORD VIDEO EVENT")
-                        _activeVehicle.cameraCapture();
+                        _activeVehicle.cameraCapture()
                     }
 
                     background: Rectangle {
@@ -275,40 +267,49 @@ Column {
             RowLayout {
 
                 Button {
+                    id: btnZoomInId
+                    checkable: true
+                    checked: zoomInActive
 
-                    contentItem: Row {
-                        Image {
-                            id: zoomInButtonIcon
-                            source: zoomInIcon
-                            anchors.verticalCenter: parent.verticalCenter
-
-                            property int size: 25
-
-                            sourceSize.width: size
-                            sourceSize.height: size
-                        }
+                    Image {
+                        id: zoomInButtonIcon
+                        source: zoomInIcon
+                        property alias color: zoomInColorOverlay.color
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        property int size: 22
+                        sourceSize.width: size
+                        sourceSize.height: size
                     }
+                    ColorOverlay {
+                        id: zoomInColorOverlay
+                        anchors.fill: zoomInButtonIcon
+                        source: zoomInButtonIcon
+                        color: zoomInActive ? "green" : "gray"
+                    }
+
                     background: Rectangle {
-                        implicitWidth: 30
-                        implicitHeight: 30
+                        implicitWidth: 40
+                        implicitHeight: 40
                         border.width: 1
                         border.color: "#888"
                         radius: 4
                         gradient: Gradient {
                             GradientStop {
                                 position: 0
-                                color: "#ccc"
+                                color: zoomInActive ? "#aaa" : "#ccc"
                             }
 
                             GradientStop {
                                 position: 1
-                                color: "#aaa"
+                                color: zoomInActive ? "#ccc" : "#aaa"
                             }
                         }
                     }
-                    onClicked: {
-                        //console.log("ZOOM IN EVENT")
-                        _activeVehicle.cameraZoomIn();
+                    onCheckedChanged: {
+                        zoomOutActive = false
+                        zoomInActive = checked
+                        checked ? _activeVehicle.cameraZoomIn() : _activeVehicle.cameraZoomStop()
                     }
                 }
                 Label {
@@ -316,37 +317,48 @@ Column {
                     font.pointSize: 11
                 }
                 Button {
-                    contentItem: Row {
-                        Image {
-                            id: zoomOutButtonIcon
-                            source: zoomOutIcon
-                            anchors.verticalCenter: parent.verticalCenter
-                            property int size: 25
-                            sourceSize.width: size
-                            sourceSize.height: size
-                        }
+                    id: btnZoomOutId
+                    checkable: true
+                    checked: zoomOutActive
+                    Image {
+                        id: zoomOutButtonIcon
+                        source: zoomOutIcon
+                        property alias color: zoomOutColorOverlay.color
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        property int size: 22
+                        sourceSize.width: size
+                        sourceSize.height: size
                     }
+                    ColorOverlay {
+                        id: zoomOutColorOverlay
+                        anchors.fill: zoomOutButtonIcon
+                        source: zoomOutButtonIcon
+                        color: zoomOutActive ? "green" : "gray"
+                    }
+
                     background: Rectangle {
-                        implicitWidth: 30
-                        implicitHeight: 30
+                        implicitWidth: 40
+                        implicitHeight: 40
                         border.width: 1
                         border.color: "#888"
                         radius: 4
                         gradient: Gradient {
                             GradientStop {
                                 position: 0
-                                color: "#ccc"
+                                color: zoomOutActive ? "#aaa" : "#ccc"
                             }
 
                             GradientStop {
                                 position: 1
-                                color: "#aaa"
+                                color: zoomOutActive ? "#ccc" : "#aaa"
                             }
                         }
                     }
-                    onClicked: {
-                        console.log("ZOOM OUT EVENT")
-                        _activeVehicle.cameraZoomOut();
+                    onCheckedChanged: {
+                        zoomInActive = false
+                        zoomOutActive = checked
+                        checked ? _activeVehicle.cameraZoomOut() : _activeVehicle.cameraZoomStop()
                     }
                 }
             }
