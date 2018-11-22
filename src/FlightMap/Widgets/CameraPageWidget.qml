@@ -69,7 +69,7 @@ Column {
     property string photoTakeIcon: "/qmlimages/camera_photo.svg"
     property string zoomInIcon: "/res/zoomIn"
     property string zoomOutIcon: "/res/zoomOut"
-    property bool cameraMode
+    property bool cameraMode: true
     property bool videoActive: false
     property bool zoomInActive
     property bool zoomOutActive
@@ -100,7 +100,7 @@ Column {
                     RadioButton {
                         id: radioButton
                         text: "Photo"
-                        checked: true
+                        checked: !cameraMode
                         ButtonGroup.group: tabPositionGroup
                         onCheckedChanged: {
                             if (checked) {
@@ -108,6 +108,7 @@ Column {
                                     videoButtonIcon.source = videoCameraIcon
                                     videoButtonIcon.color = "gray"
                                     videoActive = false
+                                    _activeVehicle.cameraCapture() //stop active recording before changing mode
                                 }
                                 cameraModeStatusText.text = "Take a photo"
                                 cameraMode = false
@@ -118,7 +119,8 @@ Column {
                         }
                     }
                     RadioButton {
-                        text: "Video"
+                        text: "Video"                        
+                        checked: cameraMode
                         ButtonGroup.group: tabPositionGroup
                         onCheckedChanged: {
                             if (checked) {
