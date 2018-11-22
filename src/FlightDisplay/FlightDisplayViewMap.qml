@@ -316,6 +316,7 @@ FlightMap {
         function hide() {
             gotoLocationItem.visible = false
         }
+
     }
 
     MapQuickItem {
@@ -330,6 +331,7 @@ FlightMap {
             index:      -1
             color:      "blue"
             label:      qsTr("ROI", "Camera Region Of Interest")
+
         }
 
         function show(coord) {
