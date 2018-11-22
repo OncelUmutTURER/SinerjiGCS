@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>948</width>
+    <width>854</width>
     <height>38</height>
    </rect>
   </property>
@@ -109,6 +109,13 @@
      </property>
      <property name="text">
       <string>Replay Flight Data</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Video Player</string>
      </property>
     </widget>
    </item>
