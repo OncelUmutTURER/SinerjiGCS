@@ -52,6 +52,7 @@ Item {
     readonly property string vtolTransitionTitle:           qsTr("VTOL Transition")
     readonly property string roiLocationTitle:              qsTr("ROI Location")
 
+
     readonly property string armMessage:                        qsTr("Arm the vehicle.")
     readonly property string disarmMessage:                     qsTr("Disarm the vehicle")
     readonly property string emergencyStopMessage:              qsTr("WARNING: THIS WILL STOP ALL MOTORS. IF VEHICLE IS CURRENTLY IN THE AIR IT WILL CRASH.")
@@ -96,6 +97,8 @@ Item {
     readonly property int actionVtolTransitionToFwdFlight:  20
     readonly property int actionVtolTransitionToMRFlight:   21
     readonly property int actionROILocation:                22
+    readonly property int actionROILocationCancel:          23
+
 
     property bool showEmergenyStop:     _guidedActionsEnabled && !_hideEmergenyStop && _vehicleArmed && _vehicleFlying
     property bool showArm:              _guidedActionsEnabled && !_vehicleArmed
@@ -203,7 +206,18 @@ Item {
         _vehicleInLandMode =    _activeVehicle ? _flightMode === _activeVehicle.landFlightMode : false
         _vehicleInMissionMode = _activeVehicle ? _flightMode === _activeVehicle.missionFlightMode : false // Must be last to get correct signalling for showStartMission popups
     }
-
+    function cancellation(actionCode)
+    {
+        switch (actionCode) {
+        case actionROILocationCancel:
+            console.log("ROI CANCEL")
+            _activeVehicle.cancelROILocation()
+            break;
+        default:
+            console.warn("Unknown actionCode", actionCode)
+            return
+        }
+    }
     // Called when an action is about to be executed in order to confirm
     function confirmAction(actionCode, actionData) {
         var showImmediate = true
