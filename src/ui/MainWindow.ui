@@ -78,7 +78,6 @@
     <addaction name="separator"/>
     <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
-    <addaction name="actionVideoPlayer"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuWidgets">
@@ -217,11 +216,6 @@
   <action name="actionTurkce">
    <property name="text">
     <string>Türkçe</string>
-   </property>
-  </action>
-  <action name="actionVideoPlayer">
-   <property name="text">
-    <string>Video Player</string>
    </property>
   </action>
   <action name="actionPilot_Profile">

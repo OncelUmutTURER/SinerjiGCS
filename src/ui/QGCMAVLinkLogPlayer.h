@@ -44,6 +44,8 @@ private slots:
     void _replayLinkDisconnected(void);
     void _setCurrentLogTime(int secs);
 
+    void on_pushButton_clicked();
+
 private:
     void _finishPlayback(void);
     QString _secondsToHMS(int seconds);
