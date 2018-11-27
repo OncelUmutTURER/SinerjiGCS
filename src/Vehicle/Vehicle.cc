@@ -2889,6 +2889,17 @@ void Vehicle::cancelROILocation()
     //Umut TODO: To Be Implemented
 }
 
+
+int Vehicle::_videoRecordStatus;
+
+void Vehicle::setVideoRecordStatus(int setValue)
+{
+    _videoRecordStatus = setValue;
+}
+int Vehicle::getVideoRecordStatus()
+{
+    return _videoRecordStatus;
+}
 void Vehicle::guidedModeChangeAltitude(double altitudeChange)
 {
     if (!guidedModeSupported()) {
