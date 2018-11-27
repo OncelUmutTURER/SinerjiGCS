@@ -70,6 +70,7 @@ private slots:
     void _udpPortChanged            ();
     void _rtspUrlChanged            ();
     void _tcpUrlChanged             ();
+    void _updateUVC ();
 
 private:
     void _updateSettings            ();

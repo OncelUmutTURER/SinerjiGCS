@@ -32,8 +32,8 @@ QGC_LOGGING_CATEGORY(VideoManagerLog, "VideoManagerLog")
 //-----------------------------------------------------------------------------
 VideoManager::VideoManager(QGCApplication* app, QGCToolbox* toolbox)
     : QGCTool(app, toolbox)
-    , _videoReceiver(NULL)
-    , _videoSettings(NULL)
+    , _videoReceiver(nullptr)
+    , _videoSettings(nullptr)
     , _fullScreen(false)
 {
 }
@@ -65,15 +65,7 @@ VideoManager::setToolbox(QGCToolbox *toolbox)
 #if defined(QGC_GST_STREAMING)
 #ifndef QGC_DISABLE_UVC
    // If we are using a UVC camera setup the device name
-    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-    foreach (const QCameraInfo &cameraInfo, cameras) {
-        if(cameraInfo.description() == videoSource) {
-            _videoSourceID = cameraInfo.deviceName();
-            emit videoSourceIDChanged();
-            qCDebug(VideoManagerLog) << "Found USB source:" << _videoSourceID << " Name:" << videoSource;
-            break;
-        }
-    }
+   _updateUVC();
 #endif
 
     emit isGStreamerChanged();
@@ -88,11 +80,29 @@ VideoManager::setToolbox(QGCToolbox *toolbox)
 
 #endif
 }
+//-----------------------------------------------------------------------------
+void
+VideoManager::_updateUVC()
+{
+#ifndef QGC_DISABLE_UVC
+    QString videoSource = _videoSettings->videoSource()->rawValue().toString();
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    for (const QCameraInfo &cameraInfo: cameras) {
+        if(cameraInfo.description() == videoSource) {
+            _videoSourceID = cameraInfo.deviceName();
+            emit videoSourceIDChanged();
+            qCDebug(VideoManagerLog) << "Found USB source:" << _videoSourceID << " Name:" << videoSource;
+            break;
+        }
+    }
+#endif
+}
 
 //-----------------------------------------------------------------------------
 void
 VideoManager::_videoSourceChanged()
 {
+    _updateUVC();
     emit hasVideoChanged();
     emit isGStreamerChanged();
     _restartVideo();
