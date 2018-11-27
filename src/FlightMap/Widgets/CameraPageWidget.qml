@@ -108,6 +108,7 @@ Column {
                                     videoButtonIcon.source = videoCameraIcon
                                     videoButtonIcon.color = "gray"
                                     videoActive = false
+                                    _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
                                     _activeVehicle.cameraCapture() //stop active recording before changing mode
                                 }
                                 cameraModeStatusText.text = "Take a photo"
@@ -200,6 +201,7 @@ Column {
                         videoActive = !videoActive
 
                         //console.log("RECORD VIDEO EVENT")
+                        _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
                         _activeVehicle.cameraCapture()
                     }
 

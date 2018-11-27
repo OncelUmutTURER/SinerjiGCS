@@ -760,7 +760,10 @@ public:
     Q_INVOKABLE void cameraZoomOut(void);
     ///Stop zoom command
     Q_INVOKABLE void cameraZoomStop(void);
-
+    ///Set Video Record Status
+    Q_INVOKABLE void setVideoRecordStatus(int);
+    ///Get Video Record Status
+    Q_INVOKABLE static int getVideoRecordStatus();
 #if 0
     // Temporarily removed, waiting for new command implementation
     /// Test motor
@@ -769,7 +772,6 @@ public:
     ///     @param timeoutSecs Number of seconds for motor to run
     Q_INVOKABLE void motorTest(int motor, int percent, int timeoutSecs);
 #endif
-
     bool guidedModeSupported    (void) const;
     bool pauseVehicleSupported  (void) const;
     bool orbitModeSupported     (void) const;
@@ -1215,6 +1217,7 @@ private slots:
     void _adsbTimerTimeout      ();
 
 private:
+    static int _videoRecordStatus;
     bool _containsLink(LinkInterface* link);
     void _addLink(LinkInterface* link);
     void _loadSettings(void);
