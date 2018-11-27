@@ -329,7 +329,6 @@ FlightMap {
 
             onClicked: {
                 gotoLocationItem.visible = false
-                console.log("hmmm");
             }
         }
         function show(coord) {
@@ -372,7 +371,6 @@ FlightMap {
                 roiLocationItem.visible = false
                 guidedActionsController.cancellation(guidedActionsController.actionROILocationCancel)
 
-                console.log("hmmm");
             }
         }
         function show(coord) {
