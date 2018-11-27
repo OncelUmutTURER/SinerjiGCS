@@ -56,6 +56,14 @@ FlightMap {
     property bool   _disableVehicleTracking:    false
     property bool   _keepVehicleCentered:       _mainIsMap ? false : true
 
+    property string goToText: qsTr("Goto here", "Goto here waypoint")
+    property bool firstPointGoTo: false
+    property bool isCancelGoTo: false
+
+    property string roiText: qsTr("ROI", "Camera Region Of Interest")
+    property bool firstPointROI: false
+    property bool isCancelROI: false
+
     function updateAirspace(reset) {
         if(_airspaceEnabled) {
             var coordinateNW = flightMap.toCoordinate(Qt.point(0,0), false /* clipToViewPort */)
@@ -305,10 +313,26 @@ FlightMap {
         sourceItem: MissionItemIndexLabel {
             checked:    true
             index:      -1
-            label:      qsTr("Goto here", "Goto here waypoint")
+            color:      isCancelGoTo ? "red" : "green"
+            label:      isCancelGoTo ? qsTr("Cancel", "Cancel Go to location") : goToText
         }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: {
+              isCancelGoTo = firstPointGoTo ? true : false
+            }
+            onExited: {
+                isCancelGoTo = false
+                firstPointGoTo = true
+            }
 
+            onClicked: {
+                gotoLocationItem.visible = false
+            }
+        }
         function show(coord) {
+            firstPointGoTo = false
             gotoLocationItem.coordinate = coord
             gotoLocationItem.visible = true
         }
@@ -316,29 +340,47 @@ FlightMap {
         function hide() {
             gotoLocationItem.visible = false
         }
+
     }
 
     MapQuickItem {
-        id:             lookAtLocation
+        id:             roiLocationItem
         visible:        false
         z:              QGroundControl.zOrderMapItems
         anchorPoint.x:  sourceItem.anchorPointX
         anchorPoint.y:  sourceItem.anchorPointY
-
         sourceItem: MissionItemIndexLabel {
             checked:    true
             index:      -1
-            color:      "blue"
-            label:      qsTr("ROI", "ROI")
-        }
+            color:      isCancelROI ? "red" : "blue"
+            label:      isCancelROI ? qsTr("Cancel", "Cancel ROI") : roiText
 
+        }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: {
+              isCancelROI = firstPointROI ? true : false
+            }
+            onExited: {
+                isCancelROI = false
+                firstPointROI = true
+            }
+
+            onClicked: {
+                roiLocationItem.visible = false
+                guidedActionsController.cancellation(guidedActionsController.actionROILocationCancel)
+
+            }
+        }
         function show(coord) {
-            lookAtLocation.coordinate = coord
-            lookAtLocation.visible = true
+            firstPointROI = false
+            roiLocationItem.coordinate = coord
+            roiLocationItem.visible = true
         }
 
         function hide() {
-            lookAtLocation.visible = false
+            roiLocationItem.visible = false
         }
     }
 
@@ -445,15 +487,15 @@ FlightMap {
             else if (mouseButtonClicked === Qt.RightButton)
             {
 
-                if (guidedActionsController.guidedUIVisible || !guidedActionsController.showLookAtLocation) {
+                if (guidedActionsController.guidedUIVisible || !guidedActionsController.showROILocation) {
                     return
                 }
-                lookAtLocation.hide()
+                roiLocationItem.hide()
                 var clickCoords = flightMap.toCoordinate(Qt.point(mouse.x, mouse.y), false)
 
-                if (guidedActionsController.showLookAtLocation) {
-                    lookAtLocation.show(clickCoords)
-                    guidedActionsController.confirmAction(guidedActionsController.actionLookAtLocation, clickCoords)
+                if (guidedActionsController.showROILocation) {
+                    roiLocationItem.show(clickCoords)
+                    guidedActionsController.confirmAction(guidedActionsController.actionROILocation, clickCoords)
                 }
 
             }

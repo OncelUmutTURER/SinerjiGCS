@@ -50,7 +50,8 @@ Item {
     readonly property string setWaypointTitle:              qsTr("Set Waypoint")
     readonly property string gotoTitle:                     qsTr("Goto Location")
     readonly property string vtolTransitionTitle:           qsTr("VTOL Transition")
-    readonly property string lookAtLocationTitle:           qsTr("ROI Location")
+    readonly property string roiLocationTitle:              qsTr("ROI Location")
+
 
     readonly property string armMessage:                        qsTr("Arm the vehicle.")
     readonly property string disarmMessage:                     qsTr("Disarm the vehicle")
@@ -72,7 +73,7 @@ Item {
     readonly property string mvPauseMessage:                    qsTr("Pause all vehicles at their current position.")
     readonly property string vtolTransitionFwdMessage:          qsTr("Transition VTOL to fixed wing flight.")
     readonly property string vtolTransitionMRMessage:           qsTr("Transition VTOL to multi-rotor flight.")
-    readonly property string lookAtLocationMessage:             qsTr("Set camera target to the specified location.")
+    readonly property string roiLocationMessage:                qsTr("Set camera target to the specified location.")
 
     readonly property int actionRTL:                        1
     readonly property int actionLand:                       2
@@ -95,7 +96,9 @@ Item {
     readonly property int actionMVStartMission:             19
     readonly property int actionVtolTransitionToFwdFlight:  20
     readonly property int actionVtolTransitionToMRFlight:   21
-    readonly property int actionLookAtLocation:             22
+    readonly property int actionROILocation:                22
+    readonly property int actionROILocationCancel:          23
+
 
     property bool showEmergenyStop:     _guidedActionsEnabled && !_hideEmergenyStop && _vehicleArmed && _vehicleFlying
     property bool showArm:              _guidedActionsEnabled && !_vehicleArmed
@@ -110,7 +113,7 @@ Item {
     property bool showOrbit:            _guidedActionsEnabled && !_hideOrbit && _vehicleFlying && _activeVehicle.orbitModeSupported && !_missionActive
     property bool showLandAbort:        _guidedActionsEnabled && _vehicleFlying && _activeVehicle.fixedWing && _vehicleLanding
     property bool showGotoLocation:     _guidedActionsEnabled && _vehicleFlying
-    property bool showLookAtLocation:   _guidedActionsEnabled && _vehicleFlying
+    property bool showROILocation:      _guidedActionsEnabled && _vehicleFlying
     // Note: The 'missionController.visualItems.count - 3' is a hack to not trigger resume mission when a mission ends with an RTL item
     property bool showResumeMission:    _activeVehicle && !_vehicleArmed && _vehicleWasFlying && _missionAvailable && _resumeMissionIndex > 0 && (_resumeMissionIndex < missionController.visualItems.count - 3)
 
@@ -203,7 +206,18 @@ Item {
         _vehicleInLandMode =    _activeVehicle ? _flightMode === _activeVehicle.landFlightMode : false
         _vehicleInMissionMode = _activeVehicle ? _flightMode === _activeVehicle.missionFlightMode : false // Must be last to get correct signalling for showStartMission popups
     }
-
+    function cancellation(actionCode)
+    {
+        switch (actionCode) {
+        case actionROILocationCancel:
+            console.log("ROI CANCEL")
+            _activeVehicle.cancelROILocation()
+            break;
+        default:
+            console.warn("Unknown actionCode", actionCode)
+            return
+        }
+    }
     // Called when an action is about to be executed in order to confirm
     function confirmAction(actionCode, actionData) {
         var showImmediate = true
@@ -334,10 +348,10 @@ Item {
             confirmDialog.message = vtolTransitionMRMessage
             confirmDialog.hideTrigger = true
             break
-        case actionLookAtLocation:
-            confirmDialog.title = lookAtLocationTitle
-            confirmDialog.message = lookAtLocationMessage
-            confirmDialog.hideTrigger = Qt.binding(function() { return !showLookAtLocation })
+        case actionROILocation:
+            confirmDialog.title = roiLocationTitle
+            confirmDialog.message = roiLocationMessage
+            confirmDialog.hideTrigger = Qt.binding(function() { return !showROILocation })
             break;
         default:
             console.warn("Unknown actionCode", actionCode)
@@ -393,8 +407,8 @@ Item {
         case actionGoto:
             _activeVehicle.guidedModeGotoLocation(actionData)
             break
-        case actionLookAtLocation:
-                console.log("ROI-actionData parametresinde koordinat bilgisi gelmektedir.")
+        case actionROILocation:
+            _activeVehicle.setROILocation(actionData)
             break
         case actionSetWaypoint:
             _activeVehicle.setCurrentMissionSequence(actionData)

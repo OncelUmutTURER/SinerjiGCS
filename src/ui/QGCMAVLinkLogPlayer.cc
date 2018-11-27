@@ -14,6 +14,11 @@
 #include "LinkManager.h"
 #include "QGCQFileDialog.h"
 #include "QGCMessageBox.h"
+//videoPlayer
+#include "VideoPlayer/videoplayer.h"
+#include <QDesktopWidget>
+
+//
 
 QGCMAVLinkLogPlayer::QGCMAVLinkLogPlayer(QWidget *parent)
     : QWidget           (parent)
@@ -215,4 +220,13 @@ void QGCMAVLinkLogPlayer::_setCurrentLogTime(int secs)
         _lastCurrentTime = secs;
         _ui->logCurrentTime->setText(_secondsToHMS(secs));
     }
+}
+
+void QGCMAVLinkLogPlayer::on_pushButton_clicked()
+{
+    VideoPlayer* player = new VideoPlayer();
+
+    const QRect availableGeometry = qApp->desktop()->availableGeometry(player);
+    player->resize(availableGeometry.width() / 2, availableGeometry.height() / 2);
+    player->show();
 }
