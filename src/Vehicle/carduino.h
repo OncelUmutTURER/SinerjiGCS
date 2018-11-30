@@ -19,35 +19,35 @@ Serial Conection Based On:
 
 #include <termios.h>
 #include <string>
-
+#include <list>
 using namespace std;
 
 enum ArduinoBaundRate{
-  B300bps  = B300,
-  B600bps  = B600,
-  B1200bps = B1200,
-  B2400bps = B2400,
-  B4800bps = B4800,
-  B9600bps = B9600,
-//B14400bps= B14400,
-  B19200bps=B19200,
-//B28800bps=B28800
-//B38400bps=38400
-//B57600bps=57600
-  B115200bps=115200
+    B300bps  = B300,
+    B600bps  = B600,
+    B1200bps = B1200,
+    B2400bps = B2400,
+    B4800bps = B4800,
+    B9600bps = B9600,
+    //B14400bps= B14400,
+    B19200bps=B19200,
+    //B28800bps=B28800
+    //B38400bps=38400
+    //B57600bps=57600
+    B115200bps=115200
 };
 
 class cArduino{
 
 private:
-        /*serial port FileDescriptor*/
-        int fd=0;
+    /*serial port FileDescriptor*/
+    int fd=0;
 
     /*memory of port settings*/
-        struct termios oldtio;
+    struct termios oldtio;
 
-        /*Arduino FileName*/
-        char *MODEMDEVICE =0;
+    /*Arduino FileName*/
+    char *MODEMDEVICE =0;
 
 public:
 
@@ -86,10 +86,10 @@ public:
      *print_error - print errors to stderr?
     */
     bool read(
-        string &ret,
-        unsigned long int timeOut_MicroSec=(1*1000000),//1sec
-        bool print_error=false
-        );
+            string &ret,
+            unsigned long int timeOut_MicroSec=(1*1000000),//1sec
+            bool print_error=false
+            );
 
     /*
     odczytuj az do napotkania znaku / lub przekroczenia czasu
@@ -98,14 +98,17 @@ public:
      *timeOut_MicroSec - (mikro sekundy 10-6)
     */
     bool read(
-        string &ret,
-        char until,
-        unsigned long int timeOut_MicroSec
-        );
+            string &ret,
+            char until,
+            unsigned long int timeOut_MicroSec
+            );
 
     /*write to Arduinio*/
     void write(string text);
 
+    list<string> getComList(const char* k);
+    bool IsAvailableConnection();
+    bool IsAvailableVideoSignal();
 };
 
 #endif

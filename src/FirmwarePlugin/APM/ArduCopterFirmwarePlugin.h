@@ -34,8 +34,8 @@ public:
         DRIFT       = 11,  // Drift 'Car Like' mode
         RESERVED_12 = 12,  // RESERVED FOR FUTURE USE
         SPORT       = 13,
-        FLIP        = 14,
-        AUTOTUNE    = 15,
+        //FLIP        = 14,
+        //AUTOTUNE    = 15,
         POS_HOLD    = 16, // HYBRID LOITER.
         BRAKE       = 17,
         THROW       = 18,

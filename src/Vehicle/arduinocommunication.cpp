@@ -22,38 +22,38 @@ void ArduinoCommunication::SetArduinoConnection(bool x)
 void ArduinoCommunication::SetValueIsRecord(bool a)
 {
     if(a)
-        IsRecord="H";
-    else
         IsRecord="L";
+    else
+        IsRecord="H";
 }
 void ArduinoCommunication::SetValueVideoSignal(bool b)
 {
     if(b)
-        VideoSignal="H";
-    else
         VideoSignal="L";
+    else
+        VideoSignal="H";
 }
 
 void ArduinoCommunication::SetValueTelemetry(bool c)
 {
     if(c)
-        Telemetry="H";
-    else
         Telemetry="L";
+    else
+        Telemetry="H";
 }
 void ArduinoCommunication::SetValueArmed(bool d)
 {
     if(d)
-        Armed="H";
-    else
         Armed="L";
+    else
+        Armed="H";
 }
 void ArduinoCommunication::SetValueApplicationStart(bool e)
 {
     if(e)
-        ApplicationStart="H";
-    else
         ApplicationStart="L";
+    else
+        ApplicationStart="H";
 }
 
 void ArduinoCommunication::SetValueCustomMode(std::string f)
@@ -65,9 +65,9 @@ void ArduinoCommunication::SetValueGPS3DFix(bool g,bool h)
 {
     IsSendMessage=h;
     if(g)
-        GPS3DFix="H";
-    else
         GPS3DFix="L";
+    else
+        GPS3DFix="H";
 }
 void ArduinoCommunication::SetValueBatteryStatus(int h)
 {
