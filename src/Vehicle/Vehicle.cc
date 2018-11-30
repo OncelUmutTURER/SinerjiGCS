@@ -2875,20 +2875,33 @@ void Vehicle::setROILocation(const QGeoCoordinate& roiCoord)
         return;
     }
 
+    qDebug() << "rel_alt:" << altitudeRelative()->rawValue().toFloat() * -1 << "real_alt" << _coordinate.altitude();
+
     sendMavCommand(defaultComponentId(),
                    MAV_CMD_DO_SET_ROI,                  // command
                    true,                                // show error if fails
                    qQNaN(), qQNaN(), qQNaN(), qQNaN(),  // params 1-4 empty
                    roiCoord.latitude(),
                    roiCoord.longitude(),
-                   _coordinate.altitude());
+                   altitudeAMSL()->rawValue().toDouble() - altitudeRelative()->rawValue().toDouble());  //copter altitude'undan relative altitude'ı çıkararak yere odaklamasını sağlıyoruz. //altitudeAMSL()->rawValue().toDouble() //_coordinate.altitude()
 }
 
 void Vehicle::cancelROILocation()
 {
-    //Umut TODO: To Be Implemented
+    //lat, lon ve alt 0 olduğunda ROI cancel ediliyor
+    sendMavCommand(defaultComponentId(),
+                   MAV_CMD_DO_SET_ROI,                  // command
+                   true,                                // show error if fails
+                   qQNaN(), qQNaN(), qQNaN(), qQNaN(),  // params 1-4 empty
+                   0,
+                   0,
+                   0);
 }
 
+void Vehicle::cancelGoToLocation()
+{
+    pauseVehicle();
+}
 
 int Vehicle::_videoRecordStatus;
 
