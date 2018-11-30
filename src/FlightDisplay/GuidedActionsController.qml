@@ -96,8 +96,10 @@ Item {
     readonly property int actionMVStartMission:             19
     readonly property int actionVtolTransitionToFwdFlight:  20
     readonly property int actionVtolTransitionToMRFlight:   21
+
     readonly property int actionROILocation:                22
     readonly property int actionROILocationCancel:          23
+    readonly property int actionGoToLocationCancel:         24
 
 
     property bool showEmergenyStop:     _guidedActionsEnabled && !_hideEmergenyStop && _vehicleArmed && _vehicleFlying
@@ -209,13 +211,15 @@ Item {
     function cancellation(actionCode)
     {
         switch (actionCode) {
-        case actionROILocationCancel:
-            console.log("ROI CANCEL")
-            _activeVehicle.cancelROILocation()
-            break;
-        default:
-            console.warn("Unknown actionCode", actionCode)
-            return
+            case actionROILocationCancel:
+                _activeVehicle.cancelROILocation()
+                break;
+            case actionGoToLocationCancel:
+                _activeVehicle.cancelGoToLocation()
+                break;
+            default:
+                console.warn("Unknown actionCode", actionCode)
+                return
         }
     }
     // Called when an action is about to be executed in order to confirm
