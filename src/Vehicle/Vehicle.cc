@@ -92,37 +92,37 @@ const char* Vehicle::_estimatorStatusFactGroupName =    "estimatorStatus";
 
 void Vehicle::ReadingArduino()
 {
-    if(_arduinocommunication.GetArduinoConnection())
+    if(arduino.IsAvailableConnection())
     {
-        if(!arduino.isOpen())
+        if(_arduinocommunication.GetArmed() == "ALL")//Armed ise dinleme yap
         {
-            _arduinocommunication.SetArduinoConnection(false);
-             QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-        }
-        else
-        {
-            if(_arduinocommunication.GetArmed() == "ALH")//Armed ise dinleme yap
-            {
-                arduino.open(ArduinoBaundRate::B9600bps);
-                string arduinoOutput;
-                int indexRth,indexADB;
-                if(arduino.read(arduinoOutput))//data is arrived
-                {
-                    indexRth=arduinoOutput.find("R");
-                    indexADB=arduinoOutput.find("A");
-                    if(indexRth > -1)
-                    {
-                        guidedModeRTL();
-                    }
-                    if(indexADB > -1)
-                    {
-                        emergencyStop();
-                    }
-                }
-                arduino.close();
-            }
+            arduino.open(ArduinoBaundRate::B9600bps);
+            string arduinoOutput;
+            int indexRth,indexADB;
 
+            if(arduino.read(arduinoOutput))//data is arrived
+            {
+                //cerr<<arduinoOutput<<endl;
+                indexRth=arduinoOutput.find("R");
+                indexADB=arduinoOutput.find("A");
+                if(indexRth > -1)
+                {
+                    guidedModeRTL();
+                }
+                if(indexADB > -1)
+                {
+                    emergencyStop();
+                }
+            }
+            arduino.close();
         }
+    }
+    else
+    {
+        cerr<<"Read else girdi"<<endl;
+        //        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+        //        arduino.close();
+        //        arduino.flush();
 
     }
 }
@@ -251,7 +251,7 @@ Vehicle::Vehicle(LinkInterface*             link,
 {
     //Read Arduino
     QObject::connect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-    readTimer.setInterval(500);
+    readTimer.setInterval(300);
     readTimer.start();
 
     connect(_joystickManager, &JoystickManager::activeJoystickChanged, this, &Vehicle::_loadSettings);
@@ -837,33 +837,64 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     // does processing.
     emit mavlinkMessageReceived(message);
     _uas->receiveMessage(message);
-    //    arduino.open(ArduinoBaundRate::B9600bps);
-    //    arduino.write("KYHVTHTYLALLSLC3GPFHDB77");
-    //    arduino.close();
-    if(_arduinocommunication.GetArduinoConnection())
+    //    if(_arduinocommunication.GetArduinoConnection())
+    //    {
+    //        arduino.open(ArduinoBaundRate::B9600bps);
+    //        string userInput = _arduinocommunication.GetValue();
+    //        if(_arduinocommunication.GetLastValue() !=userInput)
+    //            if(!arduino.isOpen())
+    //            {
+    //                _arduinocommunication.SetArduinoConnection(false);
+    //                QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+    //            }
+    //            else
+    //            {
+    //                _arduinocommunication.SetLastValue(userInput);
+    //                arduino.write(userInput);
+    //                if(_arduinocommunication.GetIsSendMessage())
+    //                {
+    //                    arduino.open(ArduinoBaundRate::B9600bps);
+    //                    string userInput = _arduinocommunication.GetValue();
+    //                    if(_arduinocommunication.GetLastValue() !=userInput)
+    //                    {
+    //                        _arduinocommunication.SetLastValue(userInput);
+    //                        arduino.write(userInput);
+    //                    }
+    //                    arduino.close();
+    //                }
+    //            }
+    //        arduino.close();
+    //    }
+    if(arduino.IsAvailableConnection())
     {
-        if(!arduino.isOpen())
+        if(_arduinocommunication.GetIsSendMessage())
         {
-            _arduinocommunication.SetArduinoConnection(false);
-            QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-        }
-        else
-        {
-            if(_arduinocommunication.GetIsSendMessage())
+            arduino.open(ArduinoBaundRate::B9600bps);
+            int VideoStatus=0;
+            VideoStatus = getVideoRecordStatus();
+            if(VideoStatus == 1)
+                _arduinocommunication.SetValueIsRecord(true);
+            else
+                _arduinocommunication.SetValueIsRecord(false);
+            _arduinocommunication.SetValueVideoSignal(arduino.IsAvailableVideoSignal()); //Video sinyali için video1 vericisinin bulunmasına bakılıyor.
+            string userInput = _arduinocommunication.GetValue();
+            if(_arduinocommunication.GetLastValue() !=userInput)
             {
-                arduino.open(ArduinoBaundRate::B9600bps);
-
-                string userInput = _arduinocommunication.GetValue();
-                if(_arduinocommunication.GetLastValue() !=userInput)
-                {
-                    _arduinocommunication.SetLastValue(userInput);
-                    arduino.write(userInput);
-                }
-                arduino.close();
+                //cerr<<_arduinocommunication.GetLastValue()<<endl;
+                _arduinocommunication.SetLastValue(userInput);
+                arduino.write(userInput);
+                //cerr<<userInput<<endl;
             }
+            arduino.close();
         }
     }
-
+    else
+    {
+        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+        arduino.close();
+        arduino.flush();
+        //printf("Seri bağlantı bulunamadı");
+    }
 }
 
 #if !defined(NO_ARDUPILOT_DIALECT)
@@ -1699,46 +1730,45 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
         _base_mode = heartbeat.base_mode;
         _custom_mode = heartbeat.custom_mode;
         string _custommode="";
-        if(_custom_mode>9)
+        if(_custom_mode>8)
         {
             switch (_custom_mode) {
-            case 10:
-                _custommode="A";
+            case 9:
+                _custommode="8"; //Land mode için arduino koduna uyuldu
                 break;
             case 11:
-                _custommode="b";
-                break;
-            case 12:
-                _custommode="C";
-                break;
-            case 13:
-                _custommode="d";
-                break;
-            case 14:
-                _custommode="E";
-                break;
-            case 15:
-                _custommode="F";
+                _custommode="9"; //Drift mode için arduino koduna uyuldu
                 break;
             case 16:
-                _custommode="P";
+                _custommode="d";//Position hold
                 break;
             case 17:
-                _custommode="U";
+                _custommode="E"; //Brake Mode
                 break;
             case 18:
-                _custommode="H";
+                _custommode="F"; //Throw Mode
+                break;
+            case 19:
+                _custommode="P"; //Avoid ADSB
+                break;
+            case 20:
+                _custommode="U"; //Guided no gps
+                break;
+            case 13:
+                _custommode="A"; //Sport Mode
+                break;
+            case 21:
+                _custommode="H"; //Smart RTL
                 break;
             }
-
         }
         else
         {
             _custommode=std::to_string(_custom_mode);
         }
-        if(_arduinocommunication.GetCustomMode() != "C"+std::to_string(_custom_mode) )
+        if(_arduinocommunication.GetCustomMode() != "C"+_custommode )
         {
-            _arduinocommunication.SetValueCustomMode(std::to_string(_custom_mode));
+            _arduinocommunication.SetValueCustomMode(_custommode);
         }
         if (previousFlightMode != flightMode()) {
             emit flightModeChanged(flightMode());

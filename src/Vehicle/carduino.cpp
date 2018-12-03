@@ -2,24 +2,21 @@
 #define cArduino_CPP 1
 
 #include "carduino.h"
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
-#include <string.h>
 #include <unistd.h>
-
 #include <string>
-#include <sys/types.h>
 #include <dirent.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <linux/serial.h>
+#include <iostream>
+#include <list>
+#include <algorithm>
 using namespace std;
 
 
@@ -300,5 +297,136 @@ void cArduino::write(string text)
 {
     ::write(	fd,(char*)text.c_str(),(size_t)text.length() );
 }
+static string get_driver(const string& tty) {
+    struct stat st;
+    string devicedir = tty;
 
+    // Append '/device' to the tty-path
+    devicedir += "/device";
+
+    // Stat the devicedir and handle it if it is a symlink
+    if (lstat(devicedir.c_str(), &st)==0 && S_ISLNK(st.st_mode)) {
+        char buffer[1024];
+        memset(buffer, 0, sizeof(buffer));
+
+        // Append '/driver' and return basename of the target
+        devicedir += "/driver";
+
+        if (readlink(devicedir.c_str(), buffer, sizeof(buffer)) > 0)
+            return basename(buffer);
+    }
+    return "";
+}
+
+static void register_comport( list<string>& comList, list<string>& comList8250, const string& dir) {
+    // Get the driver the device is using
+    string driver = get_driver(dir);
+
+    // Skip devices without a driver
+    if (driver.size() > 0) {
+        string devfile = string("/dev/") + basename(dir.c_str());
+
+        // Put serial8250-devices in a seperate list
+        if (driver == "serial8250") {
+            comList8250.push_back(devfile);
+        } else
+            comList.push_back(devfile);
+    }
+}
+
+static void probe_serial8250_comports(list<string>& comList, list<string> comList8250) {
+    struct serial_struct serinfo;
+    list<string>::iterator it = comList8250.begin();
+
+    // Iterate over all serial8250-devices
+    while (it != comList8250.end()) {
+
+        // Try to open the device
+        int fd = open((*it).c_str(), O_RDWR | O_NONBLOCK | O_NOCTTY);
+
+        if (fd >= 0) {
+            // Get serial_info
+            if (ioctl(fd, TIOCGSERIAL, &serinfo)==0) {
+                // If device type is no PORT_UNKNOWN we accept the port
+                if (serinfo.type != PORT_UNKNOWN)
+                    comList.push_back(*it);
+            }
+            close(fd);
+        }
+        it ++;
+    }
+}
+
+list<string> cArduino::getComList(const char* k) {
+    int n;
+    struct dirent **namelist;
+    list<string> comList;
+    list<string> comList8250;
+    const char* sysdir = k;
+
+    // Scan through /sys/class/tty - it contains all tty-devices in the system
+    n = scandir(sysdir, &namelist, NULL, NULL);
+    if (n < 0)
+        perror("scandir");
+    else {
+        while (n--) {
+            if (strcmp(namelist[n]->d_name,"..") && strcmp(namelist[n]->d_name,".")) {
+
+                // Construct full absolute file path
+                string devicedir = sysdir;
+                devicedir += namelist[n]->d_name;
+
+                // Register the device
+                register_comport(comList, comList8250, devicedir);
+            }
+            free(namelist[n]);
+        }
+        free(namelist);
+    }
+
+    // Only non-serial8250 has been added to comList without any further testing
+    // serial8250-devices must be probe to check for validity
+    probe_serial8250_comports(comList, comList8250);
+
+    // Return the lsit of detected comports
+    return comList;
+}
+bool cArduino::IsAvailableConnection()
+{
+    list<string> l=getComList("/sys/class/tty/");
+    list<string>::iterator it = l.begin();
+    it = std::find(l.begin(), l.end(), "/dev/ttyACM0");
+
+    // Check if iterator points to end or not
+    if(it != l.end())
+    {
+        // It does not point to end, it means element exists in list
+        return true;
+    }
+    else
+    {
+        // It points to end, it means element does not exists in list
+        return false;
+    }
+    return false;
+}
+bool cArduino::IsAvailableVideoSignal()
+{
+    list<string> l=getComList("/sys/class/video4linux/");
+    list<string>::iterator it = l.begin();
+    it = std::find(l.begin(), l.end(), "/dev/video1");
+
+    // Check if iterator points to end or not
+    if(it != l.end())
+    {
+        // It does not point to end, it means element exists in list
+        return true;
+    }
+    else
+    {
+        // It points to end, it means element does not exists in list
+        return false;
+    }
+    return false;
+}
 #endif

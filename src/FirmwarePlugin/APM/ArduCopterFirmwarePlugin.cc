@@ -34,8 +34,8 @@ APMCopterMode::APMCopterMode(uint32_t mode, bool settable) :
     enumToString.insert(LAND,      "Land");
     enumToString.insert(DRIFT,     "Drift");
     enumToString.insert(SPORT,     "Sport");
-    enumToString.insert(FLIP,      "Flip");
-    enumToString.insert(AUTOTUNE,  "Autotune");
+//    enumToString.insert(FLIP,      "Flip");
+//    enumToString.insert(AUTOTUNE,  "Autotune");
     enumToString.insert(POS_HOLD,  "Position Hold");
     enumToString.insert(BRAKE,     "Brake");
     enumToString.insert(THROW,     "Throw");
@@ -61,8 +61,8 @@ ArduCopterFirmwarePlugin::ArduCopterFirmwarePlugin(void)
     supportedFlightModes << APMCopterMode(APMCopterMode::LAND      ,true);
     supportedFlightModes << APMCopterMode(APMCopterMode::DRIFT     ,true);
     supportedFlightModes << APMCopterMode(APMCopterMode::SPORT     ,true);
-    supportedFlightModes << APMCopterMode(APMCopterMode::FLIP      ,true);
-    supportedFlightModes << APMCopterMode(APMCopterMode::AUTOTUNE  ,true);
+//    supportedFlightModes << APMCopterMode(APMCopterMode::FLIP      ,true);
+//    supportedFlightModes << APMCopterMode(APMCopterMode::AUTOTUNE  ,true);
     supportedFlightModes << APMCopterMode(APMCopterMode::POS_HOLD  ,true);
     supportedFlightModes << APMCopterMode(APMCopterMode::BRAKE     ,true);
     supportedFlightModes << APMCopterMode(APMCopterMode::THROW     ,true);
