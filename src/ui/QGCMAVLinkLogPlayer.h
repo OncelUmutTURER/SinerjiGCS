@@ -54,7 +54,7 @@ private:
     LogReplayLink*  _replayLink;
     int             _logDurationSeconds;
     int             _lastCurrentTime;
-    
+
     Ui::QGCMAVLinkLogPlayer* _ui;
 };
 

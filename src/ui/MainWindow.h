@@ -99,6 +99,7 @@ protected slots:
      * @brief Enable/Disable Status Bar
      */
     void showStatusBarCallback(bool checked);
+    void setLanguage(int language);
 
 signals:
     void initStatusChanged(const QString& message, int alignment, const QColor &color);
@@ -194,6 +195,8 @@ private:
     MAVLinkDecoder*         _mavlinkDecoder;
     bool                    _lowPowerMode;           ///< If enabled, QGC reduces the update rates of all widgets
     bool                    _showStatusBar;
+    int                     _language;
+    bool                    _languageStatus;
     QVBoxLayout*            _centralLayout;
     Ui::MainWindow          _ui;
 

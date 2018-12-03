@@ -17,6 +17,7 @@
 //videoPlayer
 #include "VideoPlayer/videoplayer.h"
 #include <QDesktopWidget>
+#include "QGCApplication.h"
 
 //
 
@@ -224,6 +225,8 @@ void QGCMAVLinkLogPlayer::_setCurrentLogTime(int secs)
 
 void QGCMAVLinkLogPlayer::on_pushButton_clicked()
 {
+    QGCApplication* qgcApp();
+    qgcApp()->setLocalization(1);
     VideoPlayer* player = new VideoPlayer();
 
     const QRect availableGeometry = qApp->desktop()->availableGeometry(player);

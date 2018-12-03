@@ -107,7 +107,7 @@
     </property>
     <widget class="QMenu" name="menuLanguage">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>Language</string>
@@ -209,11 +209,17 @@
    </property>
   </action>
   <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>English</string>
    </property>
   </action>
   <action name="actionTurkce">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Türkçe</string>
    </property>

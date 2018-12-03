@@ -150,6 +150,8 @@ public:
 
     bool _checkTelemetrySavePath(bool useMessageBox);
 
+public:
+    Q_INVOKABLE void setLocalization(int);
 private slots:
     void _missingParamsDisplay(void);
 
