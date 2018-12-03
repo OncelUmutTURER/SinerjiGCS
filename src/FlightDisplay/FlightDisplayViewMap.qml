@@ -329,6 +329,7 @@ FlightMap {
 
             onClicked: {
                 gotoLocationItem.visible = false
+                guidedActionsController.cancellation(guidedActionsController.actionGoToLocationCancel)
             }
         }
         function show(coord) {

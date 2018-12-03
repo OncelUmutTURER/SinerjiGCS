@@ -73,7 +73,7 @@ public:
     static const char* videoSourceTCP;
 
 signals:
-    void streamConfiguredChanged    ();
+    void streamConfiguredChanged();
 
 private slots:
     void _configChanged             (QVariant value);
@@ -92,6 +92,8 @@ private:
     SettingsFact* _rtspTimeoutFact;
     SettingsFact* _streamEnabledFact;
     SettingsFact* _disableWhenDisarmedFact;
+    void _setDefaults ();
+    bool _noVideo = false;
 };
 
 #endif

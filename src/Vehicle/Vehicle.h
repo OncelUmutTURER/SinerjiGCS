@@ -716,6 +716,9 @@ public:
     /// Command vehicle camera to look at natural position
     Q_INVOKABLE void cancelROILocation(void);
 
+    /// Command vehicle to cancel moving and to start hover
+    Q_INVOKABLE void cancelGoToLocation(void);
+
     /// Command vehicle to change altitude
     ///     @param altitudeChange If > 0, go up by amount specified, if < 0, go down by amount specified
     Q_INVOKABLE void guidedModeChangeAltitude(double altitudeChange);
