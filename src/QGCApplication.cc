@@ -166,8 +166,10 @@ QGCApplication::QGCApplication(int &argc, char* argv[], bool unitTesting)
 {
     _app = this;
 
+    //TO-DO APP LANGUAGE
+    //QLocale locale = QLocale(QLocale::Turkish);
+    QLocale locale = QLocale::system(); //SYSTEM default language
 
-    QLocale locale = QLocale(QLocale::Turkish);
     //-- Some forced locales for testing
     //QLocale locale = QLocale(QLocale::German);
     //QLocale locale = QLocale(QLocale::French);
@@ -709,18 +711,4 @@ void QGCApplication::qmlAttemptWindowClose(void)
 bool QGCApplication::isInternetAvailable()
 {
     return getQGCMapEngine()->isInternetActive();
-}
-void QGCApplication::setLocalization(int val)
-{
-    QLocale locale = QLocale::system();
-    //-- Some forced locales for testing
-    //QLocale locale = QLocale(QLocale::German);
-    //QLocale locale = QLocale(QLocale::French);
-    //QLocale locale = QLocale(QLocale::Chinese);
-#if defined (__macos__)
-    locale = QLocale(locale.name());
-#endif
-    //-- Our localization
-    if(_QGCTranslator.load(locale, "qgc_", "", ":/localization"))
-        _app->installTranslator(&_QGCTranslator);
 }
