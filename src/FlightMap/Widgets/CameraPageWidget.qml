@@ -103,18 +103,17 @@ Column {
                         checked: !cameraMode
                         ButtonGroup.group: tabPositionGroup
                         onCheckedChanged: {
-                            if (checked) {
+                            cameraModeStatusText.text = "Take a photo"
+                            if (checked && cameraMode) {
                                 if (videoActive) {
                                     videoButtonIcon.source = videoCameraIcon
                                     videoButtonIcon.color = "gray"
                                     videoActive = false
                                     _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
                                     _activeVehicle.cameraCapture() //stop active recording before changing mode
-                                }
-                                cameraModeStatusText.text = "Take a photo"
+                                }                                
                                 cameraMode = false
 
-                                //console.log("CHANGE MODE (PHOTO) EVENT")
                                 _activeVehicle.cameraModeChange()
                             }
                         }
@@ -124,11 +123,10 @@ Column {
                         checked: cameraMode
                         ButtonGroup.group: tabPositionGroup
                         onCheckedChanged: {
-                            if (checked) {
+                            cameraModeStatusText.text = "Record a video"
+                            if (checked && !cameraMode) {
                                 cameraMode = true
-                                cameraModeStatusText.text = "Record a video"
 
-                                //console.log("CHANGE MODE (VIDEO) EVENT")
                                 _activeVehicle.cameraModeChange()
                             }
                         }
