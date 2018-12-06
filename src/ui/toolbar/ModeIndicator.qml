@@ -41,7 +41,7 @@ Item {
         Component {
             id: flightModeMenuItemComponent
             MenuItem {
-                onTriggered: _activeVehicle.flightMode = text
+                onTriggered: flightView.guidedController.confirmAction(flightView.guidedController.actionSetFlightMode, text) //_activeVehicle.flightMode = text
             }
         }
         property var flightModesMenuItems: []
