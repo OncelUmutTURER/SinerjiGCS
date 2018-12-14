@@ -102,7 +102,8 @@ Column {
                         text: "Photo"
                         checked: !cameraMode
                         ButtonGroup.group: tabPositionGroup
-                        onCheckedChanged: {                            
+
+                        onCheckedChanged: {
                             cameraModeStatusText.text = "Take a photo"
                             if (checked && cameraMode) {
                                 if (videoActive) {
@@ -113,6 +114,7 @@ Column {
                                     _activeVehicle.cameraCapture() //stop active recording before changing mode
                                 }
                                 cameraMode = false
+
                                 _activeVehicle.cameraModeChange()
                             }
                         }
@@ -121,6 +123,7 @@ Column {
                         text: "Video"                        
                         checked: cameraMode
                         ButtonGroup.group: tabPositionGroup
+
                         onCheckedChanged: {                            
                             cameraModeStatusText.text = "Record a video"
                             if (checked && !cameraMode) {

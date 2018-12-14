@@ -51,6 +51,7 @@ Item {
     readonly property string gotoTitle:                     qsTr("Goto Location")
     readonly property string vtolTransitionTitle:           qsTr("VTOL Transition")
     readonly property string roiLocationTitle:              qsTr("ROI Location")
+    readonly property string setFlightModeTitle:            qsTr("Set Flight Mode")
 
 
     readonly property string armMessage:                        qsTr("Arm the vehicle.")
@@ -74,6 +75,7 @@ Item {
     readonly property string vtolTransitionFwdMessage:          qsTr("Transition VTOL to fixed wing flight.")
     readonly property string vtolTransitionMRMessage:           qsTr("Transition VTOL to multi-rotor flight.")
     readonly property string roiLocationMessage:                qsTr("Set camera target to the specified location.")
+             property string setFlightModeMessage:              qsTr("Set current flight mode to %1.").arg(_actionData)
 
     readonly property int actionRTL:                        1
     readonly property int actionLand:                       2
@@ -97,9 +99,11 @@ Item {
     readonly property int actionVtolTransitionToFwdFlight:  20
     readonly property int actionVtolTransitionToMRFlight:   21
 
-    readonly property int actionROILocation:                22
-    readonly property int actionROILocationCancel:          23
-    readonly property int actionGoToLocationCancel:         24
+    readonly property int actionROILocation:                101
+    readonly property int actionROILocationCancel:          102
+    readonly property int actionGoToLocationCancel:         103
+
+    readonly property int actionSetFlightMode:              104
 
 
     property bool showEmergenyStop:     _guidedActionsEnabled && !_hideEmergenyStop && _vehicleArmed && _vehicleFlying
@@ -208,6 +212,7 @@ Item {
         _vehicleInLandMode =    _activeVehicle ? _flightMode === _activeVehicle.landFlightMode : false
         _vehicleInMissionMode = _activeVehicle ? _flightMode === _activeVehicle.missionFlightMode : false // Must be last to get correct signalling for showStartMission popups
     }
+
     function cancellation(actionCode)
     {
         switch (actionCode) {
@@ -302,6 +307,11 @@ Item {
             confirmDialog.message = rtlMessage
             confirmDialog.hideTrigger = Qt.binding(function() { return !showRTL })
             break;
+        case actionSetFlightMode:
+            confirmDialog.title = setFlightModeTitle
+            confirmDialog.message = setFlightModeMessage
+            confirmDialog.hideTrigger = Qt.binding(function() { return _flightMode === _actionData })
+            break;
         case actionChangeAlt:
             confirmDialog.title = changeAltTitle
             confirmDialog.message = changeAltMessage
@@ -371,6 +381,9 @@ Item {
         switch (actionCode) {
         case actionRTL:
             _activeVehicle.guidedModeRTL()
+            break
+        case actionSetFlightMode:
+            _activeVehicle.flightMode = actionData
             break
         case actionLand:
             _activeVehicle.guidedModeLand()
