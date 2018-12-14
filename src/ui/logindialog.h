@@ -19,7 +19,6 @@ public:
 private slots:
 
     void on_btnLogin_clicked();
-//    void connectArduino();
 
 private:
     Ui::LoginDialog *ui;

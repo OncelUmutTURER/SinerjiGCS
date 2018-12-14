@@ -1197,7 +1197,6 @@ public slots:
     void _arduinoMessageReceived(void);
 
 private slots:
-//    void ReadingArduino();
     void _mavlinkMessageReceived(LinkInterface* link, mavlink_message_t message);
     void _linkInactiveOrDeleted(LinkInterface* link);
     void _sendMessageOnLink(LinkInterface* link, mavlink_message_t message);

@@ -13,15 +13,10 @@ ArduinoCommunication::ArduinoCommunication(bool a, bool b,bool c, bool d,bool e,
     SetValueIsArmed(d);
     SetValueIsApplicationStarted(e);
     SetValueFlightMode(f);
-    SetValueIsGPS3dFixed(g); //,false
+    SetValueIsGPS3dFixed(g);
     SetValueBatteryRemaining(h);
-//    SetArduinoConnection(true);
 }
 
-//void ArduinoCommunication::SetArduinoConnection(bool x)
-//{
-//    IsArduinoConnection=x;
-//}
 void ArduinoCommunication::SetValueIsRecording(bool a)
 {
     if(a)
@@ -64,9 +59,8 @@ void ArduinoCommunication::SetValueFlightMode(std::string f)
     FlightMode = f;
 }
 
-void ArduinoCommunication::SetValueIsGPS3dFixed(bool g) //,bool h
+void ArduinoCommunication::SetValueIsGPS3dFixed(bool g)
 {
-//    IsSendMessage=h;
     if(g)
         IsGPS3dFixed="L";
     else
@@ -76,10 +70,7 @@ void ArduinoCommunication::SetValueBatteryRemaining(int h)
 {
     BatteryRemaining=QString::number(h).rightJustified(3, '0').toStdString();
 }
-//void ArduinoCommunication::SetLastValue(string f)
-//{
-//    LastValue=f;
-//}
+
 std::string ArduinoCommunication::GetValue()
 {
     string s="KY"+IsRecording+"VY"+HasVideoSignal+"TY"+HasTelemetrySignal+"AL"+IsArmed+"S"+IsApplicationStarted+"C"+FlightMode+"GPF"+IsGPS3dFixed+"DB"+BatteryRemaining;
@@ -125,18 +116,6 @@ std::string ArduinoCommunication::GetBatteryRemaining()
     string s="DB"+BatteryRemaining;
     return s;
 }
-//std::string ArduinoCommunication::GetLastValue()
-//{
-//    return LastValue;
-//}
-//bool ArduinoCommunication::GetIsSendMessage()
-//{
-//    return  IsSendMessage;
-//}
-//bool ArduinoCommunication::GetArduinoConnection()
-//{
-//    return  IsArduinoConnection;
-//}
 
 bool ArduinoCommunication::SetVideoSignalValueAndReturnIsChanged()
 {

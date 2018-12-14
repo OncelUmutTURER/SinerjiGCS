@@ -41,13 +41,11 @@
 #include "VideoManager.h"
 #include <QCoreApplication>
 #include <iostream>
-//#include "carduino.h"
 #include <string>
 #include "arduinocommunication.h"
 #include "math.h"
 
 #include "MainWindow.h"
-//#include "QSerialPort.h"
 
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirspaceVehicleManager.h"
@@ -55,7 +53,7 @@
 //#include <thread>
 //#include <chrono>
 #endif
-//cArduino arduino(ArduinoBaundRate::B9600bps);
+
 QGC_LOGGING_CATEGORY(VehicleLog, "VehicleLog")
 
 #define UPDATE_TIMER 50
@@ -93,43 +91,6 @@ const char* Vehicle::_temperatureFactGroupName =        "temperature";
 const char* Vehicle::_clockFactGroupName =              "clock";
 const char* Vehicle::_distanceSensorFactGroupName =     "distanceSensor";
 const char* Vehicle::_estimatorStatusFactGroupName =    "estimatorStatus";
-
-//void Vehicle::ReadingArduino()
-//{
-//    if(arduino.IsAvailableConnection())
-//    {
-//        if(_arduinocommunication.GetArmed() == "ALL")//Armed ise dinleme yap
-//        {
-//            arduino.open(ArduinoBaundRate::B9600bps);
-//            string arduinoOutput;
-//            int indexRth,indexADB;
-
-//            if(arduino.read(arduinoOutput))//data is arrived
-//            {
-//                //cerr<<arduinoOutput<<endl;
-//                indexRth=arduinoOutput.find("R");
-//                indexADB=arduinoOutput.find("A");
-//                if(indexRth > -1)
-//                {
-//                    guidedModeRTL();
-//                }
-//                if(indexADB > -1)
-//                {
-//                    emergencyStop();
-//                }
-//            }
-//            arduino.close();
-//        }
-//    }
-//    else
-//    {
-//        cerr<<"Read else girdi"<<endl;
-//        //        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-//        //        arduino.close();
-//        //        arduino.flush();
-
-//    }
-//}
 
 Vehicle::Vehicle(LinkInterface*             link,
                  int                        vehicleId,
@@ -254,16 +215,6 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _estimatorStatusFactGroup(this)
     , _arduinocommunication(false,false,false,false,true,"0",false,0)
 {
-    //Read Arduino
-//    QObject::connect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-//    readTimer.setInterval(300);
-//    readTimer.start();
-
-//    MainWindow* mainWindow = MainWindow::instance();
-//    if (mainWindow) {
-//        connect(&mainWindow->m_serialPortForArduino, &QSerialPort::readyRead, this, ReadingArduino());
-//    }
-
     connect(_joystickManager, &JoystickManager::activeJoystickChanged, this, &Vehicle::_loadSettings);
     connect(qgcApp()->toolbox()->multiVehicleManager(), &MultiVehicleManager::activeVehicleAvailableChanged, this, &Vehicle::_loadSettings);
 
@@ -857,66 +808,6 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     // does processing.
     emit mavlinkMessageReceived(message);
     _uas->receiveMessage(message);
-
-
-//    //    if(_arduinocommunication.GetArduinoConnection())
-//    //    {
-//    //        arduino.open(ArduinoBaundRate::B9600bps);
-//    //        string userInput = _arduinocommunication.GetValue();
-//    //        if(_arduinocommunication.GetLastValue() !=userInput)
-//    //            if(!arduino.isOpen())
-//    //            {
-//    //                _arduinocommunication.SetArduinoConnection(false);
-//    //                QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-//    //            }
-//    //            else
-//    //            {
-//    //                _arduinocommunication.SetLastValue(userInput);
-//    //                arduino.write(userInput);
-//    //                if(_arduinocommunication.GetIsSendMessage())
-//    //                {
-//    //                    arduino.open(ArduinoBaundRate::B9600bps);
-//    //                    string userInput = _arduinocommunication.GetValue();
-//    //                    if(_arduinocommunication.GetLastValue() !=userInput)
-//    //                    {
-//    //                        _arduinocommunication.SetLastValue(userInput);
-//    //                        arduino.write(userInput);
-//    //                    }
-//    //                    arduino.close();
-//    //                }
-//    //            }
-//    //        arduino.close();
-//    //    }
-//    if(arduino.IsAvailableConnection())
-//    {
-//        if(_arduinocommunication.GetIsSendMessage())
-//        {
-//            arduino.open(ArduinoBaundRate::B9600bps);
-//            int VideoStatus=0;
-//            VideoStatus = getVideoRecordStatus();
-//            if(VideoStatus == 1)
-//                _arduinocommunication.SetValueIsRecord(true);
-//            else
-//                _arduinocommunication.SetValueIsRecord(false);
-//            _arduinocommunication.SetValueVideoSignal(arduino.IsAvailableVideoSignal()); //Video sinyali için video1 vericisinin bulunmasına bakılıyor.
-//            string userInput = _arduinocommunication.GetValue();
-//            if(_arduinocommunication.GetLastValue() !=userInput)
-//            {
-//                //cerr<<_arduinocommunication.GetLastValue()<<endl;
-//                _arduinocommunication.SetLastValue(userInput);
-//                arduino.write(userInput);
-//                //cerr<<userInput<<endl;
-//            }
-//            arduino.close();
-//        }
-//    }
-//    else
-//    {
-//        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-//        arduino.close();
-//        arduino.flush();
-//        //printf("Seri bağlantı bulunamadı");
-//    }
 }
 
 void Vehicle::_arduinoMessageReceived(void)
@@ -1745,7 +1636,6 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
     }
 
     mavlink_heartbeat_t heartbeat;
-    //ArduinoCommunication AC;
 
     mavlink_msg_heartbeat_decode(&message, &heartbeat);
 
