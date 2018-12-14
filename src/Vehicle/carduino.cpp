@@ -221,7 +221,8 @@ string cArduino::read()
 
 /*read form arduino (witch timeout)
  *ret - responce
- *timeOut_MicroSec - (mikro sekundy 10-6)
+ *timeOut_MicroSec - (mikro sekundy 10-
+    ~cArduino();6)
  *print_error - print errors to stderr?
 */
 bool cArduino::read(

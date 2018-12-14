@@ -414,7 +414,8 @@ HEADERS += \
     src/ProgressiveFileCopier.h \
     src/Vehicle/carduino.h \
     src/Vehicle/arduinocommunication.h \
-    src/VideoPlayer/videoplayer.h
+    src/VideoPlayer/videoplayer.h \
+    src/AsyncSerialPortHandler.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
@@ -427,7 +428,8 @@ SOURCES += \
     src/ProgressiveFileCopier.cpp \
     src/Vehicle/carduino.cpp \
     src/Vehicle/arduinocommunication.cpp \
-    src/VideoPlayer/videoplayer.cpp
+    src/VideoPlayer/videoplayer.cpp \
+    src/AsyncSerialPortHandler.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)

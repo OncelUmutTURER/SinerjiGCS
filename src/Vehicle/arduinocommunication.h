@@ -1,8 +1,15 @@
-#pragma once
-#include "string"
-class ArduinoCommunication
-{
+//#ifndef ARDUINOCOMMUNICATION_H
+//#define ARDUINOCOMMUNICATION_H
 
+//#include <QObject>
+
+#pragma once
+
+#include "string"
+
+class ArduinoCommunication //: public QObject
+{
+//    Q_OBJECT
 
 public:
     /* ArduinoCommunication(QObject* parent = NULL);
@@ -23,47 +30,54 @@ public:
 
     //Default olarak tek seferlik değer atamaları için kullanılır
     //ArduinoCommunication(bool,bool,int,int,bool);
-    ArduinoCommunication(bool,bool,bool,bool,bool,std::string,bool,int);
+
+//    ArduinoCommunication();
+    ArduinoCommunication(bool, bool, bool, bool, bool, std::string, bool, int); //(false,false,false,false,true,"0",false,0);
+
     //Parametrelerin Set etmek için kullanılan fonksiyonlar
-    void SetValueIsRecord(bool); //KY --1
-    void SetValueVideoSignal(bool); //VY --2
-    void SetValueTelemetry(bool); //TY --3
-    void SetValueArmed(bool); //AL --4
-    void SetValueApplicationStart(bool); //S --5
-    void SetValueCustomMode(std::string); //C --6
-    void SetValueGPS3DFix(bool,bool); //GPF --7
-    void SetValueBatteryStatus(int); //DB --8
+    void SetValueIsRecording(bool); //KY --1
+    void SetValueHasVideoSignal(bool); //VY --2
+    void SetValueHasTelemetrySignal(bool); //TY --3
+    void SetValueIsArmed(bool); //AL --4
+    void SetValueIsApplicationStarted(bool); //S --5
+    void SetValueFlightMode(std::string); //C --6
+    void SetValueIsGPS3dFixed(bool); //GPF --7  //,bool
+    void SetValueBatteryRemaining(int); //DB --8
 
     //Son değer ile karşılaştırarak mesaj değişiminde arduino'ya iletmesi için
-    void SetLastValue(std::string);
-    void SetArduinoConnection(bool);
+//    void SetLastValue(std::string);
+//    void SetArduinoConnection(bool);
 
     //Parametrelerin alınması için oluşturulan fonksiyonlar
     std::string  GetValue();
-    std::string GetApplicationStart();
-    std::string GetArmed();
-    std::string GetCustomMode();
-    std::string GetBatteryStatus();
-    std::string GetGPS3DFix();
-    std::string GetLastValue();
-    std::string GetIsRecord();
-    std::string GetVideoSignal();
-    std::string GetTelemetry();
-    bool GetIsSendMessage();
-    bool GetArduinoConnection();
+    std::string GetIsApplicationStarted();
+    std::string GetIsArmed();
+    std::string GetFlightMode();
+    std::string GetBatteryRemaining();
+    std::string GetIsGPS3dFixed();
+//    std::string GetLastValue();
+    std::string GetIsRecording();
+    std::string GetHasVideoSignal();
+    std::string GetHasTelemetrySignal();
+//    bool GetIsSendMessage();
+//    bool GetArduinoConnection();
+
+    bool SetVideoSignalValueAndReturnIsChanged(void);
 
 private:
     //Parametre tanımlarını içerir
-    std::string ApplicationStart;
-    std::string Armed;
-    std::string CustomMode;
-    int BatteryStatus;
-    std::string GPS3DFix;
-    std::string LastValue;
-    std::string IsRecord;
-    std::string VideoSignal;
-    std::string Telemetry;
-    bool IsSendMessage;
-    bool IsArduinoConnection;
+    std::string IsRecording = "H";
+    std::string HasVideoSignal = "H";
+    std::string HasTelemetrySignal = "H";
+    std::string IsArmed = "H";
+    std::string IsApplicationStarted = "L";
+    std::string FlightMode = "0";
+    std::string IsGPS3dFixed = "H";
+    std::string BatteryRemaining = "000";
+//    std::string LastValue;
+//    bool IsSendMessage;
+//    bool IsArduinoConnection;
 
 };
+
+//#endif  //ARDUINOCOMMUNICATION_H

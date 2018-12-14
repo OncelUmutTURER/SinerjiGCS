@@ -20,7 +20,11 @@
 #include "MAVLinkProtocol.h"
 #include "UASMessageHandler.h"
 #include "SettingsFact.h"
+
+#include "arduinocommunication.h"
+#include "QSerialPort"
 //#include <thread>
+
 class UAS;
 class UASInterface;
 class FirmwarePlugin;
@@ -535,6 +539,9 @@ public:
     };
     Q_ENUM(MavlinkSysStatus)
 
+    QString m_arduinoMessagePool = "";
+    ArduinoCommunication _arduinocommunication; //(false,false,false,false,true,"0",false,0);
+
     Q_PROPERTY(int                  id                      READ id                                                     CONSTANT)
     Q_PROPERTY(AutoPilotPlugin*     autopilot               MEMBER _autopilotPlugin                                     CONSTANT)
     Q_PROPERTY(QGeoCoordinate       coordinate              READ coordinate                                             NOTIFY coordinateChanged)
@@ -765,8 +772,8 @@ public:
     Q_INVOKABLE void cameraZoomStop(void);
     ///Set Video Record Status
     Q_INVOKABLE void setVideoRecordStatus(int);
-    ///Get Video Record Status
-    Q_INVOKABLE static int getVideoRecordStatus();
+//    ///Get Video Record Status
+//    Q_INVOKABLE static int getVideoRecordStatus();
 #if 0
     // Temporarily removed, waiting for new command implementation
     /// Test motor
@@ -1184,8 +1191,13 @@ signals:
     void requestProtocolVersion(unsigned version);
     void mavlinkStatusChanged();
 
+    void arduinoMessageChanged(const QByteArray &data);
+
+public slots:
+    void _arduinoMessageReceived(void);
+
 private slots:
-    void ReadingArduino();
+//    void ReadingArduino();
     void _mavlinkMessageReceived(LinkInterface* link, mavlink_message_t message);
     void _linkInactiveOrDeleted(LinkInterface* link);
     void _sendMessageOnLink(LinkInterface* link, mavlink_message_t message);
@@ -1223,7 +1235,7 @@ private slots:
 
 private:
 
-    QTimer readTimer;
+//    QTimer readTimer;
     static int _videoRecordStatus;
 
     bool _containsLink(LinkInterface* link);
@@ -1426,6 +1438,9 @@ private:
     QMap<uint32_t, ADSBVehicle*>    _adsbICAOMap;
     QMap<QString, ADSBVehicle*>     _trafficVehicleMap;
     QTimer                          _adsbTimer;
+
+
+    QTimer _videoSourceCheckTimer;
 
     // Toolbox references
     FirmwarePluginManager*      _firmwarePluginManager;

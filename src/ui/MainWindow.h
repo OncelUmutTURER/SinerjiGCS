@@ -119,6 +119,8 @@ public:
         return logPlayer;
     }
 
+    QSerialPort *m_serialPortForArduino = nullptr;
+
 protected:
     void connectCommonActions();
 
@@ -148,7 +150,6 @@ protected:
     QAction* stopUASAct;
     QAction* killUASAct;
 
-
     LogCompressor* comp;
     QTimer* videoTimer;
     QTimer windowNameUpdateTimer;
@@ -156,6 +157,7 @@ protected:
 private slots:
     void _closeWindow(void) { close(); }
     void _vehicleAdded(Vehicle* vehicle);
+    void _vehicleRemoved(Vehicle* vehicle);
     void _showDockWidgetAction(bool show);
     void _showAdvancedUIChanged(bool advanced);
 
@@ -170,6 +172,8 @@ private slots:
     void on_actionImport_Flight_Video_triggered();
 
     void on_actionImport_GeoData_triggered();
+
+    bool _openArduinoSerialPort(void);
 
 private:
     /// Constructor is private since all creation should be through MainWindow::_create
@@ -201,6 +205,10 @@ private:
     bool    _forceClose;
 
     QString _getWindowGeometryKey();
+
+    void _setSerialPortTimer(void);
+    void _closeArduinoSerialPort(void);
+    QTimer* m_timerForSerialPortOpen;
 };
 
 #endif /* _MAINWINDOW_H_ */

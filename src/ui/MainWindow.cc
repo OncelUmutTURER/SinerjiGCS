@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  *   (c) 2009-2016 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -65,6 +65,8 @@
 #include <QSplashScreen>
 //#include <unistd.h>
 #include <QThread>
+
+#include <QSerialPortInfo>
 
 /// The key under which the Main Window settings are saved
 const char* MAIN_SETTINGS_GROUP = "QGC_MAINWINDOW";
@@ -250,6 +252,29 @@ MainWindow::MainWindow()
         menuBar()->hide();
 #endif
 
+        // Arduino iletişimi için gerekli seri port nesnesi mainwindow member'ı olarak init ediliyor. Vehicle içinden signal-slot bağlantıları yapılarak kullanılıyor.
+        m_serialPortForArduino = new QSerialPort(this);
+
+        connect(m_serialPortForArduino, &QSerialPort::errorOccurred, this, [&](QSerialPort::SerialPortError error){
+            if (error == QSerialPort::ResourceError) {
+                qDebug() << "QSerialPort::ResourceError";
+
+                qgcApp()->showMessage(QString("Resource Error on Serial Port at %1. Error: %2")
+                                                .arg(m_serialPortForArduino->portName())
+                                                .arg(m_serialPortForArduino->errorString()));
+
+                // closes open connection and restarts timer for openning connection again
+                _setSerialPortTimer();
+
+            } else if (error == QSerialPort::ReadError) {
+                qDebug() << "QSerialPort::ReadError";
+            } else if (error == QSerialPort::WriteError) {
+                qDebug() << "QSerialPort::WriteError";
+            }
+        });
+
+        _setSerialPortTimer();
+
         // Umut
         // Show splash screen for 5 second
         QSplashScreen *splash = new QSplashScreen;
@@ -298,6 +323,8 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+    _closeArduinoSerialPort();
+
     if (_mavlinkDecoder) {
         // Enforce thread-safe shutdown of the mavlink decoder
         _mavlinkDecoder->finish();
@@ -484,6 +511,8 @@ void MainWindow::connectCommonActions()
     // Connect internal actions
     connect(qgcApp()->toolbox()->multiVehicleManager(), &MultiVehicleManager::vehicleAdded, this, &MainWindow::_vehicleAdded);
     connect(this, &MainWindow::reallyClose, this, &MainWindow::_reallyClose, Qt::QueuedConnection); // Queued to allow closeEvent to fully unwind before _reallyClose is called
+
+    connect(qgcApp()->toolbox()->multiVehicleManager(), &MultiVehicleManager::vehicleRemoved, this, &MainWindow::_vehicleRemoved);
 }
 
 void MainWindow::_openUrl(const QString& url, const QString& errorMessage)
@@ -496,6 +525,24 @@ void MainWindow::_openUrl(const QString& url, const QString& errorMessage)
 void MainWindow::_vehicleAdded(Vehicle* vehicle)
 {
     connect(vehicle->uas(), &UAS::valueChanged, this, &MainWindow::valueChanged);
+
+    connect(m_serialPortForArduino, &QSerialPort::readyRead, vehicle, &Vehicle::_arduinoMessageReceived);
+    connect(vehicle, &Vehicle::arduinoMessageChanged, this, [&](const QByteArray &data)  {
+                                                                                            qDebug() << "Writing data on serial port: " << QString::fromLocal8Bit(data);
+
+                                                                                            if(m_serialPortForArduino->isOpen() && m_serialPortForArduino->isWritable())
+                                                                                            {
+                                                                                                qDebug() << "Serial Port is Open and Writable";
+                                                                                                m_serialPortForArduino->write(data);
+                                                                                                m_serialPortForArduino->waitForBytesWritten(-1);
+                                                                                            }
+                                                                                         });
+    }
+
+void MainWindow::_vehicleRemoved(Vehicle* vehicle)
+{
+    disconnect(m_serialPortForArduino, &QSerialPort::readyRead, vehicle, &Vehicle::_arduinoMessageReceived);
+//    disconnect(vehicle, &Vehicle::arduinoMessageChanged, m_serialPortForArduino, [&](const QByteArray &data){m_serialPortForArduino->write(data);});
 }
 
 /// Stores the state of the toolbar, status bar and widgets associated with the current view
@@ -660,4 +707,102 @@ void MainWindow::on_actionImport_GeoData_triggered()
     tabWidget->setCurrentIndex(2);
 
     ieDialog.exec();
+}
+
+void MainWindow::_setSerialPortTimer()
+{
+    _closeArduinoSerialPort();
+
+    qDebug() << "Restarting m_timerForSerialPortOpen";
+
+    m_timerForSerialPortOpen = new QTimer(this);
+    QObject::connect(m_timerForSerialPortOpen, SIGNAL(timeout()), this, SLOT(_openArduinoSerialPort()));
+    m_timerForSerialPortOpen->setSingleShot(false);
+    m_timerForSerialPortOpen->start(3000);
+}
+
+bool MainWindow::_openArduinoSerialPort()
+{
+    bool result = false;
+
+    const auto serialInfo = QSerialPortInfo::availablePorts();
+
+    QString manufacturer = nullptr;
+    QString portName = nullptr;
+    QString systemLocation = nullptr;
+    bool isBusy = false;
+
+    for (const QSerialPortInfo &serialPortInfo : serialInfo) {
+        if(serialPortInfo.manufacturer().contains("Arduino", Qt::CaseInsensitive))
+        {
+            manufacturer = serialPortInfo.manufacturer(); // Arduino www.arduino.cc
+            systemLocation = serialPortInfo.systemLocation(); // /dev/ttyACM0
+            portName = serialPortInfo.portName(); // ttyACM0
+            isBusy = serialPortInfo.isBusy();
+
+            break;
+        }
+    }
+
+    if(!portName.isNull() && !isBusy)
+    {
+        m_serialPortForArduino->setPortName(portName);
+
+        if (m_serialPortForArduino->open(QIODevice::ReadWrite)) {
+
+            if(m_serialPortForArduino->setBaudRate(9600) &&
+               m_serialPortForArduino->setDataBits(QSerialPort::Data8) &&
+               m_serialPortForArduino->setParity(QSerialPort::NoParity) &&
+               m_serialPortForArduino->setStopBits(QSerialPort::OneStop) &&
+               m_serialPortForArduino->setFlowControl(QSerialPort::NoFlowControl))
+            {
+                qgcApp()->informationMessageBoxOnMainThread("Arduino Connection", QString("Connected to %1 (%2): %3")
+                                                                                          .arg(m_serialPortForArduino->portName())
+                                                                                          .arg(m_serialPortForArduino->baudRate())
+                                                                                          .arg(manufacturer));
+
+                qDebug() << "connected to m_serialPortForArduino";
+
+                //connected to serial port, therefore stop timer
+                if (m_timerForSerialPortOpen)
+                {
+                    QObject::disconnect(m_timerForSerialPortOpen, SIGNAL(timeout()), this, SLOT(_openArduinoSerialPort()));
+                    delete m_timerForSerialPortOpen;
+                    m_timerForSerialPortOpen = nullptr;
+
+                    qDebug() << "disconnected & deleted m_timerForSerialPortOpen";
+                }
+
+                result = true;
+            }
+        }
+        else {
+            qgcApp()->informationMessageBoxOnMainThread("Arduino Connection", QString("Cannot open Serial Port at %1. Error: %2")
+                                                                                      .arg(m_serialPortForArduino->portName())
+                                                                                      .arg(m_serialPortForArduino->errorString()));
+        }
+    }
+
+    return  result;
+}
+
+void MainWindow::_closeArduinoSerialPort()
+{
+    if (m_serialPortForArduino->isOpen())
+    {
+        m_serialPortForArduino->close();
+
+        qDebug() << "m_serialPortForArduino is closed";
+
+        qgcApp()->informationMessageBoxOnMainThread("Arduino Connection", QString("Disconnected from %1").arg(m_serialPortForArduino->portName()));
+
+        if (m_timerForSerialPortOpen)
+        {
+            QObject::disconnect(m_timerForSerialPortOpen, SIGNAL(timeout()), this, SLOT(_openArduinoSerialPort()));
+            delete m_timerForSerialPortOpen;
+            m_timerForSerialPortOpen = nullptr;
+
+            qDebug() << "disconnected & deleted m_timerForSerialPortOpen";
+        }
+    }
 }

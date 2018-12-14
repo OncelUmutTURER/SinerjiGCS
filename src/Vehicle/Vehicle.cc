@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
  *
  *   (c) 2009-2016 QGROUNDCONTROL PROJECT <http://www.qgroundcontrol.org>
  *
@@ -41,19 +41,23 @@
 #include "VideoManager.h"
 #include <QCoreApplication>
 #include <iostream>
-#include "carduino.h"
+//#include "carduino.h"
 #include <string>
 #include "arduinocommunication.h"
 #include "math.h"
+
+#include "MainWindow.h"
+//#include "QSerialPort.h"
+
 #if defined(QGC_AIRMAP_ENABLED)
 #include "AirspaceVehicleManager.h"
 #include "time.h"
 //#include <thread>
 //#include <chrono>
 #endif
-cArduino arduino(ArduinoBaundRate::B9600bps);
+//cArduino arduino(ArduinoBaundRate::B9600bps);
 QGC_LOGGING_CATEGORY(VehicleLog, "VehicleLog")
-ArduinoCommunication _arduinocommunication(false,false,false,false,true,"0",false,0);
+
 #define UPDATE_TIMER 50
 #define DEFAULT_LAT  38.965767f
 #define DEFAULT_LON -120.083923f
@@ -90,42 +94,42 @@ const char* Vehicle::_clockFactGroupName =              "clock";
 const char* Vehicle::_distanceSensorFactGroupName =     "distanceSensor";
 const char* Vehicle::_estimatorStatusFactGroupName =    "estimatorStatus";
 
-void Vehicle::ReadingArduino()
-{
-    if(arduino.IsAvailableConnection())
-    {
-        if(_arduinocommunication.GetArmed() == "ALL")//Armed ise dinleme yap
-        {
-            arduino.open(ArduinoBaundRate::B9600bps);
-            string arduinoOutput;
-            int indexRth,indexADB;
+//void Vehicle::ReadingArduino()
+//{
+//    if(arduino.IsAvailableConnection())
+//    {
+//        if(_arduinocommunication.GetArmed() == "ALL")//Armed ise dinleme yap
+//        {
+//            arduino.open(ArduinoBaundRate::B9600bps);
+//            string arduinoOutput;
+//            int indexRth,indexADB;
 
-            if(arduino.read(arduinoOutput))//data is arrived
-            {
-                //cerr<<arduinoOutput<<endl;
-                indexRth=arduinoOutput.find("R");
-                indexADB=arduinoOutput.find("A");
-                if(indexRth > -1)
-                {
-                    guidedModeRTL();
-                }
-                if(indexADB > -1)
-                {
-                    emergencyStop();
-                }
-            }
-            arduino.close();
-        }
-    }
-    else
-    {
-        cerr<<"Read else girdi"<<endl;
-        //        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-        //        arduino.close();
-        //        arduino.flush();
+//            if(arduino.read(arduinoOutput))//data is arrived
+//            {
+//                //cerr<<arduinoOutput<<endl;
+//                indexRth=arduinoOutput.find("R");
+//                indexADB=arduinoOutput.find("A");
+//                if(indexRth > -1)
+//                {
+//                    guidedModeRTL();
+//                }
+//                if(indexADB > -1)
+//                {
+//                    emergencyStop();
+//                }
+//            }
+//            arduino.close();
+//        }
+//    }
+//    else
+//    {
+//        cerr<<"Read else girdi"<<endl;
+//        //        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+//        //        arduino.close();
+//        //        arduino.flush();
 
-    }
-}
+//    }
+//}
 
 Vehicle::Vehicle(LinkInterface*             link,
                  int                        vehicleId,
@@ -248,11 +252,17 @@ Vehicle::Vehicle(LinkInterface*             link,
     , _clockFactGroup(this)
     , _distanceSensorFactGroup(this)
     , _estimatorStatusFactGroup(this)
+    , _arduinocommunication(false,false,false,false,true,"0",false,0)
 {
     //Read Arduino
-    QObject::connect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-    readTimer.setInterval(300);
-    readTimer.start();
+//    QObject::connect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+//    readTimer.setInterval(300);
+//    readTimer.start();
+
+//    MainWindow* mainWindow = MainWindow::instance();
+//    if (mainWindow) {
+//        connect(&mainWindow->m_serialPortForArduino, &QSerialPort::readyRead, this, ReadingArduino());
+//    }
 
     connect(_joystickManager, &JoystickManager::activeJoystickChanged, this, &Vehicle::_loadSettings);
     connect(qgcApp()->toolbox()->multiVehicleManager(), &MultiVehicleManager::activeVehicleAvailableChanged, this, &Vehicle::_loadSettings);
@@ -336,6 +346,15 @@ Vehicle::Vehicle(LinkInterface*             link,
     connect(&_adsbTimer, &QTimer::timeout, this, &Vehicle::_adsbTimerTimeout);
     _adsbTimer.setSingleShot(false);
     _adsbTimer.start(1000);
+
+    // video sinyalinin olup olmadığını bilgisayara bağlı ek bir video kaynağı var mı yok mu diye bakarak söylüyoruz.
+    // Umut TODO: Doğru kontrol için ek video kaynağında görüntü olup olmadığı kontrolü eklenmeli
+    connect(&_videoSourceCheckTimer, &QTimer::timeout, this, [&]{
+                                                                    if(_arduinocommunication.SetVideoSignalValueAndReturnIsChanged())
+                                                                        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
+                                                                });
+    _videoSourceCheckTimer.setSingleShot(false);
+    _videoSourceCheckTimer.start(5000);
 }
 
 // Disconnected Vehicle for offline editing
@@ -446,6 +465,7 @@ Vehicle::Vehicle(MAV_AUTOPILOT              firmwareType,
     , _vibrationFactGroup(this)
     , _clockFactGroup(this)
     , _distanceSensorFactGroup(this)
+    , _arduinocommunication(false,false,false,false,true,"0",false,0)
 {
     _commonInit();
     _firmwarePlugin->initializeVehicle(this);
@@ -837,63 +857,95 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
     // does processing.
     emit mavlinkMessageReceived(message);
     _uas->receiveMessage(message);
-    //    if(_arduinocommunication.GetArduinoConnection())
-    //    {
-    //        arduino.open(ArduinoBaundRate::B9600bps);
-    //        string userInput = _arduinocommunication.GetValue();
-    //        if(_arduinocommunication.GetLastValue() !=userInput)
-    //            if(!arduino.isOpen())
-    //            {
-    //                _arduinocommunication.SetArduinoConnection(false);
-    //                QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-    //            }
-    //            else
-    //            {
-    //                _arduinocommunication.SetLastValue(userInput);
-    //                arduino.write(userInput);
-    //                if(_arduinocommunication.GetIsSendMessage())
-    //                {
-    //                    arduino.open(ArduinoBaundRate::B9600bps);
-    //                    string userInput = _arduinocommunication.GetValue();
-    //                    if(_arduinocommunication.GetLastValue() !=userInput)
-    //                    {
-    //                        _arduinocommunication.SetLastValue(userInput);
-    //                        arduino.write(userInput);
-    //                    }
-    //                    arduino.close();
-    //                }
-    //            }
-    //        arduino.close();
-    //    }
-    if(arduino.IsAvailableConnection())
+
+
+//    //    if(_arduinocommunication.GetArduinoConnection())
+//    //    {
+//    //        arduino.open(ArduinoBaundRate::B9600bps);
+//    //        string userInput = _arduinocommunication.GetValue();
+//    //        if(_arduinocommunication.GetLastValue() !=userInput)
+//    //            if(!arduino.isOpen())
+//    //            {
+//    //                _arduinocommunication.SetArduinoConnection(false);
+//    //                QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+//    //            }
+//    //            else
+//    //            {
+//    //                _arduinocommunication.SetLastValue(userInput);
+//    //                arduino.write(userInput);
+//    //                if(_arduinocommunication.GetIsSendMessage())
+//    //                {
+//    //                    arduino.open(ArduinoBaundRate::B9600bps);
+//    //                    string userInput = _arduinocommunication.GetValue();
+//    //                    if(_arduinocommunication.GetLastValue() !=userInput)
+//    //                    {
+//    //                        _arduinocommunication.SetLastValue(userInput);
+//    //                        arduino.write(userInput);
+//    //                    }
+//    //                    arduino.close();
+//    //                }
+//    //            }
+//    //        arduino.close();
+//    //    }
+//    if(arduino.IsAvailableConnection())
+//    {
+//        if(_arduinocommunication.GetIsSendMessage())
+//        {
+//            arduino.open(ArduinoBaundRate::B9600bps);
+//            int VideoStatus=0;
+//            VideoStatus = getVideoRecordStatus();
+//            if(VideoStatus == 1)
+//                _arduinocommunication.SetValueIsRecord(true);
+//            else
+//                _arduinocommunication.SetValueIsRecord(false);
+//            _arduinocommunication.SetValueVideoSignal(arduino.IsAvailableVideoSignal()); //Video sinyali için video1 vericisinin bulunmasına bakılıyor.
+//            string userInput = _arduinocommunication.GetValue();
+//            if(_arduinocommunication.GetLastValue() !=userInput)
+//            {
+//                //cerr<<_arduinocommunication.GetLastValue()<<endl;
+//                _arduinocommunication.SetLastValue(userInput);
+//                arduino.write(userInput);
+//                //cerr<<userInput<<endl;
+//            }
+//            arduino.close();
+//        }
+//    }
+//    else
+//    {
+//        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
+//        arduino.close();
+//        arduino.flush();
+//        //printf("Seri bağlantı bulunamadı");
+//    }
+}
+
+void Vehicle::_arduinoMessageReceived(void)
+{
+    MainWindow* mainWindow = MainWindow::instance();
+
+    const QByteArray _incomingData = mainWindow->m_serialPortForArduino->readAll();
+    QString _message = QString::fromStdString(_incomingData.toStdString());
+
+    m_arduinoMessagePool += _message;
+
+    if(m_arduinoMessagePool.length()>=3) //mesaj parça parça gelmiş olabilir
     {
-        if(_arduinocommunication.GetIsSendMessage())
+        if(_armed) //Armed ise uygula
         {
-            arduino.open(ArduinoBaundRate::B9600bps);
-            int VideoStatus=0;
-            VideoStatus = getVideoRecordStatus();
-            if(VideoStatus == 1)
-                _arduinocommunication.SetValueIsRecord(true);
-            else
-                _arduinocommunication.SetValueIsRecord(false);
-            _arduinocommunication.SetValueVideoSignal(arduino.IsAvailableVideoSignal()); //Video sinyali için video1 vericisinin bulunmasına bakılıyor.
-            string userInput = _arduinocommunication.GetValue();
-            if(_arduinocommunication.GetLastValue() !=userInput)
+            if(_message.contains("#R#", Qt::CaseSensitive) && !flightMode().contains("RTL"))
             {
-                //cerr<<_arduinocommunication.GetLastValue()<<endl;
-                _arduinocommunication.SetLastValue(userInput);
-                arduino.write(userInput);
-                //cerr<<userInput<<endl;
+                guidedModeRTL();
+                qDebug() << "guidedModeRTL() executed from serial port";
             }
-            arduino.close();
+
+            if(_message.contains("#A#", Qt::CaseSensitive))
+            {
+                emergencyStop();
+                qDebug() << "emergencyStop() executed from serial port";
+            }
         }
-    }
-    else
-    {
-        QObject::disconnect(&readTimer, SIGNAL(timeout()), this, SLOT(ReadingArduino()));
-        arduino.close();
-        arduino.flush();
-        //printf("Seri bağlantı bulunamadı");
+
+        m_arduinoMessagePool = ""; //mesajı aldık, işledik, yenisini albilmek için pool'u sıfırlıyoruz
     }
 }
 
@@ -1121,18 +1173,19 @@ void Vehicle::_handleGpsRawInt(mavlink_message_t& message)
             }
             _altitudeAMSLFact.setRawValue(gpsRawInt.alt / 1000.0);
         }
-        if(_arduinocommunication.GetGPS3DFix() != "GPF"+gpsRawInt.fix_type)
+
+        if(_arduinocommunication.GetIsGPS3dFixed() != "GPFL")
         {
-            _arduinocommunication.SetValueTelemetry(true);//Drone bağlantısı sağlandığında telemetry de bağlı olduğunu gönderiyoruz
-            _arduinocommunication.SetValueGPS3DFix(true,true);
+            _arduinocommunication.SetValueIsGPS3dFixed(true); //,true
+            emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
         }
     }
     else
     {
-        if(_arduinocommunication.GetGPS3DFix() != "GPF"+gpsRawInt.fix_type)
+        if(_arduinocommunication.GetIsGPS3dFixed() != "GPFH")
         {
-            _arduinocommunication.SetValueTelemetry(true);//Drone bağlantısı sağlandığında telemetry de bağlı olduğunu gönderiyoruz
-            _arduinocommunication.SetValueGPS3DFix(false,true);
+            _arduinocommunication.SetValueIsGPS3dFixed(false); //,true
+            emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
         }
     }
 
@@ -1188,6 +1241,9 @@ void Vehicle::_handleHighLatency2(mavlink_message_t& message)
     if (_armed != true) {
         _armed = true;
         emit armedChanged(_armed);
+
+        _arduinocommunication.SetValueIsArmed(_armed);
+        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
     }
 
     _coordinate.setLatitude(highLatency2.latitude  / (double)1E7);
@@ -1536,14 +1592,16 @@ void Vehicle::_handleSysStatus(mavlink_message_t& message)
         }
         _lastAnnouncedLowBatteryPercent = sysStatus.battery_remaining;
     }
-    int _batteryStatus=round(sysStatus.battery_remaining);
-    if(_batteryStatus >= 99)
+
+    int8_t batteryRemaining=sysStatus.battery_remaining;
+    if(batteryRemaining >= 99)
     {
-        _batteryStatus=100;
+        batteryRemaining=100;
     }
-    if(_arduinocommunication.GetBatteryStatus() != "DB"+std::to_string(_batteryStatus))
+    if(_arduinocommunication.GetBatteryRemaining() != "DB"+QString::number(batteryRemaining).rightJustified(3, '0').toStdString())
     {
-        _arduinocommunication.SetValueBatteryStatus(_batteryStatus);
+        _arduinocommunication.SetValueBatteryRemaining(batteryRemaining);
+        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
     }
 
     if (_onboardControlSensorsPresent != sysStatus.onboard_control_sensors_present) {
@@ -1645,6 +1703,9 @@ void Vehicle::_updateArmed(bool armed)
         _armed = armed;
         emit armedChanged(_armed);
 
+        _arduinocommunication.SetValueIsArmed(_armed);
+        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
+
         // We are transitioning to the armed state, begin tracking trajectory points for the map
         if (_armed) {
             _mapTrajectoryStart();
@@ -1689,24 +1750,7 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
     mavlink_msg_heartbeat_decode(&message, &heartbeat);
 
     bool newArmed = heartbeat.base_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
-    if(_arduinocommunication.GetArmed() != "AL"+std::to_string(newArmed) )
-    {
-        if(newArmed)
-        {
-            _arduinocommunication.SetValueArmed(true);
-            //Arduino Read Messages
-            //            std::thread s(&Vehicle::ReadingArduino, this);
-            //            s.join();
-            //            if(s.joinable())
-            //            {
-            //                std::terminate();
-            //            }
-        }
-        else
-        {
-            _arduinocommunication.SetValueArmed(false);
-        }
-    }
+
     // ArduPilot firmare has a strange case when ARMING_REQUIRE=0. This means the vehicle is always armed but the motors are not
     // really powered up until the safety button is pressed. Because of this we can't depend on the heartbeat to tell us the true
     // armed (and dangerous) state. We must instead rely on SYS_STATUS telling us that the motors are enabled.
@@ -1729,49 +1773,51 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
         }
         _base_mode = heartbeat.base_mode;
         _custom_mode = heartbeat.custom_mode;
-        string _custommode="";
-        if(_custom_mode>8)
-        {
-            switch (_custom_mode) {
-            case 9:
-                _custommode="8"; //Land mode için arduino koduna uyuldu
-                break;
-            case 11:
-                _custommode="9"; //Drift mode için arduino koduna uyuldu
-                break;
-            case 16:
-                _custommode="d";//Position hold
-                break;
-            case 17:
-                _custommode="E"; //Brake Mode
-                break;
-            case 18:
-                _custommode="F"; //Throw Mode
-                break;
-            case 19:
-                _custommode="P"; //Avoid ADSB
-                break;
-            case 20:
-                _custommode="U"; //Guided no gps
-                break;
-            case 13:
-                _custommode="A"; //Sport Mode
-                break;
-            case 21:
-                _custommode="H"; //Smart RTL
-                break;
-            }
-        }
-        else
-        {
-            _custommode=std::to_string(_custom_mode);
-        }
-        if(_arduinocommunication.GetCustomMode() != "C"+_custommode )
-        {
-            _arduinocommunication.SetValueCustomMode(_custommode);
-        }
-        if (previousFlightMode != flightMode()) {
+
+        if (previousFlightMode != flightMode()) {            
             emit flightModeChanged(flightMode());
+
+            QString _custommode;
+            _custommode=QString::number(_custom_mode);
+
+            if(_custom_mode > 8)
+            {
+                switch (_custom_mode) {
+                    case 9:
+                        _custommode="8"; //Land mode için arduino koduna uyuldu
+                        break;
+                    case 11:
+                        _custommode="9"; //Drift mode için arduino koduna uyuldu
+                        break;
+                    case 13:
+                        _custommode="A"; //Sport Mode
+                        break;
+                    case 16:
+                        _custommode="d";//Position hold
+                        break;
+                    case 17:
+                        _custommode="E"; //Brake Mode
+                        break;
+                    case 18:
+                        _custommode="F"; //Throw Mode
+                        break;
+                    case 19:
+                        _custommode="P"; //Avoid ADSB
+                        break;
+                    case 20:
+                        _custommode="U"; //Guided no gps
+                        break;
+                    case 21:
+                        _custommode="H"; //Smart RTL
+                        break;
+                    default:
+                        _custommode="b"; //Bilinmeyen uçuş modu
+                        break;
+                }
+            }
+
+            _arduinocommunication.SetValueFlightMode(_custommode.toStdString());
+            emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
         }
     }
 }
@@ -1961,6 +2007,9 @@ void Vehicle::_addLink(LinkInterface* link)
         connect(_toolbox->linkManager(), &LinkManager::linkDeleted, this, &Vehicle::_linkInactiveOrDeleted);
         connect(link, &LinkInterface::highLatencyChanged, this, &Vehicle::_updateHighLatencyLink);
         connect(link, &LinkInterface::activeChanged, this, &Vehicle::_linkActiveChanged);
+
+        _arduinocommunication.SetValueHasTelemetrySignal(true);
+        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
     }
 }
 
@@ -3094,16 +3143,20 @@ void Vehicle::cancelGoToLocation()
     pauseVehicle();
 }
 
-int Vehicle::_videoRecordStatus;
-
 void Vehicle::setVideoRecordStatus(int setValue)
 {
-    _videoRecordStatus = setValue;
+    if(_arduinocommunication.GetIsRecording() != "KY" + QString(setValue == 1 ? "L" : "H").toStdString())
+    {
+        _arduinocommunication.SetValueIsRecording(setValue == 1);
+        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
+    }
 }
-int Vehicle::getVideoRecordStatus()
-{
-    return _videoRecordStatus;
-}
+
+//int Vehicle::getVideoRecordStatus()
+//{
+//    return _videoRecordStatus;
+//}
+
 void Vehicle::guidedModeChangeAltitude(double altitudeChange)
 {
     if (!guidedModeSupported()) {
