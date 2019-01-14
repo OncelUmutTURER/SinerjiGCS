@@ -528,13 +528,17 @@ void MainWindow::_vehicleAdded(Vehicle* vehicle)
 
     connect(m_serialPortForArduino, &QSerialPort::readyRead, vehicle, &Vehicle::_arduinoMessageReceived);
     connect(vehicle, &Vehicle::arduinoMessageChanged, this, [&](const QByteArray &data)  {
-                                                                                            qDebug() << "Writing data on serial port: " << QString::fromLocal8Bit(data);
+                                                                                            qDebug() << "Trying to write data on serial port: " << QString::fromLocal8Bit(data);
 
                                                                                             if(m_serialPortForArduino->isOpen() && m_serialPortForArduino->isWritable())
                                                                                             {
                                                                                                 qDebug() << "Serial Port is Open and Writable";
                                                                                                 m_serialPortForArduino->write(data);
                                                                                                 m_serialPortForArduino->waitForBytesWritten(-1);
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                qDebug() << "Serial Port is NOT Open or Writable. Skipping write step.";
                                                                                             }
                                                                                          });
     }
@@ -746,6 +750,8 @@ bool MainWindow::_openArduinoSerialPort()
 
     if(!portName.isNull() && !isBusy)
     {
+        qDebug() << "Found and available Arduino @" << portName;
+
         m_serialPortForArduino->setPortName(portName);
 
         if (m_serialPortForArduino->open(QIODevice::ReadWrite)) {
@@ -770,7 +776,7 @@ bool MainWindow::_openArduinoSerialPort()
                     delete m_timerForSerialPortOpen;
                     m_timerForSerialPortOpen = nullptr;
 
-                    qDebug() << "disconnected & deleted m_timerForSerialPortOpen";
+                    qDebug() << "disconnected & deleted m_timerForSerialPortOpen since there is no need to check ports for Arduino";
                 }
 
                 result = true;
