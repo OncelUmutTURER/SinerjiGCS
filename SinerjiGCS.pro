@@ -240,11 +240,12 @@ QT += \
     xml \
     texttospeech
 
-QT += multimedia multimediawidgets
+#QT += multimedia multimediawidgets
 # Multimedia only used if QVC is enabled
 !contains (DEFINES, QGC_DISABLE_UVC) {
     QT += \
-        multimedia
+        multimedia \
+        multimediawidgets \
 }
 
 AndroidBuild || iOSBuild {
