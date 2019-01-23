@@ -211,6 +211,7 @@
         <file alias="QGroundControl/FlightMap/SinerjiGCS_Altimeter.qml">src/FlightMap/Widgets/SinerjiGCS_Altimeter.qml</file>
         <file alias="QGroundControl/FlightMap/SinerjiGCS_Attitude.qml">src/FlightMap/Widgets/SinerjiGCS_Attitude.qml</file>
         <file alias="QGroundControl/FlightMap/SinerjiGCS_Heading.qml">src/FlightMap/Widgets/SinerjiGCS_Heading.qml</file>
+        <file alias="GimbalPageWidget.qml">src/FlightMap/Widgets/GimbalPageWidget.qml</file>
     </qresource>
     <qresource prefix="/json">
         <file alias="CameraCalc.FactMetaData.json">src/MissionManager/CameraCalc.FactMetaData.json</file>
