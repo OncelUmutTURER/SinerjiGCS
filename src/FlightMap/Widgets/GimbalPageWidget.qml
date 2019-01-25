@@ -368,7 +368,7 @@ Column {
                 cursorShape: "PointingHandCursor"
                 onPressed: cursorShape = "ClosedHandCursor"
                 onReleased: cursorShape = "PointingHandCursor"
-                onClicked: console.log("up")
+                onClicked: _activeVehicle.rotateGimbal(1)
             }
 
             MouseArea {
@@ -380,7 +380,7 @@ Column {
                 cursorShape: "PointingHandCursor"
                 onPressed: cursorShape = "ClosedHandCursor"
                 onReleased: cursorShape = "PointingHandCursor"
-                onClicked: console.log("right")
+                onClicked: _activeVehicle.rotateGimbal(2)
             }
 
             MouseArea {
@@ -392,7 +392,7 @@ Column {
                 cursorShape: "PointingHandCursor"
                 onPressed: cursorShape = "ClosedHandCursor"
                 onReleased: cursorShape = "PointingHandCursor"
-                onClicked: console.log("down")
+                onClicked: _activeVehicle.rotateGimbal(3)
             }
 
             MouseArea {
@@ -404,7 +404,7 @@ Column {
                 cursorShape: "PointingHandCursor"
                 onPressed: cursorShape = "ClosedHandCursor"
                 onReleased: cursorShape = "PointingHandCursor"
-                onClicked: console.log("left")
+                onClicked: _activeVehicle.rotateGimbal(4)
             }
 
             MouseArea {
@@ -416,7 +416,7 @@ Column {
                 cursorShape: "PointingHandCursor"
                 onPressed: cursorShape = "ClosedHandCursor"
                 onReleased: cursorShape = "PointingHandCursor"
-                onClicked: console.log("center")
+                onClicked: _activeVehicle.rotateGimbal(0)
             }
         }
     }

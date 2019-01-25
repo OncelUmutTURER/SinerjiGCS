@@ -3033,20 +3033,6 @@ void Vehicle::cancelGoToLocation()
     pauseVehicle();
 }
 
-void Vehicle::setVideoRecordStatus(int setValue)
-{
-    if(_arduinocommunication.GetIsRecording() != "KY" + QString(setValue == 1 ? "L" : "H").toStdString())
-    {
-        _arduinocommunication.SetValueIsRecording(setValue == 1);
-        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
-    }
-}
-
-//int Vehicle::getVideoRecordStatus()
-//{
-//    return _videoRecordStatus;
-//}
-
 void Vehicle::guidedModeChangeAltitude(double altitudeChange)
 {
     if (!guidedModeSupported()) {
@@ -3543,6 +3529,59 @@ void Vehicle::cameraZoomStop(void)
 {
     uint8_t cmd[7] = {0xFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01};
     _sendSerialCommand(sizeof(cmd), cmd);
+}
+
+void Vehicle::setVideoRecordStatus(int setValue)
+{
+    if(_arduinocommunication.GetIsRecording() != "KY" + QString(setValue == 1 ? "L" : "H").toStdString())
+    {
+        _arduinocommunication.SetValueIsRecording(setValue == 1);
+        emit arduinoMessageChanged(QString::fromStdString(_arduinocommunication.GetValue()).toLocal8Bit());
+    }
+}
+
+//int Vehicle::getVideoRecordStatus()
+//{
+//    return _videoRecordStatus;
+//}
+
+///Rotate gimbal to given direction. 0: look center, 1: up, 2: right, 3: down, 4: left
+void Vehicle::rotateGimbal(int direction)
+{
+//    float _pitchAngle = 0; //_cameraSection->specifiedGimbalPitch(); //_gimbalPitchFact.rawValue().toDouble();
+//    float _yawAngle = 0;
+
+    switch (direction) {
+        case 0:
+            _pitchAngle = 0;
+            _yawAngle = 0;
+            break;
+        case 1:
+            _pitchAngle += _delta_angle * -1;
+            break;
+        case 2:
+            _yawAngle += _delta_angle;
+            break;
+        case 3:
+            _pitchAngle += _delta_angle;
+            break;
+        case 4:
+            _yawAngle += _delta_angle * -1;
+            break;
+    }
+
+    qDebug() << "d: " << direction << "; pa: " << _pitchAngle << ", ya: " << _yawAngle;
+
+    sendMavCommand(_defaultComponentId,
+                   MAV_CMD_DO_MOUNT_CONTROL,
+                   true,                        // show errors
+                   _pitchAngle,                 // param 1: pitch depending on mount mode (degrees or degrees/second depending on pitch input).
+                   0.0,                         // param 2: roll depending on mount mode (degrees or degrees/second depending on roll input).
+                   _yawAngle,                   // param 3: yaw depending on mount mode (degrees or degrees/second depending on yaw input).
+                   0.0,                         // param 4: alt in meters depending on mount mode.
+                   0.0,                         // param 5: latitude in degrees * 1E7, set if appropriate mount mode.
+                   0.0,                         // param 6: longitude in degrees * 1E7, set if appropriate mount mode.
+                   2);                          // param 7: MAV_MOUNT_MODE enum value: 2: MAV_MOUNT_MODE_MAVLINK_TARGETING
 }
 
 void Vehicle::_sendSerialCommand(uint8_t count, const uint8_t *data, uint8_t device, uint8_t flags, uint16_t timeout, uint32_t baudrate)
