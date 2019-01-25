@@ -35,7 +35,7 @@ Column {
 
     property var _activeVehicle: QGroundControl.multiVehicleManager.activeVehicle
     property var _dynamicCameras: _activeVehicle ? _activeVehicle.dynamicCameras : null
-    property bool _isCamera: false
+    property bool _isCamera: false  //_dynamicCameras ? _dynamicCameras.cameras.count > 0 : false
     property var _camera: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex) : null
     property bool _cameraModeUndefined: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex).cameraMode === QGCCameraControl.CAMERA_MODE_UNDEFINED : true
     property bool _cameraVideoMode: _isCamera ? _dynamicCameras.cameras.get(_curCameraIndex).cameraMode === 1 : false
@@ -55,15 +55,6 @@ Column {
         qgcView.showDialog(cameraSettings, _cameraVideoMode ? qsTr("Video Settings") : qsTr("Camera Settings"), 70, StandardButton.Ok)
     }
 
-    //-- Dumb camera trigger if no actual camera interface exists
-    QGCButton {
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: qsTr("Trigger Camera")
-        visible: false
-        onClicked: _activeVehicle.triggerCamera()
-        enabled: _activeVehicle
-    }
-
     property string videoCameraIcon: "/qmlimages/camera_video.svg"
     property string videoStopIcon: "/res/Stop"
     property string photoTakeIcon: "/qmlimages/camera_photo.svg"
@@ -79,10 +70,10 @@ Column {
         enabled: _activeVehicle
 
         anchors.horizontalCenter: parent.horizontalCenter
-        Text {
-            text: "Capture Mode"
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-        }
+//        Text {
+//            text: "Capture Mode"
+//            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+//        }
         QGCGroupBox {
 
             id: rowBox
@@ -367,6 +358,15 @@ Column {
             }
         }
     }
+
+    //-- Dumb camera trigger if no actual camera interface exists
+    QGCButton {
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: qsTr("Trigger Camera")
+        visible: false  //!_isCamera
+        onClicked: _activeVehicle.triggerCamera()
+        enabled: _activeVehicle
+    }
     Item {
         width: 1
         height: ScreenTools.defaultFontPixelHeight
@@ -472,12 +472,9 @@ Column {
         border.width: 3
         anchors.horizontalCenter: parent.horizontalCenter
         Rectangle {
-            width: parent.width * (_videoRecording
-                                   || (_cameraPhotoMode && !_cameraPhotoIdle
-                                       && _cameraElapsedMode) ? 0.5 : 0.75)
+            width: parent.width * (_videoRecording || (_cameraPhotoMode && !_cameraPhotoIdle && _cameraElapsedMode) ? 0.5 : 0.75)
             height: width
-            radius: _videoRecording || (_cameraPhotoMode && !_cameraPhotoIdle
-                                        && _cameraElapsedMode) ? 0 : width * 0.5
+            radius: _videoRecording || (_cameraPhotoMode && !_cameraPhotoIdle && _cameraElapsedMode) ? 0 : width * 0.5
             color: _cameraModeUndefined ? qgcPal.colorGrey : qgcPal.colorRed
             anchors.centerIn: parent
         }
@@ -488,8 +485,7 @@ Column {
                 if (_cameraVideoMode) {
                     _camera.toggleVideo()
                 } else {
-                    if (_cameraPhotoMode && !_cameraPhotoIdle
-                            && _cameraElapsedMode) {
+                    if (_cameraPhotoMode && !_cameraPhotoIdle && _cameraElapsedMode) {
                         _camera.stopTakePhoto()
                     } else {
                         _camera.takePhoto()
@@ -504,16 +500,13 @@ Column {
         visible: _isCamera
     }
     QGCLabel {
-        text: (_cameraVideoMode
-               && _camera.videoStatus === QGCCameraControl.VIDEO_CAPTURE_STATUS_RUNNING) ? _camera.recordTimeStr : "00:00:00"
+        text: (_cameraVideoMode && _camera.videoStatus === QGCCameraControl.VIDEO_CAPTURE_STATUS_RUNNING) ? _camera.recordTimeStr : "00:00:00"
         font.pointSize: ScreenTools.smallFontPointSize
         visible: _cameraVideoMode
         anchors.horizontalCenter: parent.horizontalCenter
     }
     QGCLabel {
-        text: _activeVehicle
-              && _cameraPhotoMode ? ('00000' + _activeVehicle.cameraTriggerPoints.count).slice(
-                                        -5) : "00000"
+        text: _activeVehicle && _cameraPhotoMode ? ('00000' + _activeVehicle.cameraTriggerPoints.count).slice(-5) : "00000"
         font.pointSize: ScreenTools.smallFontPointSize
         visible: _cameraPhotoMode
         anchors.horizontalCenter: parent.horizontalCenter

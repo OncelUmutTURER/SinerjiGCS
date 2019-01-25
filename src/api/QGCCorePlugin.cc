@@ -43,7 +43,8 @@ public:
     #endif
         , defaultOptions            (nullptr)
         , valuesPageWidgetInfo      (nullptr)
-        , cameraPageWidgetInfo      (nullptr)
+//        , cameraPageWidgetInfo      (nullptr)
+        , gimbalPageWidgetInfo      (nullptr)
         , videoPageWidgetInfo       (nullptr)
         , healthPageWidgetInfo      (nullptr)
         , vibrationPageWidgetInfo   (nullptr)
@@ -93,7 +94,8 @@ public:
     QGCOptions*  defaultOptions;
 
     QmlComponentInfo*   valuesPageWidgetInfo;
-    QmlComponentInfo*   cameraPageWidgetInfo;
+//    QmlComponentInfo*   cameraPageWidgetInfo;
+    QmlComponentInfo*   gimbalPageWidgetInfo;
     QmlComponentInfo*   videoPageWidgetInfo;
     QmlComponentInfo*   healthPageWidgetInfo;
     QmlComponentInfo*   vibrationPageWidgetInfo;
@@ -173,7 +175,8 @@ QVariantList& QGCCorePlugin::instrumentPages(void)
 {
     if (!_p->valuesPageWidgetInfo) {
         _p->valuesPageWidgetInfo    = new QmlComponentInfo(tr("Values"),    QUrl::fromUserInput("qrc:/qml/ValuePageWidget.qml"));
-        _p->cameraPageWidgetInfo    = new QmlComponentInfo(tr("Camera"),    QUrl::fromUserInput("qrc:/qml/CameraPageWidget.qml"));
+//        _p->cameraPageWidgetInfo    = new QmlComponentInfo(tr("Camera"),    QUrl::fromUserInput("qrc:/qml/CameraPageWidget.qml"));
+        _p->gimbalPageWidgetInfo    = new QmlComponentInfo(tr("Gimbal"),    QUrl::fromUserInput("qrc:/qml/GimbalPageWidget.qml"));
 #if defined(QGC_GST_STREAMING)
         _p->videoPageWidgetInfo     = new QmlComponentInfo(tr("Video Stream"), QUrl::fromUserInput("qrc:/qml/VideoPageWidget.qml"));
 #endif
@@ -181,7 +184,8 @@ QVariantList& QGCCorePlugin::instrumentPages(void)
         _p->vibrationPageWidgetInfo = new QmlComponentInfo(tr("Vibration"), QUrl::fromUserInput("qrc:/qml/VibrationPageWidget.qml"));
 
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->valuesPageWidgetInfo));
-        _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->cameraPageWidgetInfo));
+//        _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->cameraPageWidgetInfo));
+        _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->gimbalPageWidgetInfo));
 #if defined(QGC_GST_STREAMING)
         _p->instrumentPageWidgetList.append(QVariant::fromValue(_p->videoPageWidgetInfo));
 #endif

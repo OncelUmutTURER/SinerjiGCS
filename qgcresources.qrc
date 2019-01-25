@@ -181,6 +181,7 @@
         <file alias="AwarenessAircraft.svg">src/FlightMap/Images/AwarenessAircraft.svg</file>
         <file alias="check.svg">resources/check.svg</file>
         <file alias="APM/SinerjiBrandImage">src/FirmwarePlugin/APM/SinerjiBrandImage.png</file>
+        <file alias="SinerjiGCS_GimbalControls.svg">resources/SinerjiGCS_GimbalControls.svg</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="action.svg">resources/action.svg</file>

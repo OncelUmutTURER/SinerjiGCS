@@ -774,6 +774,8 @@ public:
     Q_INVOKABLE void setVideoRecordStatus(int);
 //    ///Get Video Record Status
 //    Q_INVOKABLE static int getVideoRecordStatus();
+    ///Rotate gimbal to given direction. 0: look center, 1: up, 2: right, 3: down, 4: left
+    Q_INVOKABLE void rotateGimbal(int direction);
 #if 0
     // Temporarily removed, waiting for new command implementation
     /// Test motor
@@ -1362,6 +1364,10 @@ private:
     uint64_t        _capabilityBits;
     bool            _highLatencyLink;
     bool            _receivingAttitudeQuaternion;
+
+    float           _pitchAngle = 0;
+    float           _yawAngle = 0;
+    float           _delta_angle = 10.0;
 
     QGCCameraManager* _cameras;
 
