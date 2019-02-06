@@ -155,7 +155,7 @@ Column {
                             id: captureButtoncolorOverlay
                             anchors.fill: captureButtonIcon
                             source: captureButtonIcon
-                            color: captureButton.pressed ? "green" : "gray"
+                            color: captureButton.pressed ? "red" : "gray"
                         }
                     }
 
@@ -262,7 +262,7 @@ Column {
                         id: zoomInColorOverlay
                         anchors.fill: zoomInButtonIcon
                         source: zoomInButtonIcon
-                        color: zoomInActive ? "green" : "gray"
+                        color: zoomInActive ? "red" : "gray"
                     }
 
                     background: Rectangle {
@@ -311,7 +311,7 @@ Column {
                         id: zoomOutColorOverlay
                         anchors.fill: zoomOutButtonIcon
                         source: zoomOutButtonIcon
-                        color: zoomOutActive ? "green" : "gray"
+                        color: zoomOutActive ? "red" : "gray"
                     }
 
                     background: Rectangle {
@@ -354,7 +354,9 @@ Column {
 
         Image {
             id: image
-            source: "/qmlimages/SinerjiGCS_GimbalControls.svg"
+
+            property string defaultControls: "/qmlimages/SinerjiGCS_GimbalControls.svg"
+            source: defaultControls
 
 //            anchors.fill: parent
             Layout.alignment: Qt.AlignCenter
@@ -366,8 +368,14 @@ Column {
                 width: gimbalControls.width / 3 //80
                 height: gimbalControls.width / 3 //80
                 cursorShape: "PointingHandCursor"
-                onPressed: cursorShape = "ClosedHandCursor"
-                onReleased: cursorShape = "PointingHandCursor"
+                onPressed: {
+                    cursorShape = "ClosedHandCursor"
+                    image.source = "/qmlimages/SinerjiGCS_GimbalControls_up.svg"
+                }
+                onReleased: {
+                    cursorShape = "PointingHandCursor"
+                    image.source = parent.defaultControls
+                }
                 onClicked: _activeVehicle.rotateGimbal(1)
             }
 
@@ -378,8 +386,14 @@ Column {
                 width: gimbalControls.width / 3 //80
                 height: gimbalControls.width / 3 //80
                 cursorShape: "PointingHandCursor"
-                onPressed: cursorShape = "ClosedHandCursor"
-                onReleased: cursorShape = "PointingHandCursor"
+                onPressed: {
+                    cursorShape = "ClosedHandCursor"
+                    image.source = "/qmlimages/SinerjiGCS_GimbalControls_right.svg"
+                }
+                onReleased: {
+                    cursorShape = "PointingHandCursor"
+                    image.source = parent.defaultControls
+                }
                 onClicked: _activeVehicle.rotateGimbal(2)
             }
 
@@ -390,8 +404,14 @@ Column {
                 width: gimbalControls.width / 3 //80
                 height: gimbalControls.width / 3 //80
                 cursorShape: "PointingHandCursor"
-                onPressed: cursorShape = "ClosedHandCursor"
-                onReleased: cursorShape = "PointingHandCursor"
+                onPressed: {
+                    cursorShape = "ClosedHandCursor"
+                    image.source = "/qmlimages/SinerjiGCS_GimbalControls_down.svg"
+                }
+                onReleased: {
+                    cursorShape = "PointingHandCursor"
+                    image.source = parent.defaultControls
+                }
                 onClicked: _activeVehicle.rotateGimbal(3)
             }
 
@@ -402,8 +422,14 @@ Column {
                 width: gimbalControls.width / 3 //80
                 height: gimbalControls.width / 3 //80
                 cursorShape: "PointingHandCursor"
-                onPressed: cursorShape = "ClosedHandCursor"
-                onReleased: cursorShape = "PointingHandCursor"
+                onPressed: {
+                    cursorShape = "ClosedHandCursor"
+                    image.source = "/qmlimages/SinerjiGCS_GimbalControls_left.svg"
+                }
+                onReleased: {
+                    cursorShape = "PointingHandCursor"
+                    image.source = parent.defaultControls
+                }
                 onClicked: _activeVehicle.rotateGimbal(4)
             }
 
@@ -414,8 +440,14 @@ Column {
                 width: gimbalControls.width / 3 //80
                 height: gimbalControls.width / 3 //80
                 cursorShape: "PointingHandCursor"
-                onPressed: cursorShape = "ClosedHandCursor"
-                onReleased: cursorShape = "PointingHandCursor"
+                onPressed: {
+                    cursorShape = "ClosedHandCursor"
+                    image.source = "/qmlimages/SinerjiGCS_GimbalControls_center.svg"
+                }
+                onReleased: {
+                    cursorShape = "PointingHandCursor"
+                    image.source = parent.defaultControls
+                }
                 onClicked: _activeVehicle.rotateGimbal(0)
             }
         }
