@@ -671,6 +671,7 @@ void Vehicle::_mavlinkMessageReceived(LinkInterface* link, mavlink_message_t mes
         return;
     }
 
+//    qDebug() << "msgid: " << message.msgid;
 
     switch (message.msgid) {
     case MAVLINK_MSG_ID_HOME_POSITION:
@@ -1237,6 +1238,8 @@ void Vehicle::_handleAutopilotVersion(LinkInterface *link, mavlink_message_t& me
 
     mavlink_autopilot_version_t autopilotVersion;
     mavlink_msg_autopilot_version_decode(&message, &autopilotVersion);
+
+//    qDebug() << "uid: " << autopilotVersion.uid << ", uid2: " << autopilotVersion.uid2;
 
     _uid = (quint64)autopilotVersion.uid;
     emit vehicleUIDChanged();
@@ -3005,7 +3008,7 @@ void Vehicle::setROILocation(const QGeoCoordinate& roiCoord)
         return;
     }
 
-    qDebug() << "rel_alt:" << altitudeRelative()->rawValue().toFloat() * -1 << "real_alt" << _coordinate.altitude();
+//    qDebug() << "rel_alt:" << altitudeRelative()->rawValue().toFloat() * -1 << "real_alt" << _coordinate.altitude();
 
     sendMavCommand(defaultComponentId(),
                    MAV_CMD_DO_SET_ROI,                  // command
@@ -3604,6 +3607,11 @@ void Vehicle::_sendSerialCommand(uint8_t count, const uint8_t *data, uint8_t dev
                                            &ser);
 
     sendMessageOnLink(priorityLink(), msg);
+
+//    _sendMessageOnLink(priorityLink(), msg);
+
+    // We use sendMessageMultiple since we really want these to make it to the vehicle
+//    sendMessageMultiple(msg);
 }
 
 void Vehicle::setVtolInFwdFlight(bool vtolInFwdFlight)

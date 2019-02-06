@@ -182,6 +182,11 @@
         <file alias="check.svg">resources/check.svg</file>
         <file alias="APM/SinerjiBrandImage">src/FirmwarePlugin/APM/SinerjiBrandImage.png</file>
         <file alias="SinerjiGCS_GimbalControls.svg">resources/SinerjiGCS_GimbalControls.svg</file>
+        <file alias="SinerjiGCS_GimbalControls_center.svg">resources/SinerjiGCS_GimbalControls_center.svg</file>
+        <file alias="SinerjiGCS_GimbalControls_down.svg">resources/SinerjiGCS_GimbalControls_down.svg</file>
+        <file alias="SinerjiGCS_GimbalControls_left.svg">resources/SinerjiGCS_GimbalControls_left.svg</file>
+        <file alias="SinerjiGCS_GimbalControls_right.svg">resources/SinerjiGCS_GimbalControls_right.svg</file>
+        <file alias="SinerjiGCS_GimbalControls_up.svg">resources/SinerjiGCS_GimbalControls_up.svg</file>
     </qresource>
     <qresource prefix="/res">
         <file alias="action.svg">resources/action.svg</file>
