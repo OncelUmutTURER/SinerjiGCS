@@ -73,12 +73,12 @@ Column {
                     }
                     RadioButton {
                         id: radioButton
-                        text: "Photo"
+                        text: qsTr("Photo")
                         checked: !cameraMode
                         ButtonGroup.group: tabPositionGroup
 
                         onCheckedChanged: {
-                            cameraModeStatusText.text = "Take a photo"
+                            cameraModeStatusText.text = qsTr("Take a photo")
                             if (checked && cameraMode) {
                                 if (videoActive) {
                                     videoButtonIcon.source = videoCameraIcon
@@ -94,12 +94,12 @@ Column {
                         }
                     }
                     RadioButton {
-                        text: "Video"
+                        text: qsTr("Video")
                         checked: cameraMode
                         ButtonGroup.group: tabPositionGroup
 
                         onCheckedChanged: {
-                            cameraModeStatusText.text = "Record a video"
+                            cameraModeStatusText.text = qsTr("Record a video")
                             if (checked && !cameraMode) {
                                 cameraMode = true
                                 _activeVehicle.cameraModeChange()
@@ -170,7 +170,7 @@ Column {
                     onClicked: {
                         videoButtonIcon.source = videoActive ? videoCameraIcon : videoStopIcon
                         videoButtonIcon.color = videoActive ? "gray" : "red"
-                        cameraModeStatusText.text = !videoActive ? "Recording.." : "Record a video"
+                        cameraModeStatusText.text = !videoActive ? qsTr("Recording..") : qsTr("Record a video")
                         videoActive = !videoActive
 
                         //console.log("RECORD VIDEO EVENT")
@@ -235,7 +235,7 @@ Column {
                 }
                 Label {
                     id: cameraModeStatusText
-                    text: "Take a photo"
+                    text: qsTr("Take a photo")
                     font.pointSize: 11
                 }
             }
@@ -290,7 +290,7 @@ Column {
                     }
                 }
                 Label {
-                    text: "Zoom Camera"
+                    text: qsTr("Zoom Camera")
                     font.pointSize: 11
                 }
                 Button {

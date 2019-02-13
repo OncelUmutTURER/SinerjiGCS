@@ -812,3 +812,28 @@ void MainWindow::_closeArduinoSerialPort()
         }
     }
 }
+
+void MainWindow::on_actionTurkce_triggered()
+{
+    QLocale locale = QLocale(QLocale::Turkish);
+    _changeLanguage(locale);
+}
+
+void MainWindow::on_actionEnglish_triggered()
+{
+    QLocale locale = QLocale(QLocale::English);
+    _changeLanguage(locale);
+}
+
+void MainWindow::_changeLanguage(QLocale locale)
+{
+    if (!qgcApp()->_QGCTranslator.isEmpty())
+        QCoreApplication::removeTranslator(&qgcApp()->_QGCTranslator);
+
+    if(qgcApp()->_QGCTranslator.load(locale, "qgc_", "", ":/localization"))
+        qgcApp()->installTranslator(&qgcApp()->_QGCTranslator);
+
+//#ifdef __mobile__
+//    qgcApp()->_qmlAppEngine->retranslate();
+//#endif
+}

@@ -175,6 +175,10 @@ private slots:
 
     bool _openArduinoSerialPort(void);
 
+    void on_actionTurkce_triggered();
+
+    void on_actionEnglish_triggered();
+
 private:
     /// Constructor is private since all creation should be through MainWindow::_create
     MainWindow();
@@ -209,6 +213,8 @@ private:
     void _setSerialPortTimer(void);
     void _closeArduinoSerialPort(void);
     QTimer* m_timerForSerialPortOpen;
+
+    void _changeLanguage(QLocale locale);
 };
 
 #endif /* _MAINWINDOW_H_ */

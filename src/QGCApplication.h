@@ -150,6 +150,8 @@ public:
 
     bool _checkTelemetrySavePath(bool useMessageBox);
 
+    QTranslator _QGCTranslator; //Umut: MainWindow.ui menülerinden dil değişimi yapabilmek için public olacak şekilde değiştirildi.
+
 private slots:
     void _missingParamsDisplay(void);
 
@@ -176,8 +178,6 @@ private:
 #endif
 
     QGCToolbox* _toolbox;
-
-    QTranslator _QGCTranslator;
 
     bool _bluetoothAvailable;
 
