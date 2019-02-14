@@ -3503,6 +3503,62 @@ void Vehicle::triggerCamera(void)
                    1.0);                            // test shot flag
 }
 
+//void Vehicle::mount_VideoModeActiveChanged(bool mount_VideoModeActive)
+//void Vehicle::mount_RecordingVideoChanged(bool mount_RecordingVideo)
+//void Vehicle::mount_ZoomInActiveChanged(bool mount_ZoomInActive)
+//void Vehicle::mount_ZoomOutActiveChanged(bool mount_ZoomOutActive)
+
+void Vehicle::setMount_VideoModeActive(bool mount_VideoModeActive)
+{
+    if (_mount_VideoModeActive != mount_VideoModeActive) {
+        _mount_VideoModeActive = mount_VideoModeActive;
+
+        cameraModeChange();
+
+        emit mount_VideoModeActiveChanged(_mount_VideoModeActive);
+    }
+}
+void Vehicle::setMount_RecordingVideo(bool mount_RecordingVideo)
+{
+    if (_mount_RecordingVideo != mount_RecordingVideo) {
+        _mount_RecordingVideo = mount_RecordingVideo;
+
+        if(_mount_RecordingVideo)
+            setVideoRecordStatus(1);
+        else
+            setVideoRecordStatus(0);
+
+        cameraCapture();
+
+        emit mount_RecordingVideoChanged(_mount_RecordingVideo);
+    }
+}
+void Vehicle::setMount_ZoomInActive(bool mount_ZoomInActive)
+{
+    if (_mount_ZoomInActive != mount_ZoomInActive) {
+        _mount_ZoomInActive = mount_ZoomInActive;
+
+        if(_mount_ZoomInActive)
+            cameraZoomIn();
+        else
+            cameraZoomStop();
+
+        emit mount_ZoomInActiveChanged(_mount_ZoomInActive);
+    }
+}
+void Vehicle::setMount_ZoomOutActive(bool mount_ZoomOutActive)
+{
+    if (_mount_ZoomOutActive != mount_ZoomOutActive) {
+        _mount_ZoomOutActive = mount_ZoomOutActive;
+
+        if(_mount_ZoomOutActive)
+            cameraZoomOut();
+        else
+            cameraZoomStop();
+
+        emit mount_ZoomOutActiveChanged(_mount_ZoomOutActive);
+    }
+}
 
 void Vehicle::cameraModeChange(void)
 {

@@ -46,10 +46,10 @@ Column {
     property string photoTakeIcon: "/qmlimages/camera_photo.svg"
     property string zoomInIcon: "/res/zoomIn"
     property string zoomOutIcon: "/res/zoomOut"
-    property bool cameraMode: true
-    property bool videoActive: false
-    property bool zoomInActive
-    property bool zoomOutActive
+//    property bool cameraMode: !_activeVehicle.mount_VideoModeActive
+//    property bool videoActive: _activeVehicle.mount_RecordingVideo
+//    property bool zoomInActive: _activeVehicle.mount_zoomInActive
+//    property bool zoomOutActive: _activeVehicle.mount_zoomOutActive
 
     ColumnLayout {
         id: mainLayout
@@ -58,7 +58,6 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
 
         QGCGroupBox {
-
             id: rowBox
             transformOrigin: Item.Center
             Layout.fillWidth: true
@@ -74,41 +73,43 @@ Column {
                     RadioButton {
                         id: radioButton
                         text: "Photo"
-                        checked: !cameraMode
+                        checked: !_activeVehicle.mount_VideoModeActive
                         ButtonGroup.group: tabPositionGroup
-
+                        /*
                         onCheckedChanged: {
-                            cameraModeStatusText.text = "Take a photo"
-                            if (checked && cameraMode) {
-                                if (videoActive) {
-                                    videoButtonIcon.source = videoCameraIcon
-                                    videoButtonIcon.color = "gray"
-                                    videoActive = false
-                                    _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
-                                    _activeVehicle.cameraCapture() //stop active recording before changing mode
+//                            cameraModeStatusText.text = "Take a photo"
+                            if (checked && _activeVehicle.mount_VideoModeActive) {
+                                if (_activeVehicle.mount_RecordingVideo) {
+//                                    videoButtonIcon.source = videoCameraIcon
+//                                    videoButtonIcon.color = "gray"
+                                    _activeVehicle.mount_RecordingVideo = false
+//                                    _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
+//                                    _activeVehicle.cameraCapture() //stop active recording before changing mode
                                 }
-                                cameraMode = false
-
-                                _activeVehicle.cameraModeChange()
+                                _activeVehicle.mount_VideoModeActive = false
+//                                _activeVehicle.cameraModeChange()
                             }
                         }
+                        */
                     }
                     RadioButton {
                         text: "Video"
-                        checked: cameraMode
+                        checked: _activeVehicle.mount_VideoModeActive
                         ButtonGroup.group: tabPositionGroup
 
                         onCheckedChanged: {
-                            cameraModeStatusText.text = "Record a video"
-                            if (checked && !cameraMode) {
-                                cameraMode = true
-                                _activeVehicle.cameraModeChange()
+//                            cameraModeStatusText.text = "Record a video"
+                            if (!checked && _activeVehicle.mount_RecordingVideo) {
+                                _activeVehicle.mount_RecordingVideo = false
                             }
+
+                            _activeVehicle.mount_VideoModeActive = checked
                         }
                     }
                 }
             }
         }
+
         QGCGroupBox {
             Layout.fillWidth: true
             RowLayout {
@@ -116,7 +117,7 @@ Column {
                     // Take Photo
                     id: captureButton
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    visible: !cameraMode
+                    visible: !_activeVehicle.mount_VideoModeActive
 
                     onClicked: {
                         //console.log("TAKE A PHOTO EVENT")
@@ -163,21 +164,23 @@ Column {
                 Button {
                     // Video
                     id: videoButton
-                    checked: false
                     checkable: true
-                    visible: cameraMode
 
-                    onClicked: {
-                        videoButtonIcon.source = videoActive ? videoCameraIcon : videoStopIcon
-                        videoButtonIcon.color = videoActive ? "gray" : "red"
-                        cameraModeStatusText.text = !videoActive ? "Recording.." : "Record a video"
-                        videoActive = !videoActive
+                    checked: _activeVehicle.mount_RecordingVideo
+                    visible: _activeVehicle.mount_VideoModeActive
+
+                    onCheckedChanged: {
+                        _activeVehicle.mount_RecordingVideo = checked
+
+//                        videoButtonIcon.source = videoActive ? videoCameraIcon : videoStopIcon
+//                        videoButtonIcon.color = videoActive ? "gray" : "red"
+//                        cameraModeStatusText.text = !videoActive ? "Recording.." : "Record a video"
+//                        videoActive = !videoActive
 
                         //console.log("RECORD VIDEO EVENT")
-                        _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
-                        _activeVehicle.cameraCapture()
+//                        _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
+//                        _activeVehicle.cameraCapture()
                     }
-
                     background: Rectangle {
                         implicitWidth: 40
                         implicitHeight: 40
@@ -187,24 +190,37 @@ Column {
                         gradient: Gradient {
                             GradientStop {
                                 position: 0
-                                color: "#ccc"
+                                color: _activeVehicle.mount_RecordingVideo ? "#aaa" : "#ccc"
                             }
-
                             GradientStop {
                                 position: 1
-                                color: "#aaa"
+                                color: _activeVehicle.mount_RecordingVideo ? "#ccc" : "#aaa"
                             }
                         }
                     }
+
                     Image {
+                        id: videoButtonIcon
+
+                        property alias color: videoButtoncolorOverlay.color
+                        property int size: 30
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        source: _activeVehicle.mount_RecordingVideo ? videoStopIcon : videoCameraIcon
+                        sourceSize.width: size
+                        sourceSize.height: size
+
                         property bool timeTick: true
                         Timer {
                             id: textTimer
                             interval: 700
-                            repeat: videoActive
-                            running: videoActive
-                            triggeredOnStart: videoActive
+                            repeat: _activeVehicle.mount_RecordingVideo
+                            running: _activeVehicle.mount_RecordingVideo
+                            triggeredOnStart: _activeVehicle.mount_RecordingVideo
                             onTriggered: videoButtonIcon.set()
+                            onRunningChanged: videoButtonIcon.stop()
                         }
                         function set() {
                             if (timeTick) {
@@ -214,39 +230,32 @@ Column {
                             }
                             timeTick = !timeTick
                         }
-                        id: videoButtonIcon
-                        source: videoCameraIcon
-                        property alias color: videoButtoncolorOverlay.color
-                        anchors.horizontalCenter: videoButton.horizontalCenter
-                        anchors.verticalCenter: videoButton.verticalCenter
-
-                        property int size: 30
-
-                        sourceSize.width: size
-                        sourceSize.height: size
-
-                        ColorOverlay {
-                            id: videoButtoncolorOverlay
-                            anchors.fill: videoButtonIcon
-                            source: videoButtonIcon
-                            color: "gray"
+                        function stop() {
+                            if(!videoButton.checked)
+                                videoButtonIcon.color = "gray"
                         }
+                    }
+                    ColorOverlay {
+                        id: videoButtoncolorOverlay
+                        anchors.fill: videoButtonIcon
+                        source: videoButtonIcon
+                        color: _activeVehicle.mount_RecordingVideo ? "red" : "gray"
                     }
                 }
                 Label {
                     id: cameraModeStatusText
-                    text: "Take a photo"
+                    text: _activeVehicle.mount_VideoModeActive ? (_activeVehicle.mount_RecordingVideo ? "Recording.." : "Record a video") : "Take a photo"
                     font.pointSize: 11
                 }
             }
         }
+
         QGCGroupBox {
             RowLayout {
-
                 Button {
                     id: btnZoomInId
                     checkable: true
-                    checked: zoomInActive
+                    checked: _activeVehicle.mount_zoomInActive
 
                     Image {
                         id: zoomInButtonIcon
@@ -262,7 +271,7 @@ Column {
                         id: zoomInColorOverlay
                         anchors.fill: zoomInButtonIcon
                         source: zoomInButtonIcon
-                        color: zoomInActive ? "red" : "gray"
+                        color: _activeVehicle.mount_zoomInActive ? "red" : "gray"
                     }
 
                     background: Rectangle {
@@ -274,19 +283,19 @@ Column {
                         gradient: Gradient {
                             GradientStop {
                                 position: 0
-                                color: zoomInActive ? "#aaa" : "#ccc"
+                                color: _activeVehicle.mount_zoomInActive ? "#aaa" : "#ccc"
                             }
 
                             GradientStop {
                                 position: 1
-                                color: zoomInActive ? "#ccc" : "#aaa"
+                                color: _activeVehicle.mount_zoomInActive ? "#ccc" : "#aaa"
                             }
                         }
                     }
                     onCheckedChanged: {
-                        zoomOutActive = false
-                        zoomInActive = checked
-                        checked ? _activeVehicle.cameraZoomIn() : _activeVehicle.cameraZoomStop()
+                        _activeVehicle.mount_zoomOutActive = false
+                        _activeVehicle.mount_zoomInActive = checked
+//                        checked ? _activeVehicle.cameraZoomIn() : _activeVehicle.cameraZoomStop()
                     }
                 }
                 Label {
@@ -296,7 +305,7 @@ Column {
                 Button {
                     id: btnZoomOutId
                     checkable: true
-                    checked: zoomOutActive
+                    checked: _activeVehicle.mount_zoomOutActive
                     Image {
                         id: zoomOutButtonIcon
                         source: zoomOutIcon
@@ -311,7 +320,7 @@ Column {
                         id: zoomOutColorOverlay
                         anchors.fill: zoomOutButtonIcon
                         source: zoomOutButtonIcon
-                        color: zoomOutActive ? "red" : "gray"
+                        color: _activeVehicle.mount_zoomOutActive ? "red" : "gray"
                     }
 
                     background: Rectangle {
@@ -323,19 +332,19 @@ Column {
                         gradient: Gradient {
                             GradientStop {
                                 position: 0
-                                color: zoomOutActive ? "#aaa" : "#ccc"
+                                color: _activeVehicle.mount_zoomOutActive ? "#aaa" : "#ccc"
                             }
 
                             GradientStop {
                                 position: 1
-                                color: zoomOutActive ? "#ccc" : "#aaa"
+                                color: _activeVehicle.mount_zoomOutActive ? "#ccc" : "#aaa"
                             }
                         }
                     }
                     onCheckedChanged: {
-                        zoomInActive = false
-                        zoomOutActive = checked
-                        checked ? _activeVehicle.cameraZoomOut() : _activeVehicle.cameraZoomStop()
+                        _activeVehicle.mount_zoomInActive = false
+                        _activeVehicle.mount_zoomOutActive = checked
+//                        checked ? _activeVehicle.cameraZoomOut() : _activeVehicle.cameraZoomStop()
                     }
                 }
             }
