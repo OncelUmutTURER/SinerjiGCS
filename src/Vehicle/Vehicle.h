@@ -696,6 +696,23 @@ public:
     /// @return -1: reserver all buttons, >0 number of buttons to reserve
     Q_PROPERTY(int manualControlReservedButtonCount READ manualControlReservedButtonCount CONSTANT)
 
+    Q_PROPERTY(bool mount_VideoModeActive  READ mount_VideoModeActive WRITE setMount_VideoModeActive NOTIFY mount_VideoModeActiveChanged)
+    Q_PROPERTY(bool mount_RecordingVideo   READ mount_RecordingVideo  WRITE setMount_RecordingVideo  NOTIFY mount_RecordingVideoChanged)
+    Q_PROPERTY(bool mount_zoomInActive     READ mount_ZoomInActive    WRITE setMount_ZoomInActive    NOTIFY mount_ZoomInActiveChanged)
+    Q_PROPERTY(bool mount_zoomOutActive    READ mount_ZoomOutActive   WRITE setMount_ZoomOutActive   NOTIFY mount_ZoomOutActiveChanged)
+
+    bool mount_VideoModeActive(void) { return _mount_VideoModeActive; }
+    void setMount_VideoModeActive(bool mount_VideoModeActive);
+
+    bool mount_RecordingVideo(void) { return _mount_RecordingVideo; }
+    void setMount_RecordingVideo(bool mount_RecordingVideo);
+
+    bool mount_ZoomInActive(void) { return _mount_ZoomInActive; }
+    void setMount_ZoomInActive(bool mount_ZoomInActive);
+
+    bool mount_ZoomOutActive(void) { return _mount_ZoomOutActive; }
+    void setMount_ZoomOutActive(bool mount_ZoomOutActive);
+
     // Called when the message drop-down is invoked to clear current count
     Q_INVOKABLE void        resetMessages();
 
@@ -1170,6 +1187,11 @@ signals:
     /// Remote control RSSI changed  (0% - 100%)
     void remoteControlRSSIChanged(uint8_t rssi);
 
+    void mount_VideoModeActiveChanged(bool mount_VideoModeActive);
+    void mount_RecordingVideoChanged(bool mount_RecordingVideo);
+    void mount_ZoomInActiveChanged(bool mount_ZoomInActive);
+    void mount_ZoomOutActiveChanged(bool mount_ZoomOutActive);
+
     void mavlinkRawImu(mavlink_message_t message);
     void mavlinkScaledImu1(mavlink_message_t message);
     void mavlinkScaledImu2(mavlink_message_t message);
@@ -1370,6 +1392,11 @@ private:
     float           _delta_angle = 10.0;
 
     QGCCameraManager* _cameras;
+
+    bool _mount_VideoModeActive = true;
+    bool _mount_RecordingVideo = false;
+    bool _mount_ZoomInActive = false;
+    bool _mount_ZoomOutActive = false;
 
     typedef struct {
         int         component;
