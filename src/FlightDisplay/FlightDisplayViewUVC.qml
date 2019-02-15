@@ -18,7 +18,7 @@ Rectangle {
 
     property bool   _recordingVideo:        false
     property bool   _videoRunning:          true
-    property string _savePath: QGroundControl.settingsManager.appSettings.videoSavePath + "/" + Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh.mm.ss");
+    property string _savePath: QGroundControl.settingsManager.appSettings.videoSavePath + "/";
 
     anchors.fill:       parent
     color:              Qt.rgba(0,0,0,0.75)
@@ -28,8 +28,8 @@ Rectangle {
         captureMode:    Camera.CaptureVideo //Camera.CaptureViewfinder
 
         videoRecorder.muted: true
-        videoRecorder.audioSampleRate: 48000
-        videoRecorder.audioBitRate: 48
+        videoRecorder.audioSampleRate: 44100
+        videoRecorder.audioBitRate: 80
         videoRecorder.audioChannels: 1
         videoRecorder.audioCodec: "audio/mpeg, mpegversion=(int)4"
         videoRecorder.outputLocation: _savePath
@@ -97,6 +97,7 @@ Rectangle {
                     recordVideoBtnBackground.opacity = 1
                     _recordingVideo = false;
                 } else {
+                    camera.videoRecorder.outputLocation = _savePath + Qt.formatDateTime(new Date(), "yyyy-MM-dd_hh.mm.ss");
                     camera.videoRecorder.record()
                     _recordingVideo = true;
                 }
