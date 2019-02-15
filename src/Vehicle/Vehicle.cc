@@ -832,7 +832,8 @@ void Vehicle::_arduinoMessageReceived(void)
 
             if(_message.contains("#A#", Qt::CaseSensitive))
             {
-                emergencyStop();
+                // Umut: Bu kısım yanlışlıkla çantadaki tuşa basılırsa drone çakılmasın diye devre dışı bırakıldı!
+//                emergencyStop();
                 qDebug() << "emergencyStop() executed from serial port";
             }
         }
