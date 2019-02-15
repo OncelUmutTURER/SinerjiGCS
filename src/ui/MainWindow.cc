@@ -812,3 +812,152 @@ void MainWindow::_closeArduinoSerialPort()
         }
     }
 }
+
+void MainWindow::on_actionTurkce_triggered()
+{
+    QLocale locale = QLocale(QLocale::Turkish);
+    _changeLanguage(locale);
+
+    QList<QMenu*> menus = MainWindow::instance()->menuBar()->findChildren<QMenu*>();
+    foreach(QMenu* m,menus)
+    {
+        if(m->objectName()=="menuFile")
+        {
+            m->setTitle("Dosya");
+
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionStatusBar")
+                    a->setText("Uçuşu Tekrar Oynat");
+                if(a->objectName()=="actionExit")
+                    a->setText("Uygulamadan Çık");
+            }
+        }
+
+        if(m->objectName()=="menuWidgets")
+            m->setTitle("Araçlar");
+
+        if(m->objectName()=="menuAbout")
+            m->setTitle("Hakkında");
+
+        if(m->objectName()=="menuLanguage")
+        {
+            m->setTitle("Dil Seçimi");
+
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionEnglish")
+                    a->setText("İngilizce");
+                if(a->objectName()=="actionTurkce")
+                    a->setText("Türkçe");
+            }
+        }
+
+        if(m->objectName()=="menuImport_Export")
+        {
+            m->setTitle("İçe/Dışa Aktar");
+
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionImport_Export_Flight_Data")
+                    a->setText("Uçuş Verisi Aktarma");
+                if(a->objectName()=="actionImport_Flight_Video")
+                    a->setText("İHA Video Aktarma");
+                if(a->objectName()=="actionImport_GeoData")
+                    a->setText("Harita Verisi Aktarma");
+            }
+        }
+
+        if(m->objectName()=="menuPilot")
+        {
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionPilot_Profile")
+                    a->setText("Pilot Profili");
+                if(a->objectName()=="actionLogout")
+                    a->setText("Çıkış Yap");
+            }
+        }
+    }
+}
+
+void MainWindow::on_actionEnglish_triggered()
+{
+    QLocale locale = QLocale(QLocale::English);
+    _changeLanguage(locale);
+
+    QList<QMenu*> menus = MainWindow::instance()->menuBar()->findChildren<QMenu*>();
+    foreach(QMenu* m,menus)
+    {
+        if(m->objectName()=="menuFile")
+        {
+            m->setTitle("File");
+
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionStatusBar")
+                    a->setText("Replay Flight Data");
+                if(a->objectName()=="actionExit")
+                    a->setText("Exit");
+            }
+        }
+
+        if(m->objectName()=="menuWidgets")
+            m->setTitle("Widgets");
+
+        if(m->objectName()=="menuAbout")
+            m->setTitle("About");
+
+        if(m->objectName()=="menuLanguage")
+        {
+            m->setTitle("Language");
+
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionEnglish")
+                    a->setText("English");
+                if(a->objectName()=="actionTurkce")
+                    a->setText("Turkish");
+            }
+        }
+
+        if(m->objectName()=="menuImport_Export")
+        {
+            m->setTitle("Import/Export");
+
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionImport_Export_Flight_Data")
+                    a->setText("Import/Export Flight Data");
+                if(a->objectName()=="actionImport_Flight_Video")
+                    a->setText("Import Drone Flight Video");
+                if(a->objectName()=="actionImport_GeoData")
+                    a->setText("Import Geo Data");
+            }
+        }
+
+        if(m->objectName()=="menuPilot")
+        {
+            foreach(QAction* a,m->actions())
+            {
+                if(a->objectName()=="actionPilot_Profile")
+                    a->setText("Pilot Profile");
+                if(a->objectName()=="actionLogout")
+                    a->setText("Logout");
+            }
+        }
+    }
+}
+
+void MainWindow::_changeLanguage(QLocale locale)
+{
+    if (!qgcApp()->_QGCTranslator.isEmpty())
+        QCoreApplication::removeTranslator(&qgcApp()->_QGCTranslator);
+
+    if(qgcApp()->_QGCTranslator.load(locale, "qgc_", "", ":/localization"))
+        qgcApp()->installTranslator(&qgcApp()->_QGCTranslator);
+
+//#ifdef __mobile__
+//    qgcApp()->_qmlAppEngine->retranslate();
+//#endif
+}

@@ -73,7 +73,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Dosya</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionStatusBar"/>
@@ -91,7 +91,7 @@
  }</string>
     </property>
     <property name="title">
-     <string>Widgets</string>
+     <string>Araçlar</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuPilot">
@@ -103,14 +103,14 @@
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
-     <string>About</string>
+     <string>Hakkında</string>
     </property>
     <widget class="QMenu" name="menuLanguage">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
-      <string>Language</string>
+      <string>Dil Seçimi</string>
      </property>
      <addaction name="actionEnglish"/>
      <addaction name="actionTurkce"/>
@@ -121,7 +121,7 @@
    </widget>
    <widget class="QMenu" name="menuImport_Export">
     <property name="title">
-     <string>Import/Export</string>
+     <string>İçe/Dışa Aktar</string>
     </property>
     <addaction name="actionImport_Export_Flight_Data"/>
     <addaction name="actionImport_Flight_Video"/>
@@ -136,7 +136,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>Uygulamadan Çık</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -160,12 +160,12 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Replay Flight Data</string>
+    <string>Uçuşu Tekrar Oynat</string>
    </property>
   </action>
   <action name="actionLogout">
    <property name="text">
-    <string>Logout</string>
+    <string>Çıkış Yap</string>
    </property>
   </action>
   <action name="actionSinerji_GCS">
@@ -189,7 +189,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Import/Export Flight Data</string>
+    <string>Uçuş Verisi Aktarma</string>
    </property>
   </action>
   <action name="actionImport_GeoData">
@@ -197,7 +197,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Import Geo Data</string>
+    <string>Harita Verisi Aktarma</string>
    </property>
   </action>
   <action name="actionImport_Flight_Video">
@@ -205,12 +205,12 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Import Drone Flight Video</string>
+    <string>İHA Video Aktarma</string>
    </property>
   </action>
   <action name="actionEnglish">
    <property name="text">
-    <string>English</string>
+    <string>İngilizce</string>
    </property>
   </action>
   <action name="actionTurkce">
@@ -223,7 +223,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Pilot Profile</string>
+    <string>Pilot Profili</string>
    </property>
   </action>
  </widget>

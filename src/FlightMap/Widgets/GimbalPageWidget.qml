@@ -46,10 +46,6 @@ Column {
     property string photoTakeIcon: "/qmlimages/camera_photo.svg"
     property string zoomInIcon: "/res/zoomIn"
     property string zoomOutIcon: "/res/zoomOut"
-//    property bool cameraMode: !_activeVehicle.mount_VideoModeActive
-//    property bool videoActive: _activeVehicle.mount_RecordingVideo
-//    property bool zoomInActive: _activeVehicle.mount_zoomInActive
-//    property bool zoomOutActive: _activeVehicle.mount_zoomOutActive
 
     ColumnLayout {
         id: mainLayout
@@ -72,33 +68,17 @@ Column {
                     }
                     RadioButton {
                         id: radioButton
-                        text: "Photo"
+                        text: qsTr("Fotoğraf") //qsTr("Photo")
                         checked: !_activeVehicle.mount_VideoModeActive
                         ButtonGroup.group: tabPositionGroup
-                        /*
-                        onCheckedChanged: {
-//                            cameraModeStatusText.text = "Take a photo"
-                            if (checked && _activeVehicle.mount_VideoModeActive) {
-                                if (_activeVehicle.mount_RecordingVideo) {
-//                                    videoButtonIcon.source = videoCameraIcon
-//                                    videoButtonIcon.color = "gray"
-                                    _activeVehicle.mount_RecordingVideo = false
-//                                    _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
-//                                    _activeVehicle.cameraCapture() //stop active recording before changing mode
-                                }
-                                _activeVehicle.mount_VideoModeActive = false
-//                                _activeVehicle.cameraModeChange()
-                            }
-                        }
-                        */
                     }
                     RadioButton {
-                        text: "Video"
+                        text: qsTr("Video")
                         checked: _activeVehicle.mount_VideoModeActive
                         ButtonGroup.group: tabPositionGroup
 
                         onCheckedChanged: {
-//                            cameraModeStatusText.text = "Record a video"
+//                            cameraModeStatusText.text = qsTr("Record a video")
                             if (!checked && _activeVehicle.mount_RecordingVideo) {
                                 _activeVehicle.mount_RecordingVideo = false
                             }
@@ -171,15 +151,6 @@ Column {
 
                     onCheckedChanged: {
                         _activeVehicle.mount_RecordingVideo = checked
-
-//                        videoButtonIcon.source = videoActive ? videoCameraIcon : videoStopIcon
-//                        videoButtonIcon.color = videoActive ? "gray" : "red"
-//                        cameraModeStatusText.text = !videoActive ? "Recording.." : "Record a video"
-//                        videoActive = !videoActive
-
-                        //console.log("RECORD VIDEO EVENT")
-//                        _activeVehicle.setVideoRecordStatus(videoActive ? 1 : 0)
-//                        _activeVehicle.cameraCapture()
                     }
                     background: Rectangle {
                         implicitWidth: 40
@@ -244,14 +215,19 @@ Column {
                 }
                 Label {
                     id: cameraModeStatusText
-                    text: _activeVehicle.mount_VideoModeActive ? (_activeVehicle.mount_RecordingVideo ? "Recording.." : "Record a video") : "Take a photo"
+//                    text: _activeVehicle.mount_VideoModeActive ? (_activeVehicle.mount_RecordingVideo ? qsTr("Recording..") : qsTr("Record a video")) : qsTr("Take a photo")
+                    text: _activeVehicle.mount_VideoModeActive ? (_activeVehicle.mount_RecordingVideo ? qsTr("Kaydediliyor..") : qsTr("Video kaydet")) : qsTr("Fotoğraf çek")
                     font.pointSize: 11
                 }
             }
         }
 
         QGCGroupBox {
-            RowLayout {
+            Layout.fillWidth: true
+            RowLayout {                
+                anchors.fill: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
                 Button {
                     id: btnZoomInId
                     checkable: true
@@ -295,17 +271,17 @@ Column {
                     onCheckedChanged: {
                         _activeVehicle.mount_zoomOutActive = false
                         _activeVehicle.mount_zoomInActive = checked
-//                        checked ? _activeVehicle.cameraZoomIn() : _activeVehicle.cameraZoomStop()
                     }
                 }
                 Label {
-                    text: "Zoom Camera"
+                    text: qsTr("Yakınlık") //qsTr("Zoom Camera")
                     font.pointSize: 11
                 }
                 Button {
                     id: btnZoomOutId
                     checkable: true
                     checked: _activeVehicle.mount_zoomOutActive
+
                     Image {
                         id: zoomOutButtonIcon
                         source: zoomOutIcon
@@ -344,7 +320,6 @@ Column {
                     onCheckedChanged: {
                         _activeVehicle.mount_zoomInActive = false
                         _activeVehicle.mount_zoomOutActive = checked
-//                        checked ? _activeVehicle.cameraZoomOut() : _activeVehicle.cameraZoomStop()
                     }
                 }
             }
