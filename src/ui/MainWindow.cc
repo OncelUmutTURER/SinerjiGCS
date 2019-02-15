@@ -823,48 +823,48 @@ void MainWindow::on_actionTurkce_triggered()
     {
         if(m->objectName()=="menuFile")
         {
-            m->setTitle("Dosya");
+            m->setTitle(QStringLiteral("Dosya"));
 
             foreach(QAction* a,m->actions())
             {
                 if(a->objectName()=="actionStatusBar")
-                    a->setText("Uçuşu Tekrar Oynat");
+                    a->setText(QStringLiteral("Uçuşu Tekrar Oynat"));
                 if(a->objectName()=="actionExit")
-                    a->setText("Uygulamadan Çık");
+                    a->setText(QStringLiteral("Uygulamadan Çık"));
             }
         }
 
         if(m->objectName()=="menuWidgets")
-            m->setTitle("Araçlar");
+            m->setTitle(QStringLiteral("Araçlar"));
 
         if(m->objectName()=="menuAbout")
-            m->setTitle("Hakkında");
+            m->setTitle(QStringLiteral("Hakkında"));
 
         if(m->objectName()=="menuLanguage")
         {
-            m->setTitle("Dil Seçimi");
+            m->setTitle(QStringLiteral("Dil Seçimi"));
 
             foreach(QAction* a,m->actions())
             {
                 if(a->objectName()=="actionEnglish")
-                    a->setText("İngilizce");
+                    a->setText(QStringLiteral("İngilizce"));
                 if(a->objectName()=="actionTurkce")
-                    a->setText("Türkçe");
+                    a->setText(QStringLiteral("Türkçe"));
             }
         }
 
         if(m->objectName()=="menuImport_Export")
         {
-            m->setTitle("İçe/Dışa Aktar");
+            m->setTitle(QStringLiteral("İçe/Dışa Aktar"));
 
             foreach(QAction* a,m->actions())
             {
                 if(a->objectName()=="actionImport_Export_Flight_Data")
-                    a->setText("Uçuş Verisi Aktarma");
+                    a->setText(QStringLiteral("Uçuş Verisi Aktarma"));
                 if(a->objectName()=="actionImport_Flight_Video")
-                    a->setText("İHA Video Aktarma");
+                    a->setText(QStringLiteral("İHA Video Aktarma"));
                 if(a->objectName()=="actionImport_GeoData")
-                    a->setText("Harita Verisi Aktarma");
+                    a->setText(QStringLiteral("Harita Verisi Aktarma"));
             }
         }
 
@@ -873,9 +873,9 @@ void MainWindow::on_actionTurkce_triggered()
             foreach(QAction* a,m->actions())
             {
                 if(a->objectName()=="actionPilot_Profile")
-                    a->setText("Pilot Profili");
+                    a->setText(QStringLiteral("Pilot Profili"));
                 if(a->objectName()=="actionLogout")
-                    a->setText("Çıkış Yap");
+                    a->setText(QStringLiteral("Çıkış Yap"));
             }
         }
     }
