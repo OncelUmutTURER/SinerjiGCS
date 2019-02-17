@@ -229,7 +229,7 @@ bool QGCCorePlugin::adjustSettingMetaData(const QString& settingsGroup, FactMeta
 #if defined (__mobile__)
         outdoorPalette = 0;
 #else
-        outdoorPalette = 1;
+        outdoorPalette = 0;
 #endif
         metaData.setRawDefaultValue(outdoorPalette);
         return true;
